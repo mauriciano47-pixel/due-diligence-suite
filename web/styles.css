@@ -205,8 +205,41 @@ body {
 .app-card-role {
   font-size: 0.8rem;
   color: var(--text-muted);
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   line-height: 1.4;
+}
+
+.app-card-audit-time {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-sm);
+  padding: 5px 9px;
+  margin-bottom: 12px;
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+.app-card-audit-time.has-audit {
+  border-color: rgba(0, 229, 255, 0.2);
+  background: rgba(0, 229, 255, 0.03);
+}
+
+.app-card-audit-time.unperformed {
+  border-style: dashed;
+  color: var(--text-dim);
+}
+
+.audit-badge-icon {
+  font-size: 0.85rem;
+}
+
+.audit-date-highlight {
+  color: var(--accent-cyan);
+  font-weight: 600;
+  font-family: var(--font-mono);
 }
 
 .app-card-footer {

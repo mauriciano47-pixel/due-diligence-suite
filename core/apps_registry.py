@@ -99,6 +99,25 @@ ECOSYSTEM_APPS = [
 ]
 
 def get_apps_list():
+    import json
+    fleet_file = Path(__file__).resolve().parent.parent / "web" / "fleet_data.json"
+    cached_audits = {}
+    if fleet_file.exists():
+        try:
+            cached_data = json.loads(fleet_file.read_text(encoding="utf-8"))
+            for item in cached_data:
+                k = item.get("app_key")
+                if k:
+                    cached_audits[k] = {
+                        "timestamp": item.get("timestamp"),
+                        "date": item.get("date"),
+                        "score": item.get("global_score"),
+                        "grade": item.get("grade"),
+                        "grade_color": item.get("grade_color")
+                    }
+        except Exception:
+            pass
+
     result = []
     for app in ECOSYSTEM_APPS:
         p_path = Path(app["primary_path"])
@@ -110,6 +129,8 @@ def get_apps_list():
         elif f_path and f_path.exists():
             active_path = str(f_path.resolve())
 
+        last_aud = cached_audits.get(app["key"])
+
         result.append({
             "key": app["key"],
             "name": app["name"],
@@ -118,6 +139,7 @@ def get_apps_list():
             "exists": active_path is not None,
             "obsidian_vault": app["obsidian_vault"],
             "icon": app["icon"],
-            "category": app["category"]
+            "category": app["category"],
+            "last_audit": last_aud
         })
     return result

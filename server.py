@@ -56,6 +56,28 @@ class DueDiligenceHandler(SimpleHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(payload)
 
+    def _update_fleet_cache(self, results):
+        fleet_file = WEB_DIR / "fleet_data.json"
+        if not isinstance(results, list):
+            results = [results]
+        current = []
+        if fleet_file.exists():
+            try:
+                current = json.loads(fleet_file.read_text(encoding="utf-8"))
+            except Exception:
+                current = []
+        
+        current_map = {item.get("app_key"): item for item in current if item.get("app_key")}
+        for r in results:
+            k = r.get("app_key")
+            if k:
+                current_map[k] = r
+        
+        try:
+            fleet_file.write_text(json.dumps(list(current_map.values()), ensure_ascii=False, indent=2), encoding="utf-8")
+        except Exception:
+            pass
+
     def do_GET(self):
         parsed = urllib.parse.urlparse(self.path)
         if parsed.path == "/api/apps":
@@ -101,6 +123,7 @@ class DueDiligenceHandler(SimpleHTTPRequestHandler):
                 return
 
             result = scan_project(target_path, app_key=app_key, app_name=target_name)
+            self._update_fleet_cache(result)
             self._send_json(200, result)
 
         elif parsed.path == "/api/audit-all":
@@ -110,6 +133,7 @@ class DueDiligenceHandler(SimpleHTTPRequestHandler):
                 if a["exists"]:
                     res = scan_project(a["path"], app_key=a["key"], app_name=a["name"])
                     results.append(res)
+            self._update_fleet_cache(results)
             self._send_json(200, results)
 
         elif parsed.path == "/api/save-obsidian":
