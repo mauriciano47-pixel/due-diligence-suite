@@ -27,7 +27,7 @@ CODE_EXT_MAP = {
 
 IGNORE_DIRS = {
     "node_modules", ".git", ".venv", "venv", "__pycache__", "dist",
-    "build", ".expo", ".next", ".cache", "coverage"
+    "build", ".expo", ".next", ".cache", "coverage", "scratch"
 }
 
 GOD_FILE_THRESHOLD = 800
@@ -104,7 +104,7 @@ def audit_architecture(project_path: str) -> dict:
             # Detectar deuda técnica (TODO, FIXME, HACK) y console.log
             for idx, line in enumerate(lines, 1):
                 clean_l = line.strip()
-                if re.search(r"\b(TODO|FIXME|HACK|XXX|BUG)\b", clean_l, re.IGNORECASE):
+                if re.search(r"\b(TODO|FIXME|HACK|XXX|BUG)\b", clean_l):
                     todos_count += 1
                     if todos_count <= 8:  # Reportar los primeros 8 para no saturar
                         findings.append({

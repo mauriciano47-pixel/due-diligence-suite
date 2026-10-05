@@ -16,7 +16,7 @@ CODE_EXTENSIONS = {
 # Carpetas a ignorar en el escaneo profundo
 IGNORE_DIRS = {
     "node_modules", ".git", ".venv", "venv", "__pycache__", "dist",
-    "build", ".expo", ".next", ".cache", "coverage", ".docusaurus"
+    "build", ".expo", ".next", ".cache", "coverage", ".docusaurus", "scratch"
 }
 
 # Patrones de secretos conocidos
@@ -37,7 +37,7 @@ SECRET_PATTERNS = [
 DANGEROUS_PATTERNS = [
     (r"\beval\s*\(", "Uso de eval() (Riesgo crítico de ejecución arbitraria de código)", "HIGH", (".js", ".jsx", ".ts", ".tsx", ".py")),
     (r"dangerouslySetInnerHTML\s*=", "Uso de dangerouslySetInnerHTML (Riesgo XSS)", "MEDIUM", (".jsx", ".tsx")),
-    (r"\.innerHTML\s*=\s*[^\"'][^;]+", "Asignación directa a innerHTML con variables dinámicas (Riesgo XSS)", "MEDIUM", (".js", ".ts")),
+    (r"\.innerHTML\s*=(?!\s*[\"'])", "Asignación directa a innerHTML con variables dinámicas (Riesgo XSS)", "MEDIUM", (".js", ".ts")),
     (r"cursor\.execute\s*\(\s*f[\"']", "Consulta SQL dinámica con f-string (Riesgo SQL Injection)", "CRITICAL", (".py",)),
     (r"cursor\.execute\s*\(\s*[\"'].*%\s*\(?", "Consulta SQL dinámica con interpolación % (Riesgo SQL Injection)", "CRITICAL", (".py",)),
     (r"DEBUG\s*=\s*True", "DEBUG = True detectado (Debe ser False en entornos de producción)", "HIGH", (".py",)),

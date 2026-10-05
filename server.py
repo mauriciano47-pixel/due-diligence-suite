@@ -45,21 +45,24 @@ class DueDiligenceHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(WEB_DIR), **kwargs)
 
+    def _send_json(self, status_code, data_obj):
+        payload = json.dumps(data_obj, ensure_ascii=False).encode("utf-8")
+        self.send_response(status_code)
+        self.send_header("Content-Type", "application/json; charset=utf-8")
+        self.send_header("Content-Length", str(len(payload)))
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.end_headers()
+        self.wfile.write(payload)
+
     def do_GET(self):
         parsed = urllib.parse.urlparse(self.path)
         if parsed.path == "/api/apps":
-            self.send_response(200)
-            self.send_header("Content-Type", "application/json; charset=utf-8")
-            self.send_header("Access-Control-Allow-Origin", "*")
-            self.end_headers()
             apps = get_apps_list()
-            self.wfile.write(json.dumps(apps, ensure_ascii=False).encode("utf-8"))
+            self._send_json(200, apps)
         elif parsed.path == "/api/health":
-            self.send_response(200)
-            self.send_header("Content-Type", "application/json; charset=utf-8")
-            self.send_header("Access-Control-Allow-Origin", "*")
-            self.end_headers()
-            self.wfile.write(json.dumps({"status": "ok", "service": "V-GUARD Due Diligence Hub"}).encode("utf-8"))
+            self._send_json(200, {"status": "ok", "service": "V-GUARD Due Diligence Hub"})
         else:
             # Servir archivos estáticos desde WEB_DIR
             super().do_GET()
@@ -94,19 +97,11 @@ class DueDiligenceHandler(SimpleHTTPRequestHandler):
                     target_name = p.name
 
             if not target_path:
-                self.send_response(400)
-                self.send_header("Content-Type", "application/json; charset=utf-8")
-                self.send_header("Access-Control-Allow-Origin", "*")
-                self.end_headers()
-                self.wfile.write(json.dumps({"error": "Ruta o aplicación no válida o no encontrada"}).encode("utf-8"))
+                self._send_json(400, {"error": "Ruta o aplicación no válida o no encontrada"})
                 return
 
             result = scan_project(target_path, app_key=app_key, app_name=target_name)
-            self.send_response(200)
-            self.send_header("Content-Type", "application/json; charset=utf-8")
-            self.send_header("Access-Control-Allow-Origin", "*")
-            self.end_headers()
-            self.wfile.write(json.dumps(result, ensure_ascii=False).encode("utf-8"))
+            self._send_json(200, result)
 
         elif parsed.path == "/api/audit-all":
             apps = get_apps_list()
@@ -115,12 +110,7 @@ class DueDiligenceHandler(SimpleHTTPRequestHandler):
                 if a["exists"]:
                     res = scan_project(a["path"], app_key=a["key"], app_name=a["name"])
                     results.append(res)
-
-            self.send_response(200)
-            self.send_header("Content-Type", "application/json; charset=utf-8")
-            self.send_header("Access-Control-Allow-Origin", "*")
-            self.end_headers()
-            self.wfile.write(json.dumps(results, ensure_ascii=False).encode("utf-8"))
+            self._send_json(200, results)
 
         elif parsed.path == "/api/save-obsidian":
             app_key = data.get("key", "custom")
@@ -128,26 +118,14 @@ class DueDiligenceHandler(SimpleHTTPRequestHandler):
             markdown = data.get("markdown", "")
             
             if not markdown:
-                self.send_response(400)
-                self.send_header("Content-Type", "application/json; charset=utf-8")
-                self.send_header("Access-Control-Allow-Origin", "*")
-                self.end_headers()
-                self.wfile.write(json.dumps({"error": "Contenido markdown vacío"}).encode("utf-8"))
+                self._send_json(400, {"error": "Contenido markdown vacío"})
                 return
 
             try:
                 saved_file = save_to_obsidian(app_key, markdown, app_name)
-                self.send_response(200)
-                self.send_header("Content-Type", "application/json; charset=utf-8")
-                self.send_header("Access-Control-Allow-Origin", "*")
-                self.end_headers()
-                self.wfile.write(json.dumps({"success": True, "saved_path": saved_file}).encode("utf-8"))
+                self._send_json(200, {"success": True, "saved_path": saved_file})
             except Exception as e:
-                self.send_response(500)
-                self.send_header("Content-Type", "application/json; charset=utf-8")
-                self.send_header("Access-Control-Allow-Origin", "*")
-                self.end_headers()
-                self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                self._send_json(500, {"error": str(e)})
         else:
             self.send_response(404)
             self.end_headers()
