@@ -1,6 +1,8 @@
-// V-GUARD Due Diligence Suite - Frontend Controller
+// V-GUARD Due Diligence Suite - Dual-Mode Controller (Local Engine & Cloud Showcase)
 let currentAuditData = null;
 let ecosystemApps = [];
+let staticFleetData = [];
+let isLocalServer = false;
 
 document.addEventListener("DOMContentLoaded", () => {
   initApp();
@@ -31,7 +33,7 @@ function setupEventListeners() {
   document.getElementById("btnAuditCustom").addEventListener("click", () => {
     const customPath = document.getElementById("customPathInput").value.trim();
     if (!customPath) {
-      alert("Por favor ingresa una ruta válida para inspeccionar.");
+      alert("Por favor ingresa una ruta local o URL de GitHub para inspeccionar.");
       return;
     }
     runAudit({ path: customPath });
@@ -47,6 +49,11 @@ function setupEventListeners() {
 
   document.getElementById("btnSaveObsidian").addEventListener("click", async () => {
     if (!currentAuditData) return;
+    if (!isLocalServer) {
+      // En modo cloud, descargar como archivo .md directo
+      downloadMarkdown(currentAuditData.markdown_report, `Dossier_Due_Diligence_${currentAuditData.app_name.replace(/\s+/g, '_')}.md`);
+      return;
+    }
     try {
       const res = await fetch("/api/save-obsidian", {
         method: "POST",
@@ -64,7 +71,8 @@ function setupEventListeners() {
         alert("❌ Error al guardar en Obsidian: " + (data.error || "Desconocido"));
       }
     } catch (e) {
-      alert("❌ Error de conexión al guardar en Obsidian: " + e.message);
+      // Fallback a descarga
+      downloadMarkdown(currentAuditData.markdown_report, `Dossier_Due_Diligence_${currentAuditData.app_name.replace(/\s+/g, '_')}.md`);
     }
   });
 
@@ -80,48 +88,125 @@ function setupEventListeners() {
   });
 }
 
+function downloadMarkdown(content, filename) {
+  const blob = new Blob([content], { type: "text/markdown;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  alert(`💾 Dossier descargado como ${filename}`);
+}
+
 async function loadApps() {
   const grid = document.getElementById("appsGrid");
+  const ipPill = document.getElementById("ipPill");
+
+  // 1. Probar si el servidor backend local está respondiendo
   try {
     const res = await fetch("/api/apps");
-    ecosystemApps = await res.json();
-    
-    grid.innerHTML = "";
-    ecosystemApps.forEach(app => {
-      const card = document.createElement("div");
-      card.className = `app-card ${app.exists ? "" : "disabled"}`;
-      card.innerHTML = `
-        <div>
-          <div class="app-card-top">
-            <span class="app-card-icon">${app.icon}</span>
-            <div>
-              <div class="app-card-name">${app.name}</div>
-              <div class="app-card-category">${app.category}</div>
-            </div>
-          </div>
-          <div class="app-card-role">${app.role}</div>
-        </div>
-        <div class="app-card-footer">
-          <span class="${app.exists ? 'status-badge-ready' : 'status-badge-missing'}">
-            ${app.exists ? '● Listo para auditar' : '○ No encontrado'}
-          </span>
-          <button class="btn btn-primary btn-sm" ${app.exists ? '' : 'disabled'}>
-            Auditar
-          </button>
-        </div>
-      `;
-
-      if (app.exists) {
-        card.addEventListener("click", (e) => {
-          runAudit({ key: app.key });
-        });
-      }
-
-      grid.appendChild(card);
-    });
+    if (res.ok) {
+      ecosystemApps = await res.json();
+      isLocalServer = true;
+      if (ipPill) ipPill.innerHTML = `<span>🟢 Motor Local 24/7 Activo</span>`;
+      renderAppsGrid(ecosystemApps);
+      return;
+    }
   } catch (e) {
-    grid.innerHTML = `<div class="error-state">Error cargando aplicaciones: ${e.message}</div>`;
+    // Backend local no disponible -> Entrar en Modo Cloud
   }
+
+  // 2. Modo Cloud / GitHub Pages: Cargar dataset pre-auditado
+  isLocalServer = false;
+  if (ipPill) ipPill.innerHTML = `<span>☁️ Nube 24/7 (Showcase Activo)</span>`;
+
+  try {
+    const res = await fetch("fleet_data.json");
+    if (res.ok) {
+      staticFleetData = await res.json();
+      ecosystemApps = staticFleetData.map(d => ({
+        key: d.app_key,
+        name: d.app_name,
+        role: d.pillars.governance.summary || "Aplicación oficial del ecosistema",
+        category: getCategoryForApp(d.app_key),
+        icon: getIconForApp(d.app_key),
+        exists: true,
+        score: d.global_score,
+        grade: d.grade,
+        path: d.project_path
+      }));
+      renderAppsGrid(ecosystemApps);
+    } else {
+      throw new Error("No se pudo cargar fleet_data.json");
+    }
+  } catch (err) {
+    grid.innerHTML = `<div class="error-state">Modo Cloud: ${err.message}</div>`;
+  }
+}
+
+function getIconForApp(key) {
+  const map = {
+    cambioya: "🔄", ataraxia: "⚡", hidoctor: "🩺", faro: "🚨",
+    vitrodiag: "🔬", sentinel: "🛡️", tramitefacil: "📑", vitrina: "🚀",
+    crypto_analyzer: "📈"
+  };
+  return map[key] || "📦";
+}
+
+function getCategoryForApp(key) {
+  const map = {
+    cambioya: "Economía Colaborativa", ataraxia: "HealthTech & Stoic Coaching",
+    hidoctor: "HealthTech Pediátrico", faro: "Seguridad Personal & SOS",
+    vitrodiag: "Diagnóstico In-Vitro", sentinel: "Ciberseguridad & RGPD",
+    tramitefacil: "GovTech & Ciudadanía", vitrina: "Showcase & Hub de Inversión",
+    crypto_analyzer: "Fintech & Trading Cuantitativo"
+  };
+  return map[key] || "Software";
+}
+
+function renderAppsGrid(apps) {
+  const grid = document.getElementById("appsGrid");
+  grid.innerHTML = "";
+
+  apps.forEach(app => {
+    const card = document.createElement("div");
+    card.className = `app-card ${app.exists ? "" : "disabled"}`;
+    
+    const scoreBadge = app.score ? `<span class="badge-app" style="float:right;">${app.grade} (${app.score}/100)</span>` : "";
+
+    card.innerHTML = `
+      <div>
+        <div class="app-card-top">
+          <span class="app-card-icon">${app.icon}</span>
+          <div style="flex:1;">
+            <div class="app-card-name">${app.name}</div>
+            <div class="app-card-category">${app.category}</div>
+          </div>
+          ${scoreBadge}
+        </div>
+        <div class="app-card-role">${app.role}</div>
+      </div>
+      <div class="app-card-footer">
+        <span class="${app.exists ? 'status-badge-ready' : 'status-badge-missing'}">
+          ${isLocalServer ? '● Listo para auditar' : '● Certificado Cloud'}
+        </span>
+        <button class="btn btn-primary btn-sm" ${app.exists ? '' : 'disabled'}>
+          ${isLocalServer ? 'Auditar' : 'Ver Dossier'}
+        </button>
+      </div>
+    `;
+
+    if (app.exists) {
+      card.addEventListener("click", () => {
+        runAudit({ key: app.key });
+      });
+    }
+
+    grid.appendChild(card);
+  });
 }
 
 async function runAudit(payload) {
@@ -131,7 +216,25 @@ async function runAudit(payload) {
 
   resultsEl.classList.add("hidden");
   scanningEl.classList.remove("hidden");
-  
+
+  // Modo Cloud con dataset estático
+  if (!isLocalServer) {
+    setTimeout(() => {
+      scanningEl.classList.add("hidden");
+      if (payload.key && staticFleetData.length > 0) {
+        const found = staticFleetData.find(d => d.app_key === payload.key);
+        if (found) {
+          currentAuditData = found;
+          renderResults(found);
+          return;
+        }
+      }
+      alert("En el modo Cloud desplegado, las auditorías en vivo requieren el servidor local o un repositorio GitHub.");
+    }, 400);
+    return;
+  }
+
+  // Modo Local en vivo
   if (payload.key) {
     const matched = ecosystemApps.find(a => a.key === payload.key);
     if (matched) scanningTitle.innerText = `Auditando ${matched.name}...`;
@@ -168,9 +271,7 @@ function renderResults(data) {
   // Encabezado
   document.getElementById("resAppName").innerText = data.app_name;
   document.getElementById("resAppPath").innerText = data.project_path;
-  
-  const matched = ecosystemApps.find(a => a.key === data.app_key);
-  document.getElementById("resAppCategory").innerText = matched ? matched.category : "Directorio Local";
+  document.getElementById("resAppCategory").innerText = getCategoryForApp(data.app_key);
 
   // Score Gauge
   const score = data.global_score;
@@ -267,39 +368,47 @@ async function runFleetAudit() {
   const scanningEl = document.getElementById("scanningState");
   const scanningTitle = document.getElementById("scanningAppTitle");
   
+  if (!isLocalServer && staticFleetData.length > 0) {
+    populateFleetTable(staticFleetData);
+    document.getElementById("fleetModal").classList.remove("hidden");
+    return;
+  }
+
   scanningEl.classList.remove("hidden");
   scanningTitle.innerText = "Auditando toda la flota de aplicaciones...";
 
   try {
     const res = await fetch("/api/audit-all", { method: "POST" });
     const results = await res.json();
-
-    const tbody = document.getElementById("fleetTableBody");
-    tbody.innerHTML = "";
-
-    results.forEach(r => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td><strong>${r.app_name}</strong></td>
-        <td><strong>${r.global_score}/100</strong></td>
-        <td><span class="grade-badge" style="color:${r.grade_color}; background:${r.grade_color}22;">${r.grade}</span></td>
-        <td><span style="color:${r.deal_breakers_count > 0 ? 'var(--accent-red)' : 'var(--accent-emerald)'}; font-weight:700;">${r.deal_breakers_count}</span></td>
-        <td>${r.pillars.security.score}/100</td>
-        <td>${r.pillars.ip_licenses.score}/100</td>
-        <td>${r.pillars.architecture.score}/100</td>
-        <td>${r.pillars.resilience.score}/100</td>
-        <td>${r.pillars.governance.score}/100</td>
-        <td><button class="btn btn-outline btn-sm" onclick='viewFleetAppDetail(${JSON.stringify(r.app_key)})'>Ver</button></td>
-      `;
-      tbody.appendChild(tr);
-    });
-
+    populateFleetTable(results);
     document.getElementById("fleetModal").classList.remove("hidden");
   } catch (e) {
     alert("❌ Error al auditar la flota: " + e.message);
   } finally {
     scanningEl.classList.add("hidden");
   }
+}
+
+function populateFleetTable(results) {
+  const tbody = document.getElementById("fleetTableBody");
+  tbody.innerHTML = "";
+
+  results.forEach(r => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td><strong>${r.app_name}</strong></td>
+      <td><strong>${r.global_score}/100</strong></td>
+      <td><span class="grade-badge" style="color:${r.grade_color}; background:${r.grade_color}22;">${r.grade}</span></td>
+      <td><span style="color:${r.deal_breakers_count > 0 ? 'var(--accent-red)' : 'var(--accent-emerald)'}; font-weight:700;">${r.deal_breakers_count}</span></td>
+      <td>${r.pillars.security.score}/100</td>
+      <td>${r.pillars.ip_licenses.score}/100</td>
+      <td>${r.pillars.architecture.score}/100</td>
+      <td>${r.pillars.resilience.score}/100</td>
+      <td>${r.pillars.governance.score}/100</td>
+      <td><button class="btn btn-outline btn-sm" onclick='viewFleetAppDetail(${JSON.stringify(r.app_key)})'>Ver</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
 }
 
 window.viewFleetAppDetail = function(appKey) {
