@@ -136,7 +136,13 @@ async function loadApps() {
         exists: true,
         score: d.global_score,
         grade: d.grade,
-        path: d.project_path
+        path: d.project_path,
+        last_audit: {
+          timestamp: d.timestamp,
+          date: d.date,
+          score: d.global_score,
+          grade: d.grade
+        }
       }));
       renderAppsGrid(ecosystemApps);
     } else {
@@ -145,6 +151,30 @@ async function loadApps() {
   } catch (err) {
     grid.innerHTML = `<div class="error-state">Modo Cloud: ${err.message}</div>`;
   }
+}
+
+function formatAuditTime(auditObj) {
+  if (!auditObj || (!auditObj.timestamp && !auditObj.date)) {
+    return `<div class="app-card-audit-time unperformed">
+      <span class="audit-badge-icon">🕒</span>
+      <span>Sin auditoría realizada aún</span>
+    </div>`;
+  }
+  const raw = auditObj.timestamp || auditObj.date;
+  let formatted = raw;
+  const parts = raw.split(" ");
+  if (parts.length >= 2) {
+    const d = parts[0].split("-");
+    const t = parts[1].substring(0, 5); // HH:MM
+    if (d.length === 3) formatted = `${d[2]}/${d[1]}/${d[0]} ${t}`;
+  } else if (raw.includes("-")) {
+    const d = raw.split("-");
+    if (d.length === 3) formatted = `${d[2]}/${d[1]}/${d[0]}`;
+  }
+  return `<div class="app-card-audit-time has-audit">
+    <span class="audit-badge-icon">🕒</span>
+    <span>Última auditoría: <strong class="audit-date-highlight">${formatted}</strong></span>
+  </div>`;
 }
 
 function getIconForApp(key) {
@@ -175,7 +205,9 @@ function renderAppsGrid(apps) {
     const card = document.createElement("div");
     card.className = `app-card ${app.exists ? "" : "disabled"}`;
     
-    const scoreBadge = app.score ? `<span class="badge-app" style="float:right;">${app.grade} (${app.score}/100)</span>` : "";
+    const scoreVal = app.last_audit ? app.last_audit.score : app.score;
+    const gradeVal = app.last_audit ? app.last_audit.grade : app.grade;
+    const scoreBadge = scoreVal ? `<span class="badge-app" style="float:right;">${gradeVal} (${scoreVal}/100)</span>` : "";
 
     card.innerHTML = `
       <div>
@@ -188,6 +220,7 @@ function renderAppsGrid(apps) {
           ${scoreBadge}
         </div>
         <div class="app-card-role">${app.role}</div>
+        ${formatAuditTime(app.last_audit)}
       </div>
       <div class="app-card-footer">
         <span class="${app.exists ? 'status-badge-ready' : 'status-badge-missing'}">
@@ -312,6 +345,23 @@ function renderResults(data) {
   renderPillar("arch", data.pillars.architecture);
   renderPillar("res", data.pillars.resilience);
   renderPillar("gov", data.pillars.governance);
+
+  // Actualizar reactivamente la tarjeta en la cuadricula
+  if (data.app_key && ecosystemApps.length > 0) {
+    const matched = ecosystemApps.find(a => a.key === data.app_key);
+    if (matched) {
+      matched.last_audit = {
+        timestamp: data.timestamp,
+        date: data.date,
+        score: data.global_score,
+        grade: data.grade,
+        grade_color: data.grade_color
+      };
+      matched.score = data.global_score;
+      matched.grade = data.grade;
+      renderAppsGrid(ecosystemApps);
+    }
+  }
 
   // Scroll suave hacia los resultados
   resultsEl.scrollIntoView({ behavior: "smooth" });
