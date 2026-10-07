@@ -135,14 +135,15 @@
         </div>
       </div>
 
-      <!-- Pestañas de los 5 Pilares -->
+      <!-- Pestañas de los 6 Pilares de Inversión -->
       <div class="pillars-container">
         <div class="tabs-header">
           <button class="tab-btn active" data-tab="tab-sec">🛡️ 1. Ciberseguridad & Zero-Leakage</button>
           <button class="tab-btn" data-tab="tab-ip">📜 2. Propiedad Intelectual & Licencias</button>
           <button class="tab-btn" data-tab="tab-arch">🏗️ 3. Arquitectura & Deuda Técnica</button>
-          <button class="tab-btn" data-tab="tab-res">⚡ 4. Resiliencia & Producción</button>
-          <button class="tab-btn" data-tab="tab-gov">🏛️ 5. Gobernanza & Git</button>
+          <button class="tab-btn" data-tab="tab-comm">💼 4. Vendibilidad M&A & Mercado</button>
+          <button class="tab-btn" data-tab="tab-res">⚡ 5. Resiliencia & Producción</button>
+          <button class="tab-btn" data-tab="tab-gov">🏛️ 6. Gobernanza & Git</button>
         </div>
 
         <!-- Contenido Pestaña 1: Seguridad -->
@@ -173,15 +174,27 @@
         <div class="tab-content" id="tab-arch">
           <div class="pillar-summary-bar">
             <div>
-              <h3 id="archPillarTitle">Arquitectura, Métricas & Deuda Técnica</h3>
-              <p id="archPillarDesc">Detección de archivos monolito (>800 líneas), marcadores TODO/FIXME, llamadas de debug y soporte de tests.</p>
+              <h3 id="archPillarTitle">Arquitectura, Métricas & Deuda Técnica (Rigor Hardcore)</h3>
+              <p id="archPillarDesc">Penalización estricta por ausencia de tests unitarios (-28 pts), archivos monolito (>800 líneas) y tipado estático.</p>
             </div>
             <div class="pillar-score-badge" id="archScoreBadge">100/100</div>
           </div>
           <div class="findings-list" id="archFindings"></div>
         </div>
 
-        <!-- Contenido Pestaña 4: Resiliencia & Producción -->
+        <!-- Contenido Pestaña 4: Vendibilidad M&A -->
+        <div class="tab-content" id="tab-comm">
+          <div class="pillar-summary-bar">
+            <div>
+              <h3 id="commPillarTitle">Vendibilidad M&A & Viabilidad Comercial (Exit Readiness)</h3>
+              <p id="commPillarDesc">Facilidad de venta en Acquire.com / Flippa, modelo de monetización, Key-Person Risk y foso operativo (Moat).</p>
+            </div>
+            <div class="pillar-score-badge" id="commScoreBadge">100/100</div>
+          </div>
+          <div class="findings-list" id="commFindings"></div>
+        </div>
+
+        <!-- Contenido Pestaña 5: Resiliencia & Producción -->
         <div class="tab-content" id="tab-res">
           <div class="pillar-summary-bar">
             <div>
@@ -193,7 +206,7 @@
           <div class="findings-list" id="resFindings"></div>
         </div>
 
-        <!-- Contenido Pestaña 5: Gobernanza & Git -->
+        <!-- Contenido Pestaña 6: Gobernanza & Git -->
         <div class="tab-content" id="tab-gov">
           <div class="pillar-summary-bar">
             <div>
@@ -211,7 +224,7 @@
     <section id="fleetModal" class="fleet-section hidden">
       <div class="fleet-card">
         <div class="fleet-header">
-          <h2>🏁 Matriz Comparativa de Due Diligence — Flota Completa</h2>
+          <h2>🏁 Matriz Comparativa de Due Diligence — Flota Completa (Rigor Institucional)</h2>
           <button id="btnCloseFleet" class="btn btn-outline">Cerrar Matriz</button>
         </div>
         <div class="fleet-table-wrap">
@@ -220,11 +233,12 @@
               <tr>
                 <th>Aplicación</th>
                 <th>Score</th>
-                <th>Grado</th>
+                <th>Grado M&A</th>
                 <th>Deal Breakers</th>
                 <th>Seguridad</th>
                 <th>IP / Licencias</th>
                 <th>Arquitectura</th>
+                <th>Vendibilidad M&A</th>
                 <th>Resiliencia</th>
                 <th>Git & Gov</th>
                 <th>Acción</th>
