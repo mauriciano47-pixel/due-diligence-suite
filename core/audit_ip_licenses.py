@@ -98,7 +98,7 @@ def audit_ip_licenses(project_path: str) -> dict:
     pkg_path = root / "package.json"
     if pkg_path.exists():
         try:
-            pkg_data = json.loads(pkg_path.read_text(encoding="utf-8", errors="ignore"))
+            pkg_data = json.loads(pkg_path.read_text(encoding="utf-8-sig", errors="ignore"))
             pkg_license = pkg_data.get("license", "")
             pkg_author = pkg_data.get("author", "")
             

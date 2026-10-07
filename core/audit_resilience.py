@@ -9,7 +9,7 @@ from pathlib import Path
 
 IGNORE_DIRS = {
     "node_modules", ".git", ".venv", "venv", "__pycache__", "dist",
-    "build", ".expo", ".next", ".cache"
+    "build", ".expo", ".next", ".cache", "coverage", ".docusaurus", "scratch"
 }
 
 def audit_resilience(project_path: str) -> dict:

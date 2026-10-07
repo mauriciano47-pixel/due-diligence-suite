@@ -128,28 +128,53 @@ def audit_architecture(project_path: str) -> dict:
                                 "line": idx
                             })
 
-    # Resumen de tests
+    # Cálculo del Score Rigor Institucional (Base 100)
+    score = 100
+    
+    # 1. Penalización severa por falta de tests (estándar M&A de Silicon Valley)
     if test_files_count == 0 and not has_tests_dir:
+        score -= 28
+        findings.append({
+            "severity": "HIGH",
+            "title": "Ausencia total de pruebas automatizadas (Zero-Test Codebase)",
+            "detail": "No se detectaron archivos de prueba (*.test.*, test_*.py). En Tech Due Diligence institucional, un comprador descuenta entre 20% y 40% de la valoración por el riesgo crítico de regresiones y el coste de reingeniería de QA.",
+            "file": "tests/"
+        })
+    elif test_files_count < 3:
+        score -= 12
         findings.append({
             "severity": "MEDIUM",
-            "title": "Ausencia de suite de pruebas unitarias automatizadas",
-            "detail": "No se detectaron archivos de prueba (*.test.*, test_*.py). Una suite de tests formal incrementa significativamente la valoración en Tech Due Diligence.",
+            "title": "Cobertura de pruebas embrionaria (<3 suites de test)",
+            "detail": "Existen tests mínimos pero la cobertura es simbólica en relación al volumen de líneas de código.",
             "file": "tests/"
         })
 
-    # Cálculo del Score (Base 100)
-    score = 100
-    score -= len(god_files) * 6
-    if todos_count > 10:
-        score -= 5
-    elif todos_count > 20:
+    # 2. Penalización por monolitos (God Files >800 líneas)
+    god_file_penalty = min(35, len(god_files) * 8)
+    score -= god_file_penalty
+
+    # 3. Penalización por deuda técnica acumulada (TODOs/FIXMEs)
+    if todos_count > 15:
         score -= 10
-    if debug_calls_count > 20:
+    elif todos_count > 5:
         score -= 5
-    if test_files_count == 0 and not has_tests_dir:
+
+    # 4. Debug calls residuales (console.log)
+    if debug_calls_count > 15:
+        score -= 8
+    elif debug_calls_count > 5:
+        score -= 4
+
+    # 5. Tipado estricto vs JS dinámico
+    has_js_ts = any(l in language_breakdown for l in ["JavaScript", "TypeScript", "React JSX", "React TSX"])
+    if has_js_ts and not has_typescript:
         score -= 10
-    if has_typescript:
-        score += 5 # Bonificación por tipado estricto
+        findings.append({
+            "severity": "MEDIUM",
+            "title": "Código en JavaScript dinámico sin TypeScript estricto",
+            "detail": "Falta de tipado estático en tiempo de compilación. En auditorías de gran escala incrementa la tasa de errores en runtime.",
+            "file": "tsconfig.json"
+        })
 
     score = max(0, min(100, score))
     status = "EXCELLENT" if score >= 85 else ("GOOD" if score >= 70 else ("WARNING" if score >= 50 else "DANGER"))

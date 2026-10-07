@@ -343,6 +343,7 @@ function renderResults(data) {
   renderPillar("sec", data.pillars.security);
   renderPillar("ip", data.pillars.ip_licenses);
   renderPillar("arch", data.pillars.architecture);
+  if (data.pillars.commercial) renderPillar("comm", data.pillars.commercial);
   renderPillar("res", data.pillars.resilience);
   renderPillar("gov", data.pillars.governance);
 
@@ -445,6 +446,7 @@ function populateFleetTable(results) {
 
   results.forEach(r => {
     const tr = document.createElement("tr");
+    const commScore = (r.pillars && r.pillars.commercial) ? r.pillars.commercial.score : 'N/A';
     tr.innerHTML = `
       <td><strong>${r.app_name}</strong></td>
       <td><strong>${r.global_score}/100</strong></td>
@@ -453,6 +455,7 @@ function populateFleetTable(results) {
       <td>${r.pillars.security.score}/100</td>
       <td>${r.pillars.ip_licenses.score}/100</td>
       <td>${r.pillars.architecture.score}/100</td>
+      <td>${commScore}/100</td>
       <td>${r.pillars.resilience.score}/100</td>
       <td>${r.pillars.governance.score}/100</td>
       <td><button class="btn btn-outline btn-sm" onclick='viewFleetAppDetail(${JSON.stringify(r.app_key)})'>Ver</button></td>
