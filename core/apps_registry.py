@@ -48,13 +48,13 @@ ECOSYSTEM_APPS = [
     },
     {
         "key": "vitrodiag",
-        "name": "VitroDiag",
-        "role": "Plataforma de Diagnóstico In-Vitro & Asistente Clínico IA",
+        "name": "VitroDiag NEXUS",
+        "role": "Diagnóstico Óptico Asistido por IA y Control de Moldería en Máquinas I.S. (Envases de Vidrio)",
         "primary_path": r"C:\Users\mauro\vitrodiag",
         "fallback_path": None,
         "obsidian_vault": "cerebro_vitrodiag",
-        "icon": "🔬",
-        "category": "Diagnóstico In-Vitro"
+        "icon": "🏭",
+        "category": "Manufactura Industrial de Vidrio"
     },
     {
         "key": "sentinel",
