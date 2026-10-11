@@ -95,6 +95,16 @@ ECOSYSTEM_APPS = [
         "obsidian_vault": "cerebro_crypto_analyzer",
         "icon": "📈",
         "category": "Fintech & Trading Cuantitativo"
+    },
+    {
+        "key": "nutralive",
+        "name": "NutraLive",
+        "role": "Plataforma de Nutrición Terapéutica de Precisión, Escudo Hepático y Acompañamiento Clínico en Dietas Estrictas (MASLD)",
+        "primary_path": r"C:\Users\mauro\OneDrive\Documentos\nutralive",
+        "fallback_path": None,
+        "obsidian_vault": "cerebro_nutralive",
+        "icon": "🥗",
+        "category": "Salud & Nutrición Clínica Terapéutica"
     }
 ]
 

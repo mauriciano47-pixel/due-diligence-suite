@@ -28,7 +28,8 @@ VAULT_MAP = {
     "sentinel": ("cerebro_sentinel", "Dossier_Due_Diligence_SENTINEL.md"),
     "tramitefacil": ("cerebro_tramitefacil", "Dossier_Due_Diligence_TramiteFacil.md"),
     "vitrina": ("cerebro_vitrina", "Dossier_Due_Diligence_Vitrina.md"),
-    "crypto_analyzer": ("cerebro_crypto_analyzer", "Dossier_Due_Diligence_Crypto_Analyzer.md")
+    "crypto_analyzer": ("cerebro_crypto_analyzer", "Dossier_Due_Diligence_Crypto_Analyzer.md"),
+    "nutralive": ("cerebro_nutralive", "Dossier_Due_Diligence_NutraLive.md")
 }
 
 def sync_to_obsidian():
@@ -72,9 +73,9 @@ def sync_to_obsidian():
     master_md = f"""# 🏛️ Matriz Maestra de Tech Due Diligence — Flota Completa (2026)
 
 **Fecha de Consolidación:** {now_str}  
-**Auditor Responsable:** V-GUARD Due Diligence Suite (v1.5.0)  
+**Auditor Responsable:** V-GUARD Due Diligence Suite (v2.0 Hardcore Reality)  
 **Titularidad & Propiedad Exclusiva:** Mauricio Uribe Maldonado  
-**Ecosistema:** 9 Aplicaciones de Software Propietario  
+**Ecosistema:** 10 Aplicaciones de Software Propietario  
 **URL Producción Cloud:** [https://mauriciano47-pixel.github.io/due-diligence-suite/](https://mauriciano47-pixel.github.io/due-diligence-suite/)  
 **Servicio Local 24/7:** `http://localhost:7770`
 
@@ -89,10 +90,10 @@ def sync_to_obsidian():
 
 ---
 
-## 📋 Tabla Comparativa de Calificación de la Flota
+## 📋 Tabla Comparativa de Calificación de la Flota (7 Pilares)
 
-| Aplicación | Score Global | Grado M&A | Veredicto | Deal Breakers | Ciberseguridad (30%) | IP & Licencias (25%) | Arquitectura (20%) | Resiliencia (15%) | Gobernanza (10%) | Dossier Detallado |
-| :--- | :---: | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
+| Aplicación | Score Global | Grado M&A | Veredicto | Deal Breakers | Ciberseguridad (20%) | IP & Licencias (15%) | Arquitectura (15%) | Form Shield & UX (15%) | Comercial (15%) | Resiliencia (10%) | Gobernanza (10%) | Dossier Detallado |
+| :--- | :---: | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
 """
 
     for d in data:
@@ -100,13 +101,15 @@ def sync_to_obsidian():
         sec_score = p.get("security", {}).get("score", 0)
         ip_score = p.get("ip_licenses", {}).get("score", 0)
         arch_score = p.get("architecture", {}).get("score", 0)
+        form_score = p.get("form_shield", {}).get("score", 0)
+        comm_score = p.get("commercial", {}).get("score", 0)
         res_score = p.get("resilience", {}).get("score", 0)
         gov_score = p.get("governance", {}).get("score", 0)
         
         vault_name, filename = VAULT_MAP.get(d.get("app_key"), ("cerebro_vguard_seguridad", ""))
         link = f"[[{vault_name}/{filename[:-3]}|Ver Dossier]]"
 
-        master_md += f"| **{d.get('app_name')}** | **{d.get('global_score')}/100** | `{d.get('grade')}` | {d.get('grade_label')} | {d.get('deal_breakers_count')} | {sec_score}/100 | {ip_score}/100 | {arch_score}/100 | {res_score}/100 | {gov_score}/100 | {link} |\n"
+        master_md += f"| **{d.get('app_name')}** | **{d.get('global_score')}/100** | `{d.get('grade')}` | {d.get('grade_label')} | {d.get('deal_breakers_count')} | {sec_score}/100 | {ip_score}/100 | {arch_score}/100 | {form_score}/100 | {comm_score}/100 | {res_score}/100 | {gov_score}/100 | {link} |\n"
 
     master_md += f"""
 ---
@@ -125,7 +128,11 @@ def sync_to_obsidian():
 - Arquitectura desacoplada y modular. Los monolitos identificados en CambioYa están mapeados para los checkpoints evolutivos de versión.
 - Soporte moderno con TypeScript, Tailwind / Cyber-Obsidian Royal UI y Django Daphne ASGI en el backend.
 
-### 4. Resiliencia & Producción
+### 4. Ergonomía de Formularios & UX Móvil (Form Shield)
+- Prevención de deserciones en autenticación: atributos nativos `autoComplete`, `autoCapitalize="none"`, `name` y sanitización `.trim()`.
+- Erradicación de "Modal Jail": modales con botón de cierre explícito y modo explorador / invitado sin pantalla bloqueada.
+
+### 5. Resiliencia & Producción
 - Protocolo Anti-Timeout en Gemini AI (<= 8.000 ms) activo para mitigar bloqueos de latencia.
 - Persistencia Offline-First implementada mediante SafeStorage / AsyncStorage / localStorage para tolerancia a fallos de red.
 
@@ -141,6 +148,7 @@ def sync_to_obsidian():
 - [[cerebro_tramitefacil/Dossier_Due_Diligence_TramiteFacil|Dossier TrámiteFácil]]
 - [[cerebro_vitrina/Dossier_Due_Diligence_Vitrina|Dossier Vitrina & Launchpad]]
 - [[cerebro_crypto_analyzer/Dossier_Due_Diligence_Crypto_Analyzer|Dossier Crypto Pattern Analyzer]]
+- [[cerebro_nutralive/Dossier_Due_Diligence_NutraLive|Dossier NutraLive]]
 
 *Certificado y consolidado por V-GUARD Sentinel para Mauricio Uribe Maldonado.*
 """

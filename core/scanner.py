@@ -10,19 +10,23 @@ import datetime
 from pathlib import Path
 
 from audit_security import audit_security
+from audit_sca import audit_sca
 from audit_ip_licenses import audit_ip_licenses
 from audit_architecture import audit_architecture
+from audit_frontend_forms import audit_frontend_forms
 from audit_resilience import audit_resilience
 from audit_governance import audit_governance
 from audit_commercial import audit_commercial
 
 WEIGHTS = {
-    "security": 0.25,      # 25% Ciberseguridad & Zero-Leakage
-    "ip_licenses": 0.20,   # 20% Propiedad Intelectual & Licencias
-    "architecture": 0.20,  # 20% Arquitectura & Deuda Técnica (Tests & Monolitos)
+    "security": 0.15,      # 15% Ciberseguridad & Zero-Leakage (SAST)
+    "sca": 0.10,           # 10% Seguridad de Dependencias & SCA (CVEs / Supply Chain)
+    "ip_licenses": 0.15,   # 15% Propiedad Intelectual & Licencias
+    "architecture": 0.15,  # 15% Arquitectura & Deuda Técnica (Tests & Monolitos)
+    "form_shield": 0.15,   # 15% Ergonomía de Formularios & UX Móvil (Form Shield)
     "commercial": 0.15,    # 15% Vendibilidad M&A & Viabilidad Comercial
-    "resilience": 0.10,    # 10% Resiliencia & Producción
-    "governance": 0.10     # 10% Gobernanza & Data Room
+    "resilience": 0.08,    # 8% Resiliencia & Producción
+    "governance": 0.07     # 7% Gobernanza & Data Room
 }
 
 def calculate_rating(score: float) -> tuple[str, str, str]:
@@ -47,10 +51,12 @@ def scan_project(project_path: str, app_key: str = None, app_name: str = None) -
 
     display_name = app_name or root.name
 
-    # Ejecutar auditoría en los 6 pilares
+    # Ejecutar auditoría en los 8 pilares
     sec_res = audit_security(project_path)
+    sca_res = audit_sca(project_path)
     ip_res = audit_ip_licenses(project_path)
     arch_res = audit_architecture(project_path)
+    form_res = audit_frontend_forms(project_path)
     comm_res = audit_commercial(project_path, app_key)
     res_res = audit_resilience(project_path)
     gov_res = audit_governance(project_path, app_key)
@@ -58,8 +64,10 @@ def scan_project(project_path: str, app_key: str = None, app_name: str = None) -
     # Calcular score global ponderado con rigor institucional
     global_score = round(
         (sec_res["score"] * WEIGHTS["security"]) +
+        (sca_res["score"] * WEIGHTS["sca"]) +
         (ip_res["score"] * WEIGHTS["ip_licenses"]) +
         (arch_res["score"] * WEIGHTS["architecture"]) +
+        (form_res["score"] * WEIGHTS["form_shield"]) +
         (comm_res["score"] * WEIGHTS["commercial"]) +
         (res_res["score"] * WEIGHTS["resilience"]) +
         (gov_res["score"] * WEIGHTS["governance"]),
@@ -72,7 +80,7 @@ def scan_project(project_path: str, app_key: str = None, app_name: str = None) -
     deal_breakers = []
     all_findings = []
 
-    for pilar_res in [sec_res, ip_res, arch_res, comm_res, res_res, gov_res]:
+    for pilar_res in [sec_res, sca_res, ip_res, arch_res, form_res, comm_res, res_res, gov_res]:
         for finding in pilar_res.get("findings", []):
             finding_copy = {**finding, "pilar": pilar_res["pilar"]}
             all_findings.append(finding_copy)
@@ -88,7 +96,7 @@ def scan_project(project_path: str, app_key: str = None, app_name: str = None) -
         grade=grade,
         grade_label=grade_label,
         deal_breakers=deal_breakers,
-        pillars=[sec_res, ip_res, arch_res, comm_res, res_res, gov_res]
+        pillars=[sec_res, sca_res, ip_res, arch_res, form_res, comm_res, res_res, gov_res]
     )
 
     return {
@@ -105,8 +113,10 @@ def scan_project(project_path: str, app_key: str = None, app_name: str = None) -
         "deal_breakers": deal_breakers,
         "pillars": {
             "security": sec_res,
+            "sca": sca_res,
             "ip_licenses": ip_res,
             "architecture": arch_res,
+            "form_shield": form_res,
             "commercial": comm_res,
             "resilience": res_res,
             "governance": gov_res
@@ -129,12 +139,14 @@ def generate_markdown_dossier(app_name, project_path, timestamp, score, grade, g
 
 | Pilar de Evaluación | Ponderación | Score Obtenido | Estado |
 | :--- | :---: | :---: | :---: |
-| 🛡️ **1. Ciberseguridad & Zero-Leakage** | 25% | **{pillars[0]['score']}/100** | {pillars[0]['status']} |
-| 📜 **2. Propiedad Intelectual & Licencias** | 20% | **{pillars[1]['score']}/100** | {pillars[1]['status']} |
-| 🏗️ **3. Arquitectura & Deuda Técnica** | 20% | **{pillars[2]['score']}/100** | {pillars[2]['status']} |
-| 💼 **4. Vendibilidad M&A & Viabilidad Comercial** | 15% | **{pillars[3]['score']}/100** | {pillars[3]['status']} |
-| ⚡ **5. Resiliencia & Producción** | 10% | **{pillars[4]['score']}/100** | {pillars[4]['status']} |
-| 🏛️ **6. Gobernanza & Data Room** | 10% | **{pillars[5]['score']}/100** | {pillars[5]['status']} |
+| 🛡️ **1. Ciberseguridad & Zero-Leakage (SAST)** | 15% | **{pillars[0]['score']}/100** | {pillars[0]['status']} |
+| 📦 **2. Seguridad de Dependencias & SCA (CVEs)** | 10% | **{pillars[1]['score']}/100** | {pillars[1]['status']} |
+| 📜 **3. Propiedad Intelectual & Licencias** | 15% | **{pillars[2]['score']}/100** | {pillars[2]['status']} |
+| 🏗️ **4. Arquitectura & Deuda Técnica** | 15% | **{pillars[3]['score']}/100** | {pillars[3]['status']} |
+| 📱 **5. Ergonomía de Formularios & UX Móvil** | 15% | **{pillars[4]['score']}/100** | {pillars[4]['status']} |
+| 💼 **6. Vendibilidad M&A & Viabilidad Comercial** | 15% | **{pillars[5]['score']}/100** | {pillars[5]['status']} |
+| ⚡ **7. Resiliencia & Producción** | 8% | **{pillars[6]['score']}/100** | {pillars[6]['status']} |
+| 🏛️ **8. Gobernanza & Data Room** | 7% | **{pillars[7]['score']}/100** | {pillars[7]['status']} |
 | **TOTAL PONDERADO** | **100%** | **{score}/100** | **{grade}** |
 
 ---

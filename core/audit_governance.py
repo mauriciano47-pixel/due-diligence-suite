@@ -25,6 +25,8 @@ def run_git(cmd_args, cwd):
     except Exception:
         return None
 
+from audit_git_forensics import audit_git_forensics
+
 def audit_governance(project_path: str, app_key: str = None) -> dict:
     root = Path(project_path)
     if not root.exists():
@@ -48,7 +50,18 @@ def audit_governance(project_path: str, app_key: str = None) -> dict:
     obsidian_cerebro_found = False
     obsidian_cerebro_name = "N/A"
 
-    # 1. Comprobar Git
+    # 1. Comprobar Git y ejecutar Forense de Autoría (Bus Factor)
+    forensics = audit_git_forensics(project_path)
+    forensics_metrics = forensics.get("metrics", {})
+    bus_factor = forensics_metrics.get("bus_factor", 1)
+    concentration_pct = forensics_metrics.get("concentration_pct", 100.0)
+    primary_author = forensics_metrics.get("primary_author", "N/A")
+    total_commits = forensics_metrics.get("total_commits", 0)
+
+    # Añadir hallazgos forenses
+    for f_find in forensics.get("findings", []):
+        findings.append(f_find)
+
     if is_git_repo:
         b_res = run_git(["branch", "--show-current"], root)
         if b_res:
@@ -71,12 +84,6 @@ def audit_governance(project_path: str, app_key: str = None) -> dict:
                     "severity": "MEDIUM",
                     "title": f"Árbol de trabajo con múltiples modificaciones sin commitear ({dirty_files_count} archivos)",
                     "detail": "Para una Due Diligence formal, el árbol de Git debe estar limpio y sincronizado con origin/main."
-                })
-            else:
-                findings.append({
-                    "severity": "LOW",
-                    "title": f"Árbol de trabajo activo ({dirty_files_count} archivos modificados)",
-                    "detail": "Modificaciones menores pendientes de checkpoint."
                 })
         else:
             findings.append({
@@ -130,13 +137,15 @@ def audit_governance(project_path: str, app_key: str = None) -> dict:
         })
 
     # Cálculo del Score (Base 100)
-    score = 70
+    score = 65
     if is_git_repo:
         score += 15
     if has_readme:
         score += 5
     if obsidian_cerebro_found:
         score += 10
+    if forensics_metrics.get("turnkey_ready"):
+        score += 5
     if dirty_files_count > 20:
         score -= 10
 
@@ -147,7 +156,7 @@ def audit_governance(project_path: str, app_key: str = None) -> dict:
         "pilar": "Gobernanza & Data Room",
         "score": score,
         "status": status,
-        "summary": f"Git: {'✅ Activo' if is_git_repo else '❌ Inactivo'} ({branch} • {last_commit_hash}). Obsidian: {'✅ ' + obsidian_cerebro_name if obsidian_cerebro_found else '⚠️ No vinculado'}. README: {'✅' if has_readme else '❌'}.",
+        "summary": f"Git: {'✅ Activo' if is_git_repo else '❌ Inactivo'} ({branch} • {last_commit_hash}). Bus Factor: {bus_factor} ({concentration_pct}% en {primary_author}). Obsidian: {'✅ ' + obsidian_cerebro_name if obsidian_cerebro_found else '⚠️ No vinculado'}.",
         "findings": findings,
         "metrics": {
             "is_git_repo": is_git_repo,
@@ -155,6 +164,10 @@ def audit_governance(project_path: str, app_key: str = None) -> dict:
             "last_commit_hash": last_commit_hash,
             "last_commit_date": last_commit_date,
             "last_commit_msg": last_commit_msg,
+            "total_commits": total_commits,
+            "bus_factor": bus_factor,
+            "primary_author": primary_author,
+            "concentration_pct": concentration_pct,
             "dirty_files_count": dirty_files_count,
             "has_readme": has_readme,
             "has_changelog": has_changelog,

@@ -53,8 +53,10 @@ def audit_architecture(project_path: str) -> dict:
     debug_calls_count = 0
     test_files_count = 0
 
-    has_typescript = (root / "tsconfig.json").exists()
-    has_linter = any((root / f).exists() for f in [".eslintrc", ".eslintrc.json", ".eslintrc.js", "eslint.config.js", ".hintrc"])
+    has_typescript = (root / "tsconfig.json").exists() or any((root / d / "tsconfig.json").exists() for d in ["crypto-frontend", "frontend", "client", "src", "web"])
+    has_linter = any((root / f).exists() for f in [".eslintrc", ".eslintrc.json", ".eslintrc.js", "eslint.config.js", ".hintrc"]) or any(
+        (root / d / f).exists() for d in ["crypto-frontend", "frontend", "client", "src", "web"] for f in [".eslintrc", ".eslintrc.json", ".eslintrc.js", "eslint.config.js", ".hintrc"]
+    )
     has_tests_dir = (root / "tests").exists() or (root / "test").exists() or (root / "__tests__").exists()
 
     for dirpath, dirnames, filenames in os.walk(root):
@@ -131,23 +133,41 @@ def audit_architecture(project_path: str) -> dict:
     # Cálculo del Score Rigor Institucional (Base 100)
     score = 100
     
-    # 1. Penalización severa por falta de tests (estándar M&A de Silicon Valley)
-    if test_files_count == 0 and not has_tests_dir:
-        score -= 28
-        findings.append({
-            "severity": "HIGH",
-            "title": "Ausencia total de pruebas automatizadas (Zero-Test Codebase)",
-            "detail": "No se detectaron archivos de prueba (*.test.*, test_*.py). En Tech Due Diligence institucional, un comprador descuenta entre 20% y 40% de la valoración por el riesgo crítico de regresiones y el coste de reingeniería de QA.",
-            "file": "tests/"
-        })
-    elif test_files_count < 3:
-        score -= 12
-        findings.append({
-            "severity": "MEDIUM",
-            "title": "Cobertura de pruebas embrionaria (<3 suites de test)",
-            "detail": "Existen tests mínimos pero la cobertura es simbólica en relación al volumen de líneas de código.",
-            "file": "tests/"
-        })
+    # 1. Auditoría Dinámica de Pruebas Automatizadas (Estándar M&A de Silicon Valley)
+    from audit_test_runner import audit_test_runner
+    test_run_res = audit_test_runner(project_path)
+    for t_find in test_run_res.get("findings", []):
+        findings.append(t_find)
+
+    if test_run_res.get("executed"):
+        if test_run_res.get("failed_count", 0) > 0:
+            score -= 30
+        elif test_run_res.get("pass_rate") == 100.0:
+            if test_run_res.get("total_tests", 0) < 5:
+                score -= 6
+                findings.append({
+                    "severity": "LOW",
+                    "title": "Suite de tests reducida (<5 aserciones)",
+                    "detail": f"Solo se ejecutan {test_run_res.get('total_tests')} pruebas automáticas. Recomendado expandir cobertura.",
+                    "file": "tests/"
+                })
+    else:
+        if test_files_count == 0 and not has_tests_dir:
+            score -= 28
+            findings.append({
+                "severity": "HIGH",
+                "title": "Ausencia total de pruebas automatizadas (Zero-Test Codebase)",
+                "detail": "No se detectaron archivos de prueba ni runner ejecutable. En Tech Due Diligence institucional, un comprador descuenta entre 20% y 40% de la valoración por el riesgo crítico de regresiones.",
+                "file": "tests/"
+            })
+        else:
+            score -= 12
+            findings.append({
+                "severity": "MEDIUM",
+                "title": "Archivos de prueba detectados pero sin runner dinámico verificado",
+                "detail": "Existen archivos de test pero no se ejecutó una suite automatizada vía 'npm test' o 'pytest'.",
+                "file": "package.json"
+            })
 
     # 2. Penalización por monolitos (God Files >800 líneas)
     god_file_penalty = min(35, len(god_files) * 8)
@@ -176,6 +196,22 @@ def audit_architecture(project_path: str) -> dict:
             "file": "tsconfig.json"
         })
 
+    # 6. Auditoría de Complejidad Ciclomática (McCabe AST / SonarQube Standard)
+    from audit_complexity import audit_complexity
+    comp_res = audit_complexity(project_path)
+    comp_metrics = comp_res.get("metrics", {})
+    max_complexity = comp_metrics.get("max_complexity", 1)
+    avg_complexity = comp_metrics.get("avg_complexity", 1.0)
+    critical_funcs_count = comp_metrics.get("critical_functions_count", 0)
+
+    for c_find in comp_res.get("findings", []):
+        findings.append(c_find)
+
+    if max_complexity > 30:
+        score -= 12
+    elif max_complexity > 20:
+        score -= 6
+
     score = max(0, min(100, score))
     status = "EXCELLENT" if score >= 85 else ("GOOD" if score >= 70 else ("WARNING" if score >= 50 else "DANGER"))
 
@@ -183,7 +219,7 @@ def audit_architecture(project_path: str) -> dict:
         "pilar": "Arquitectura & Deuda Técnica",
         "score": score,
         "status": status,
-        "summary": f"{total_files} archivos ({total_code_lines:,} SLOC). {len(god_files)} archivos >{GOD_FILE_THRESHOLD} líneas. {todos_count} marcadores TODO/FIXME. {test_files_count} archivos de test.",
+        "summary": f"{total_files} archivos ({total_code_lines:,} SLOC). {len(god_files)} archivos >{GOD_FILE_THRESHOLD}l. Complejidad Máx: V(G)={max_complexity} (Promedio: {avg_complexity}). {test_files_count} archivos de test.",
         "findings": findings,
         "metrics": {
             "total_files": total_files,
@@ -196,6 +232,7 @@ def audit_architecture(project_path: str) -> dict:
             "debug_calls_count": debug_calls_count,
             "test_files_count": test_files_count,
             "has_typescript": has_typescript,
-            "has_linter": has_linter
+            "has_linter": has_linter,
+            "test_run": test_run_res
         }
     }

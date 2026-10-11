@@ -4,6 +4,7 @@ V-GUARD Due Diligence Suite - Módulo de Vendibilidad M&A & Viabilidad Comercial
 Evalúa: Potencial de salida (Exit Readiness), modelo de monetización, Key-Person Risk,
 barrera de entrada (Moat) y complejidad operativa para compradores en Acquire.com / Flippa / B2B.
 """
+import os
 from pathlib import Path
 
 # Catálogo de inteligencia comercial de la flota
@@ -39,14 +40,24 @@ COMMERCIAL_PROFILES = {
         "exit_recommendation": "Venta en Flippa orientada a influencers fitness o comunidades de desarrollo personal estoico."
     },
     "vitrodiag": {
-        "model": "SaaS B2B Catálogo Clínico & Diagnóstico IA",
-        "market": "Laboratorios Clínicos / Distribuidores de Reactivos",
-        "salability": "ALTA (B2B Nicho)",
-        "salability_score": 84,
-        "take_rate_potential": "Suscripción institucional ($99 - $299/mes por laboratorio).",
-        "key_person_risk": "BAJO (Base de datos curada de 100+ reactivos y arquitectura frontend modular).",
-        "operational_moat": "Base de datos propietaria de analizadores y reactivos con Gemini Vision especializado.",
-        "exit_recommendation": "Venta directa B2B a un distribuidor médico regional o venta en MicroAcquire como herramienta B2B vertical."
+        "model": "Diagnóstico Óptico Asistido por IA y Control de Moldería en Máquinas I.S. (B2B Industrial)",
+        "market": "Plantas de Fabricación de Envases de Vidrio Hueco (Cristalerías / Botellas)",
+        "salability": "ALTA (B2B Industrial Pesado)",
+        "salability_score": 88,
+        "take_rate_potential": "Licencia SaaS Industrial por planta/línea de producción ($500 - $2,500 USD/mes).",
+        "key_person_risk": "BAJO (Catálogo multimodal de 111 defectos en caliente/frío con Gemini Vision y plomada digital láser).",
+        "operational_moat": "Reducción de brecha de detección de 60 min a 30 seg a pie de máquina en línea caliente (Hot End) y catálogo de defectos especializado.",
+        "exit_recommendation": "Venta directa de tecnología a fabricantes globales de maquinaria I.S. (Bucher Emhart Glass, Bottero) o plantas de vidrio (Owens-Illinois, Verallia, Vidrala)."
+    },
+    "nutralive": {
+        "model": "Micro-SaaS Clínico & Nutrición Terapéutica (B2C Familias & B2B Centros Pediátricos)",
+        "market": "Familias con niños con esteatosis (MASLD) / Centros Médicos Pediátricos / Nutricionistas",
+        "salability": "ALTA (Vertical de Salud Metabólica Pediátrica)",
+        "salability_score": 88,
+        "take_rate_potential": "Suscripción B2C Guardián Familiar ($4.99/mes o $39.99/año) y Licencia B2B Institucional ($29/mes o $249/año).",
+        "key_person_risk": "BAJO-MEDIO (Arquitectura desacoplada React 19 Vite PWA + Django REST, contratos Stripe y algoritmos de tamizaje formalizados).",
+        "operational_moat": "Motor algorítmico de tamizaje de JMAF/fructosa oculta, normalización pediátrica ALT/AST (<25 U/L) y biblioteca de 50+ recetas familiares.",
+        "exit_recommendation": "Publicar en Acquire.com / Flippa como Micro-SaaS de Nutrición Terapéutica o licenciar a aseguradoras y cadenas de salud pediátrica por $25k-$60k USD."
     },
     "sentinel": {
         "model": "B2B Privacy & Compliance / Micro-SaaS RGPD",
@@ -119,15 +130,23 @@ def audit_commercial(project_path: str, app_key: str = None) -> dict:
 
     # Detección de pasarela de pago (Stripe / PayPal / MercadoPago) en el código
     has_payment_gateway = False
-    for ext in [".js", ".jsx", ".ts", ".tsx", ".py", ".html"]:
-        for f in root.glob(f"*{ext}"):
-            try:
-                txt = f.read_text(encoding="utf-8", errors="ignore")
-                if any(k in txt.lower() for k in ["stripe", "mercadopago", "paypal", "lemonsqueezy", "paddle"]):
-                    has_payment_gateway = True
-                    break
-            except Exception:
-                pass
+    excluded_dirs = {'.git', 'node_modules', '.venv', 'venv', 'dist', '__pycache__', '.next', '.expo', 'scratch', 'build', '.cache'}
+    payment_keywords = ["stripe", "mercadopago", "paypal", "lemonsqueezy", "paddle"]
+    target_exts = {".js", ".jsx", ".ts", ".tsx", ".py", ".html"}
+
+    for dirpath, dirnames, filenames in os.walk(root):
+        dirnames[:] = [d for d in dirnames if d not in excluded_dirs and not d.startswith(".")]
+        for fname in filenames:
+            ext = os.path.splitext(fname)[1].lower()
+            if ext in target_exts and not fname.endswith(".min.js"):
+                fpath = Path(dirpath) / fname
+                try:
+                    txt = fpath.read_text(encoding="utf-8", errors="ignore")
+                    if any(k in txt.lower() for k in payment_keywords):
+                        has_payment_gateway = True
+                        break
+                except Exception:
+                    pass
         if has_payment_gateway:
             break
 
