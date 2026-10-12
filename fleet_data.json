@@ -1008,12 +1008,12 @@
     "app_key": "ataraxia",
     "app_name": "Ataraxia",
     "project_path": "C:\\Users\\mauro\\OneDrive\\Documentos\\ATARAXIA_APP",
-    "timestamp": "2026-10-11 17:31:34",
-    "date": "2026-10-11",
-    "global_score": 88.4,
-    "grade": "AA",
-    "grade_label": "Producción Robusta / Apto para Ronda",
-    "grade_color": "#00e5ff",
+    "timestamp": "2026-10-12 17:30:38",
+    "date": "2026-10-12",
+    "global_score": 90.8,
+    "grade": "AAA",
+    "grade_label": "Grado Institucional Élite (Apto M&A Directo)",
+    "grade_color": "#10b981",
     "deal_breakers_count": 0,
     "deal_breakers": [],
     "pillars": {
@@ -1021,11 +1021,11 @@
         "pilar": "Ciberseguridad & Zero-Leakage",
         "score": 100,
         "status": "EXCELLENT",
-        "summary": "0 críticos, 0 altos, 0 medios en 126 archivos inspeccionados.",
+        "summary": "0 críticos, 0 altos, 0 medios en 127 archivos inspeccionados.",
         "findings": [],
         "metrics": {
-          "scanned_files": 126,
-          "clean_files": 126,
+          "scanned_files": 127,
+          "clean_files": 127,
           "critical_issues": 0,
           "high_issues": 0,
           "medium_issues": 0,
@@ -1076,49 +1076,14 @@
       },
       "architecture": {
         "pilar": "Arquitectura & Deuda Técnica",
-        "score": 84,
-        "status": "GOOD",
-        "summary": "128 archivos (29,880 SLOC). 0 archivos >800l. Complejidad Máx: V(G)=161 (Promedio: 16.1). 11 archivos de test.",
+        "score": 88,
+        "status": "EXCELLENT",
+        "summary": "129 archivos (29,921 SLOC). 0 archivos >800l. Complejidad Máx: V(G)=161 (Promedio: 16.1). 11 archivos de test.",
         "findings": [
-          {
-            "severity": "LOW",
-            "title": "Llamada de depuración residual (console.log)",
-            "detail": "Línea 35: `console.warn('[Centinela Ataraxia] Interceptado:', error?.me`",
-            "file": "ataraxia/src/app/_layout.tsx",
-            "line": 35
-          },
-          {
-            "severity": "LOW",
-            "title": "Llamada de depuración residual (console.log)",
-            "detail": "Línea 113: `console.warn('Error sharing invitation:', err);`",
-            "file": "ataraxia/src/components/GuardianInviteModal.tsx",
-            "line": 113
-          },
-          {
-            "severity": "LOW",
-            "title": "Llamada de depuración residual (console.log)",
-            "detail": "Línea 166: `console.warn('[PPG Web] Linterna no soportada o rechazada:',`",
-            "file": "ataraxia/src/components/HeartRateScannerModal.tsx",
-            "line": 166
-          },
-          {
-            "severity": "LOW",
-            "title": "Llamada de depuración residual (console.log)",
-            "detail": "Línea 234: `console.warn('[PPG Web] Fallback táctil biométrico activado:`",
-            "file": "ataraxia/src/components/HeartRateScannerModal.tsx",
-            "line": 234
-          },
-          {
-            "severity": "LOW",
-            "title": "Llamada de depuración residual (console.log)",
-            "detail": "Línea 243: `console.warn('[PPG Native] Permiso cámara:', nativeErr);`",
-            "file": "ataraxia/src/components/HeartRateScannerModal.tsx",
-            "line": 243
-          },
           {
             "severity": "INFO",
             "title": "Suite de Pruebas Verificada (45/45 exitosas)",
-            "detail": "Ejecución dinámica exitosa en 12.65s (11 suites, 45 aserciones aprobadas al 100%).",
+            "detail": "Ejecución dinámica exitosa en 11.38s (11 suites, 45 aserciones aprobadas al 100%).",
             "file": "package.json"
           },
           {
@@ -1154,7 +1119,7 @@
             "title": "Complejidad Ciclomática Crítica en `usePedometerSensor()` (V(G) = 112)",
             "detail": "La función `usePedometerSensor` supera el umbral máximo de 20 caminos independientes. Requiere desacople y modularización para asegurar testeabilidad y evitar regresiones.",
             "file": "ataraxia/src/hooks/usePedometerSensor.ts",
-            "line": 50
+            "line": 51
           },
           {
             "severity": "LOW",
@@ -1179,13 +1144,13 @@
           }
         ],
         "metrics": {
-          "total_files": 128,
-          "total_lines": 31970,
-          "total_code_lines": 29880,
+          "total_files": 129,
+          "total_lines": 32015,
+          "total_code_lines": 29921,
           "languages": {
             "JSON": 14,
             "JavaScript": 3,
-            "TypeScript": 51,
+            "TypeScript": 52,
             "HTML": 1,
             "Python": 1,
             "PowerShell": 1,
@@ -1195,7 +1160,7 @@
           "god_files_count": 0,
           "god_files": [],
           "todos_count": 0,
-          "debug_calls_count": 13,
+          "debug_calls_count": 0,
           "test_files_count": 11,
           "has_typescript": true,
           "has_linter": true,
@@ -1207,12 +1172,12 @@
             "failed_count": 0,
             "pass_rate": 100.0,
             "suites_count": 11,
-            "duration_s": 12.65,
+            "duration_s": 11.38,
             "findings": [
               {
                 "severity": "INFO",
                 "title": "Suite de Pruebas Verificada (45/45 exitosas)",
-                "detail": "Ejecución dinámica exitosa en 12.65s (11 suites, 45 aserciones aprobadas al 100%).",
+                "detail": "Ejecución dinámica exitosa en 11.38s (11 suites, 45 aserciones aprobadas al 100%).",
                 "file": "package.json"
               }
             ]
@@ -1221,29 +1186,15 @@
       },
       "form_shield": {
         "pilar": "Ergonomía de Formularios & UX Móvil",
-        "score": 88.0,
-        "status": "ACEPTABLE",
-        "summary": "Auditados 15 archivos frontend y 1 campos de entrada. Se detectaron 2 observaciones ergonómicas. Requiere corrección de atributos móviles (autocomplete, autoCapitalize, sanitización .trim y modales con escape).",
-        "findings": [
-          {
-            "severity": "MEDIUM",
-            "title": "Input sin etiqueta accesible (a11y)",
-            "detail": "En ataraxia/src/app/transformation.tsx, el input carece de id para asociar <label>, aria-label o placeholder informativo.",
-            "file": "ataraxia/src/app/transformation.tsx",
-            "line": 527
-          },
-          {
-            "severity": "LOW",
-            "title": "Ausencia de reglas CSS para :-webkit-autofill",
-            "detail": "El proyecto contiene formularios interactivos pero no anula los estilos por defecto del navegador para :-webkit-autofill. Esto suele causar fondos blancos con texto ilegible en temas oscuros.",
-            "file": "Global CSS"
-          }
-        ],
+        "score": 100,
+        "status": "EXCELENTE",
+        "summary": "Auditados 15 archivos frontend y 1 campos de entrada. Se detectaron 0 observaciones ergonómicas. Los formularios implementan estándares modernos de UX móvil y autocompletado nativo.",
+        "findings": [],
         "metrics": {
           "total_form_files": 15,
           "total_inputs_checked": 1,
-          "flaws_count": 1.5,
-          "has_autofill_css": false
+          "flaws_count": 0,
+          "has_autofill_css": true
         }
       },
       "commercial": {
@@ -1336,13 +1287,13 @@
           "last_commit_hash": "471a942",
           "last_commit_date": "2026-10-10",
           "last_commit_msg": "chore(submodule): actualizar referencia de ataraxia con suite de 45 tests y desacoplamiento limpio",
-          "total_commits": 505,
+          "total_commits": 507,
           "bus_factor": 3,
           "primary_author": "Mauricio",
           "concentration_pct": 51.5,
-          "dirty_files_count": 2,
+          "dirty_files_count": 3,
           "has_readme": true,
-          "has_changelog": false,
+          "has_changelog": true,
           "obsidian_cerebro_found": true,
           "obsidian_cerebro_name": "cerebro_ataraxia"
         }
@@ -1357,49 +1308,9 @@
         "pilar": "Propiedad Intelectual & Licencias"
       },
       {
-        "severity": "LOW",
-        "title": "Llamada de depuración residual (console.log)",
-        "detail": "Línea 35: `console.warn('[Centinela Ataraxia] Interceptado:', error?.me`",
-        "file": "ataraxia/src/app/_layout.tsx",
-        "line": 35,
-        "pilar": "Arquitectura & Deuda Técnica"
-      },
-      {
-        "severity": "LOW",
-        "title": "Llamada de depuración residual (console.log)",
-        "detail": "Línea 113: `console.warn('Error sharing invitation:', err);`",
-        "file": "ataraxia/src/components/GuardianInviteModal.tsx",
-        "line": 113,
-        "pilar": "Arquitectura & Deuda Técnica"
-      },
-      {
-        "severity": "LOW",
-        "title": "Llamada de depuración residual (console.log)",
-        "detail": "Línea 166: `console.warn('[PPG Web] Linterna no soportada o rechazada:',`",
-        "file": "ataraxia/src/components/HeartRateScannerModal.tsx",
-        "line": 166,
-        "pilar": "Arquitectura & Deuda Técnica"
-      },
-      {
-        "severity": "LOW",
-        "title": "Llamada de depuración residual (console.log)",
-        "detail": "Línea 234: `console.warn('[PPG Web] Fallback táctil biométrico activado:`",
-        "file": "ataraxia/src/components/HeartRateScannerModal.tsx",
-        "line": 234,
-        "pilar": "Arquitectura & Deuda Técnica"
-      },
-      {
-        "severity": "LOW",
-        "title": "Llamada de depuración residual (console.log)",
-        "detail": "Línea 243: `console.warn('[PPG Native] Permiso cámara:', nativeErr);`",
-        "file": "ataraxia/src/components/HeartRateScannerModal.tsx",
-        "line": 243,
-        "pilar": "Arquitectura & Deuda Técnica"
-      },
-      {
         "severity": "INFO",
         "title": "Suite de Pruebas Verificada (45/45 exitosas)",
-        "detail": "Ejecución dinámica exitosa en 12.65s (11 suites, 45 aserciones aprobadas al 100%).",
+        "detail": "Ejecución dinámica exitosa en 11.38s (11 suites, 45 aserciones aprobadas al 100%).",
         "file": "package.json",
         "pilar": "Arquitectura & Deuda Técnica"
       },
@@ -1440,7 +1351,7 @@
         "title": "Complejidad Ciclomática Crítica en `usePedometerSensor()` (V(G) = 112)",
         "detail": "La función `usePedometerSensor` supera el umbral máximo de 20 caminos independientes. Requiere desacople y modularización para asegurar testeabilidad y evitar regresiones.",
         "file": "ataraxia/src/hooks/usePedometerSensor.ts",
-        "line": 50,
+        "line": 51,
         "pilar": "Arquitectura & Deuda Técnica"
       },
       {
@@ -1466,21 +1377,6 @@
         "file": "ataraxia/src/components/HonorDiplomaModal.tsx",
         "line": 25,
         "pilar": "Arquitectura & Deuda Técnica"
-      },
-      {
-        "severity": "MEDIUM",
-        "title": "Input sin etiqueta accesible (a11y)",
-        "detail": "En ataraxia/src/app/transformation.tsx, el input carece de id para asociar <label>, aria-label o placeholder informativo.",
-        "file": "ataraxia/src/app/transformation.tsx",
-        "line": 527,
-        "pilar": "Ergonomía de Formularios & UX Móvil"
-      },
-      {
-        "severity": "LOW",
-        "title": "Ausencia de reglas CSS para :-webkit-autofill",
-        "detail": "El proyecto contiene formularios interactivos pero no anula los estilos por defecto del navegador para :-webkit-autofill. Esto suele causar fondos blancos con texto ilegible en temas oscuros.",
-        "file": "Global CSS",
-        "pilar": "Ergonomía de Formularios & UX Móvil"
       },
       {
         "severity": "HIGH",
@@ -1533,7 +1429,7 @@
         "pilar": "Gobernanza & Data Room"
       }
     ],
-    "markdown_report": "# 🏛️ Dossier Ejecutivo de Tech Due Diligence — Ataraxia\n\n**Fecha de Auditoría:** 2026-10-11 17:31:34  \n**Ruta del Repositorio:** `C:\\Users\\mauro\\OneDrive\\Documentos\\ATARAXIA_APP`  \n**Titularidad & Autoría:** Mauricio Uribe Maldonado  \n**Veredicto de Inversión (Rigor Institucional):** **AA (88.4/100)** — *Producción Robusta / Apto para Ronda*\n\n---\n\n## 📊 Resumen Ejecutivo del Score (Estándar M&A)\n\n| Pilar de Evaluación | Ponderación | Score Obtenido | Estado |\n| :--- | :---: | :---: | :---: |\n| 🛡️ **1. Ciberseguridad & Zero-Leakage (SAST)** | 15% | **100/100** | EXCELLENT |\n| 📦 **2. Seguridad de Dependencias & SCA (CVEs)** | 10% | **100/100** | EXCELLENT |\n| 📜 **3. Propiedad Intelectual & Licencias** | 15% | **100/100** | EXCELLENT |\n| 🏗️ **4. Arquitectura & Deuda Técnica** | 15% | **84/100** | GOOD |\n| 📱 **5. Ergonomía de Formularios & UX Móvil** | 15% | **88.0/100** | ACEPTABLE |\n| 💼 **6. Vendibilidad M&A & Viabilidad Comercial** | 15% | **53/100** | LOW POTENTIAL |\n| ⚡ **7. Resiliencia & Producción** | 8% | **100/100** | EXCELLENT |\n| 🏛️ **8. Gobernanza & Data Room** | 7% | **95/100** | EXCELLENT |\n| **TOTAL PONDERADO** | **100%** | **88.4/100** | **AA** |\n\n---\n\n## 🚨 Alertas Críticas & Deal Breakers (0)\n✅ **CERO DEAL BREAKERS DETECTADOS.** No se observaron filtraciones de claves maestras ni riesgos de contaminación de código privativo por licencias copyleft virales.\n\n---\n\n## 🔍 Desglose Detallado por Pilares\n\n### Ciberseguridad & Zero-Leakage (Score: 100/100 - EXCELLENT)\n> **Diagnóstico:** 0 críticos, 0 altos, 0 medios en 126 archivos inspeccionados.\n\n✅ No se detectaron anomalías ni advertencias en este pilar.\n\n### Seguridad de Dependencias & SCA (Score: 100/100 - EXCELLENT)\n> **Diagnóstico:** 0 críticas, 0 altas, 0 moderadas en 0 dependencias auditadas.\n\n✅ No se detectaron anomalías ni advertencias en este pilar.\n\n### Propiedad Intelectual & Licencias (Score: 100/100 - EXCELLENT)\n> **Diagnóstico:** 39 dependencias analizadas. IP de fundador ✅ Acreditada. 0 riesgos de copyleft.\n\n* 🔵 **[LOW] Titularidad de IP verificada en LICENSE**\n  - *Detalle:* El archivo de licencia reconoce formalmente a 'Mauricio Uribe Maldonado' como titular exclusivo.\n  - *Ubicación:* `LICENSE`\n\n### Arquitectura & Deuda Técnica (Score: 84/100 - GOOD)\n> **Diagnóstico:** 128 archivos (29,880 SLOC). 0 archivos >800l. Complejidad Máx: V(G)=161 (Promedio: 16.1). 11 archivos de test.\n\n* 🔵 **[LOW] Llamada de depuración residual (console.log)**\n  - *Detalle:* Línea 35: `console.warn('[Centinela Ataraxia] Interceptado:', error?.me`\n  - *Ubicación:* `ataraxia/src/app/_layout.tsx` (Línea 35)\n* 🔵 **[LOW] Llamada de depuración residual (console.log)**\n  - *Detalle:* Línea 113: `console.warn('Error sharing invitation:', err);`\n  - *Ubicación:* `ataraxia/src/components/GuardianInviteModal.tsx` (Línea 113)\n* 🔵 **[LOW] Llamada de depuración residual (console.log)**\n  - *Detalle:* Línea 166: `console.warn('[PPG Web] Linterna no soportada o rechazada:',`\n  - *Ubicación:* `ataraxia/src/components/HeartRateScannerModal.tsx` (Línea 166)\n* 🔵 **[LOW] Llamada de depuración residual (console.log)**\n  - *Detalle:* Línea 234: `console.warn('[PPG Web] Fallback táctil biométrico activado:`\n  - *Ubicación:* `ataraxia/src/components/HeartRateScannerModal.tsx` (Línea 234)\n* 🔵 **[LOW] Llamada de depuración residual (console.log)**\n  - *Detalle:* Línea 243: `console.warn('[PPG Native] Permiso cámara:', nativeErr);`\n  - *Ubicación:* `ataraxia/src/components/HeartRateScannerModal.tsx` (Línea 243)\n* 🔵 **[INFO] Suite de Pruebas Verificada (45/45 exitosas)**\n  - *Detalle:* Ejecución dinámica exitosa en 12.65s (11 suites, 45 aserciones aprobadas al 100%).\n  - *Ubicación:* `package.json`\n* 🟠 **[HIGH] Complejidad Ciclomática Crítica en `generateStoicMentorResponse()` (V(G) = 161)**\n  - *Detalle:* La función `generateStoicMentorResponse` supera el umbral máximo de 20 caminos independientes. Requiere desacople y modularización para asegurar testeabilidad y evitar regresiones.\n  - *Ubicación:* `ataraxia/src/lib/stoicMentorEngine.ts` (Línea 90)\n* 🟠 **[HIGH] Complejidad Ciclomática Crítica en `DailyLogProvider()` (V(G) = 142)**\n  - *Detalle:* La función `DailyLogProvider` supera el umbral máximo de 20 caminos independientes. Requiere desacople y modularización para asegurar testeabilidad y evitar regresiones.\n  - *Ubicación:* `ataraxia/src/context/DailyLogContext.tsx` (Línea 55)\n* 🟠 **[HIGH] Complejidad Ciclomática Crítica en `HoyScreen()` (V(G) = 118)**\n  - *Detalle:* La función `HoyScreen` supera el umbral máximo de 20 caminos independientes. Requiere desacople y modularización para asegurar testeabilidad y evitar regresiones.\n  - *Ubicación:* `ataraxia/src/app/index.tsx` (Línea 30)\n* 🟠 **[HIGH] Complejidad Ciclomática Crítica en `ProgressScreen()` (V(G) = 116)**\n  - *Detalle:* La función `ProgressScreen` supera el umbral máximo de 20 caminos independientes. Requiere desacople y modularización para asegurar testeabilidad y evitar regresiones.\n  - *Ubicación:* `ataraxia/src/app/progress.tsx` (Línea 22)\n* 🟠 **[HIGH] Complejidad Ciclomática Crítica en `usePedometerSensor()` (V(G) = 112)**\n  - *Detalle:* La función `usePedometerSensor` supera el umbral máximo de 20 caminos independientes. Requiere desacople y modularización para asegurar testeabilidad y evitar regresiones.\n  - *Ubicación:* `ataraxia/src/hooks/usePedometerSensor.ts` (Línea 50)\n* 🔵 **[LOW] Complejidad Lógica Moderada en `ArchonThroneScreen()` (V(G) = 19)**\n  - *Detalle:* Función con 19 caminos de decisión lógica. Mantenible pero candidata a simplificación.\n  - *Ubicación:* `ataraxia/src/app/archon.tsx` (Línea 111)\n* 🔵 **[LOW] Complejidad Lógica Moderada en `StoicTwinMetabolicCards()` (V(G) = 18)**\n  - *Detalle:* Función con 18 caminos de decisión lógica. Mantenible pero candidata a simplificación.\n  - *Ubicación:* `ataraxia/src/components/StoicTwinMetabolicCards.tsx` (Línea 19)\n* 🔵 **[LOW] Complejidad Lógica Moderada en `HonorDiplomaModal()` (V(G) = 16)**\n  - *Detalle:* Función con 16 caminos de decisión lógica. Mantenible pero candidata a simplificación.\n  - *Ubicación:* `ataraxia/src/components/HonorDiplomaModal.tsx` (Línea 25)\n\n### Ergonomía de Formularios & UX Móvil (Score: 88.0/100 - ACEPTABLE)\n> **Diagnóstico:** Auditados 15 archivos frontend y 1 campos de entrada. Se detectaron 2 observaciones ergonómicas. Requiere corrección de atributos móviles (autocomplete, autoCapitalize, sanitización .trim y modales con escape).\n\n* 🟡 **[MEDIUM] Input sin etiqueta accesible (a11y)**\n  - *Detalle:* En ataraxia/src/app/transformation.tsx, el input carece de id para asociar <label>, aria-label o placeholder informativo.\n  - *Ubicación:* `ataraxia/src/app/transformation.tsx` (Línea 527)\n* 🔵 **[LOW] Ausencia de reglas CSS para :-webkit-autofill**\n  - *Detalle:* El proyecto contiene formularios interactivos pero no anula los estilos por defecto del navegador para :-webkit-autofill. Esto suele causar fondos blancos con texto ilegible en temas oscuros.\n  - *Ubicación:* `Global CSS`\n\n### Vendibilidad M&A & Viabilidad Comercial (Score: 53/100 - LOW POTENTIAL)\n> **Diagnóstico:** Vendibilidad: MEDIA (53/100). Modelo: SaaS Fitness & Coaching Estoico. Key-Person Risk: MEDIO (React Native / Expo requiere mant...\n\n* 🟠 **[HIGH] Ausencia de pasarela de pago activa (Zero-Billing Infrastructure)**\n  - *Detalle:* No se detectaron integraciones con Stripe, PayPal ni LemonSqueezy. En una auditoría de M&A, un software sin sistema de cobro activo requiere inversión previa del comprador antes de generar el primer dólar.\n  - *Ubicación:* `billing`\n\n### Resiliencia & Producción (Score: 100/100 - EXCELLENT)\n> **Diagnóstico:** Offline-First: ✅ Sí. PWA: ✅ Sí. IA Timeout: ✅ Blindado.\n\n* 🔵 **[LOW] Protocolo Anti-Timeout en IA verificado**\n  - *Detalle:* Las llamadas a Gemini implementan control de tiempo y mitigación de cuotas.\n* 🔵 **[LOW] Arquitectura de Fallback para IA presente**\n  - *Detalle:* El sistema contempla conmutación a simulación o caché ante fallos de conectividad.\n* 🔵 **[LOW] Persistencia Offline-First verificada**\n  - *Detalle:* Se detectó uso de almacenamiento local autónomo (SafeStorage / AsyncStorage / localStorage).\n* 🔵 **[LOW] Capacidades PWA detectadas**\n  - *Detalle:* Presencia de manifiesto o service worker para funcionamiento desacoplado.\n\n### Gobernanza & Data Room (Score: 95/100 - EXCELLENT)\n> **Diagnóstico:** Git: ✅ Activo (master • 471a942). Bus Factor: 3 (51.5% en Mauricio). Obsidian: ✅ cerebro_ataraxia.\n\n* 🔵 **[INFO] Equipo Distribuido (Bus Factor = 3)**\n  - *Detalle:* El código tiene historial colaborativo con 5 autores activos.\n  - *Ubicación:* `.git`\n* 🔵 **[LOW] Documentación técnica README.md presente**\n  - *Detalle:* Existe documentación de arquitectura e instrucciones de despliegue.\n* 🔵 **[LOW] Bóveda Obsidian SSOT vinculada (cerebro_ataraxia)**\n  - *Detalle:* El proyecto cuenta con gemelo digital de documentación y MOCs en Obsidian.\n\n---\n\n## 💼 Proyección Comercial & Recomendaciones para M&A\n1. **Key-Person Risk:** Reducir la dependencia del desarrollador único mediante la incorporación de suites de pruebas automatizadas (Jest / Pytest) y documentación de despliegue reproducible.\n2. **Infraestructura de Facturación:** Conectar pasarelas de pago directas (Stripe / LemonSqueezy) para convertir el prototipo en un activo con flujo de caja auditable.\n3. **Refactorización de Monolitos:** Modularizar los archivos que superan las 800 líneas antes de auditorías técnicas de compradores institucionales.\n\n*Informe generado bajo el Estándar Institucional V-GUARD Due Diligence.*\n"
+    "markdown_report": "# 🏛️ Dossier Ejecutivo de Tech Due Diligence — Ataraxia\n\n**Fecha de Auditoría:** 2026-10-12 17:30:38  \n**Ruta del Repositorio:** `C:\\Users\\mauro\\OneDrive\\Documentos\\ATARAXIA_APP`  \n**Titularidad & Autoría:** Mauricio Uribe Maldonado  \n**Veredicto de Inversión (Rigor Institucional):** **AAA (90.8/100)** — *Grado Institucional Élite (Apto M&A Directo)*\n\n---\n\n## 📊 Resumen Ejecutivo del Score (Estándar M&A)\n\n| Pilar de Evaluación | Ponderación | Score Obtenido | Estado |\n| :--- | :---: | :---: | :---: |\n| 🛡️ **1. Ciberseguridad & Zero-Leakage (SAST)** | 15% | **100/100** | EXCELLENT |\n| 📦 **2. Seguridad de Dependencias & SCA (CVEs)** | 10% | **100/100** | EXCELLENT |\n| 📜 **3. Propiedad Intelectual & Licencias** | 15% | **100/100** | EXCELLENT |\n| 🏗️ **4. Arquitectura & Deuda Técnica** | 15% | **88/100** | EXCELLENT |\n| 📱 **5. Ergonomía de Formularios & UX Móvil** | 15% | **100/100** | EXCELENTE |\n| 💼 **6. Vendibilidad M&A & Viabilidad Comercial** | 15% | **53/100** | LOW POTENTIAL |\n| ⚡ **7. Resiliencia & Producción** | 8% | **100/100** | EXCELLENT |\n| 🏛️ **8. Gobernanza & Data Room** | 7% | **95/100** | EXCELLENT |\n| **TOTAL PONDERADO** | **100%** | **90.8/100** | **AAA** |\n\n---\n\n## 🚨 Alertas Críticas & Deal Breakers (0)\n✅ **CERO DEAL BREAKERS DETECTADOS.** No se observaron filtraciones de claves maestras ni riesgos de contaminación de código privativo por licencias copyleft virales.\n\n---\n\n## 🔍 Desglose Detallado por Pilares\n\n### Ciberseguridad & Zero-Leakage (Score: 100/100 - EXCELLENT)\n> **Diagnóstico:** 0 críticos, 0 altos, 0 medios en 127 archivos inspeccionados.\n\n✅ No se detectaron anomalías ni advertencias en este pilar.\n\n### Seguridad de Dependencias & SCA (Score: 100/100 - EXCELLENT)\n> **Diagnóstico:** 0 críticas, 0 altas, 0 moderadas en 0 dependencias auditadas.\n\n✅ No se detectaron anomalías ni advertencias en este pilar.\n\n### Propiedad Intelectual & Licencias (Score: 100/100 - EXCELLENT)\n> **Diagnóstico:** 39 dependencias analizadas. IP de fundador ✅ Acreditada. 0 riesgos de copyleft.\n\n* 🔵 **[LOW] Titularidad de IP verificada en LICENSE**\n  - *Detalle:* El archivo de licencia reconoce formalmente a 'Mauricio Uribe Maldonado' como titular exclusivo.\n  - *Ubicación:* `LICENSE`\n\n### Arquitectura & Deuda Técnica (Score: 88/100 - EXCELLENT)\n> **Diagnóstico:** 129 archivos (29,921 SLOC). 0 archivos >800l. Complejidad Máx: V(G)=161 (Promedio: 16.1). 11 archivos de test.\n\n* 🔵 **[INFO] Suite de Pruebas Verificada (45/45 exitosas)**\n  - *Detalle:* Ejecución dinámica exitosa en 11.38s (11 suites, 45 aserciones aprobadas al 100%).\n  - *Ubicación:* `package.json`\n* 🟠 **[HIGH] Complejidad Ciclomática Crítica en `generateStoicMentorResponse()` (V(G) = 161)**\n  - *Detalle:* La función `generateStoicMentorResponse` supera el umbral máximo de 20 caminos independientes. Requiere desacople y modularización para asegurar testeabilidad y evitar regresiones.\n  - *Ubicación:* `ataraxia/src/lib/stoicMentorEngine.ts` (Línea 90)\n* 🟠 **[HIGH] Complejidad Ciclomática Crítica en `DailyLogProvider()` (V(G) = 142)**\n  - *Detalle:* La función `DailyLogProvider` supera el umbral máximo de 20 caminos independientes. Requiere desacople y modularización para asegurar testeabilidad y evitar regresiones.\n  - *Ubicación:* `ataraxia/src/context/DailyLogContext.tsx` (Línea 55)\n* 🟠 **[HIGH] Complejidad Ciclomática Crítica en `HoyScreen()` (V(G) = 118)**\n  - *Detalle:* La función `HoyScreen` supera el umbral máximo de 20 caminos independientes. Requiere desacople y modularización para asegurar testeabilidad y evitar regresiones.\n  - *Ubicación:* `ataraxia/src/app/index.tsx` (Línea 30)\n* 🟠 **[HIGH] Complejidad Ciclomática Crítica en `ProgressScreen()` (V(G) = 116)**\n  - *Detalle:* La función `ProgressScreen` supera el umbral máximo de 20 caminos independientes. Requiere desacople y modularización para asegurar testeabilidad y evitar regresiones.\n  - *Ubicación:* `ataraxia/src/app/progress.tsx` (Línea 22)\n* 🟠 **[HIGH] Complejidad Ciclomática Crítica en `usePedometerSensor()` (V(G) = 112)**\n  - *Detalle:* La función `usePedometerSensor` supera el umbral máximo de 20 caminos independientes. Requiere desacople y modularización para asegurar testeabilidad y evitar regresiones.\n  - *Ubicación:* `ataraxia/src/hooks/usePedometerSensor.ts` (Línea 51)\n* 🔵 **[LOW] Complejidad Lógica Moderada en `ArchonThroneScreen()` (V(G) = 19)**\n  - *Detalle:* Función con 19 caminos de decisión lógica. Mantenible pero candidata a simplificación.\n  - *Ubicación:* `ataraxia/src/app/archon.tsx` (Línea 111)\n* 🔵 **[LOW] Complejidad Lógica Moderada en `StoicTwinMetabolicCards()` (V(G) = 18)**\n  - *Detalle:* Función con 18 caminos de decisión lógica. Mantenible pero candidata a simplificación.\n  - *Ubicación:* `ataraxia/src/components/StoicTwinMetabolicCards.tsx` (Línea 19)\n* 🔵 **[LOW] Complejidad Lógica Moderada en `HonorDiplomaModal()` (V(G) = 16)**\n  - *Detalle:* Función con 16 caminos de decisión lógica. Mantenible pero candidata a simplificación.\n  - *Ubicación:* `ataraxia/src/components/HonorDiplomaModal.tsx` (Línea 25)\n\n### Ergonomía de Formularios & UX Móvil (Score: 100/100 - EXCELENTE)\n> **Diagnóstico:** Auditados 15 archivos frontend y 1 campos de entrada. Se detectaron 0 observaciones ergonómicas. Los formularios implementan estándares modernos de UX móvil y autocompletado nativo.\n\n✅ No se detectaron anomalías ni advertencias en este pilar.\n\n### Vendibilidad M&A & Viabilidad Comercial (Score: 53/100 - LOW POTENTIAL)\n> **Diagnóstico:** Vendibilidad: MEDIA (53/100). Modelo: SaaS Fitness & Coaching Estoico. Key-Person Risk: MEDIO (React Native / Expo requiere mant...\n\n* 🟠 **[HIGH] Ausencia de pasarela de pago activa (Zero-Billing Infrastructure)**\n  - *Detalle:* No se detectaron integraciones con Stripe, PayPal ni LemonSqueezy. En una auditoría de M&A, un software sin sistema de cobro activo requiere inversión previa del comprador antes de generar el primer dólar.\n  - *Ubicación:* `billing`\n\n### Resiliencia & Producción (Score: 100/100 - EXCELLENT)\n> **Diagnóstico:** Offline-First: ✅ Sí. PWA: ✅ Sí. IA Timeout: ✅ Blindado.\n\n* 🔵 **[LOW] Protocolo Anti-Timeout en IA verificado**\n  - *Detalle:* Las llamadas a Gemini implementan control de tiempo y mitigación de cuotas.\n* 🔵 **[LOW] Arquitectura de Fallback para IA presente**\n  - *Detalle:* El sistema contempla conmutación a simulación o caché ante fallos de conectividad.\n* 🔵 **[LOW] Persistencia Offline-First verificada**\n  - *Detalle:* Se detectó uso de almacenamiento local autónomo (SafeStorage / AsyncStorage / localStorage).\n* 🔵 **[LOW] Capacidades PWA detectadas**\n  - *Detalle:* Presencia de manifiesto o service worker para funcionamiento desacoplado.\n\n### Gobernanza & Data Room (Score: 95/100 - EXCELLENT)\n> **Diagnóstico:** Git: ✅ Activo (master • 471a942). Bus Factor: 3 (51.5% en Mauricio). Obsidian: ✅ cerebro_ataraxia.\n\n* 🔵 **[INFO] Equipo Distribuido (Bus Factor = 3)**\n  - *Detalle:* El código tiene historial colaborativo con 5 autores activos.\n  - *Ubicación:* `.git`\n* 🔵 **[LOW] Documentación técnica README.md presente**\n  - *Detalle:* Existe documentación de arquitectura e instrucciones de despliegue.\n* 🔵 **[LOW] Bóveda Obsidian SSOT vinculada (cerebro_ataraxia)**\n  - *Detalle:* El proyecto cuenta con gemelo digital de documentación y MOCs en Obsidian.\n\n---\n\n## 💼 Proyección Comercial & Recomendaciones para M&A\n1. **Key-Person Risk:** Reducir la dependencia del desarrollador único mediante la incorporación de suites de pruebas automatizadas (Jest / Pytest) y documentación de despliegue reproducible.\n2. **Infraestructura de Facturación:** Conectar pasarelas de pago directas (Stripe / LemonSqueezy) para convertir el prototipo en un activo con flujo de caja auditable.\n3. **Refactorización de Monolitos:** Modularizar los archivos que superan las 800 líneas antes de auditorías técnicas de compradores institucionales.\n\n*Informe generado bajo el Estándar Institucional V-GUARD Due Diligence.*\n"
   },
   {
     "app_key": "hidoctor",
