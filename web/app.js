@@ -339,10 +339,12 @@ function renderResults(data) {
   const depsCount = data.pillars.ip_licenses.metrics.total_dependencies || 0;
   document.getElementById("kpiDeps").innerText = depsCount;
 
-  // Renderizar Pilares
+  // Renderizar los 8 Pilares Institucionales
   renderPillar("sec", data.pillars.security);
+  if (data.pillars.sca) renderPillar("sca", data.pillars.sca);
   renderPillar("ip", data.pillars.ip_licenses);
   renderPillar("arch", data.pillars.architecture);
+  if (data.pillars.form_shield) renderPillar("form", data.pillars.form_shield);
   if (data.pillars.commercial) renderPillar("comm", data.pillars.commercial);
   renderPillar("res", data.pillars.resilience);
   renderPillar("gov", data.pillars.governance);
@@ -446,16 +448,20 @@ function populateFleetTable(results) {
 
   results.forEach(r => {
     const tr = document.createElement("tr");
-    const commScore = (r.pillars && r.pillars.commercial) ? r.pillars.commercial.score : 'N/A';
+    const scaScore = (r.pillars && r.pillars.sca) ? `${r.pillars.sca.score}/100` : 'N/A';
+    const formScore = (r.pillars && r.pillars.form_shield) ? `${r.pillars.form_shield.score}/100` : 'N/A';
+    const commScore = (r.pillars && r.pillars.commercial) ? `${r.pillars.commercial.score}/100` : 'N/A';
     tr.innerHTML = `
       <td><strong>${r.app_name}</strong></td>
       <td><strong>${r.global_score}/100</strong></td>
       <td><span class="grade-badge" style="color:${r.grade_color}; background:${r.grade_color}22;">${r.grade}</span></td>
       <td><span style="color:${r.deal_breakers_count > 0 ? 'var(--accent-red)' : 'var(--accent-emerald)'}; font-weight:700;">${r.deal_breakers_count}</span></td>
       <td>${r.pillars.security.score}/100</td>
+      <td>${scaScore}</td>
       <td>${r.pillars.ip_licenses.score}/100</td>
       <td>${r.pillars.architecture.score}/100</td>
-      <td>${commScore}/100</td>
+      <td>${formScore}</td>
+      <td>${commScore}</td>
       <td>${r.pillars.resilience.score}/100</td>
       <td>${r.pillars.governance.score}/100</td>
       <td><button class="btn btn-outline btn-sm" onclick='viewFleetAppDetail(${JSON.stringify(r.app_key)})'>Ver</button></td>

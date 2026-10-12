@@ -135,30 +135,44 @@
         </div>
       </div>
 
-      <!-- Pestañas de los 6 Pilares de Inversión -->
+      <!-- Pestañas de los 8 Pilares Institucionales de Inversión -->
       <div class="pillars-container">
         <div class="tabs-header">
-          <button class="tab-btn active" data-tab="tab-sec">🛡️ 1. Ciberseguridad & Zero-Leakage</button>
-          <button class="tab-btn" data-tab="tab-ip">📜 2. Propiedad Intelectual & Licencias</button>
-          <button class="tab-btn" data-tab="tab-arch">🏗️ 3. Arquitectura & Deuda Técnica</button>
-          <button class="tab-btn" data-tab="tab-comm">💼 4. Vendibilidad M&A & Mercado</button>
-          <button class="tab-btn" data-tab="tab-res">⚡ 5. Resiliencia & Producción</button>
-          <button class="tab-btn" data-tab="tab-gov">🏛️ 6. Gobernanza & Git</button>
+          <button class="tab-btn active" data-tab="tab-sec">🛡️ 1. Ciberseguridad (SAST)</button>
+          <button class="tab-btn" data-tab="tab-sca">🔍 2. Dependencias & SCA (CVEs)</button>
+          <button class="tab-btn" data-tab="tab-ip">📜 3. Propiedad Intelectual & Licencias</button>
+          <button class="tab-btn" data-tab="tab-arch">🏗️ 4. Arquitectura & McCabe AST</button>
+          <button class="tab-btn" data-tab="tab-form">📱 5. Form Shield & UX Móvil</button>
+          <button class="tab-btn" data-tab="tab-comm">💼 6. Vendibilidad M&A & Mercado</button>
+          <button class="tab-btn" data-tab="tab-res">⚡ 7. Resiliencia & Producción</button>
+          <button class="tab-btn" data-tab="tab-gov">🏛️ 8. Gobernanza & Git Forensics</button>
         </div>
 
-        <!-- Contenido Pestaña 1: Seguridad -->
+        <!-- Contenido Pestaña 1: Seguridad SAST -->
         <div class="tab-content active" id="tab-sec">
           <div class="pillar-summary-bar">
             <div>
-              <h3 id="secPillarTitle">Ciberseguridad & Zero-Leakage</h3>
-              <p id="secPillarDesc">Auditoría de fuga de credenciales, secretos expuestos, reglas .gitignore y prácticas OWASP.</p>
+              <h3 id="secPillarTitle">Ciberseguridad & Zero-Leakage (SAST)</h3>
+              <p id="secPillarDesc">Auditoría estática de fuga de credenciales, secretos expuestos, reglas .gitignore y sanitización OWASP.</p>
             </div>
             <div class="pillar-score-badge" id="secScoreBadge">100/100</div>
           </div>
           <div class="findings-list" id="secFindings"></div>
         </div>
 
-        <!-- Contenido Pestaña 2: IP & Licencias -->
+        <!-- Contenido Pestaña 2: Dependencias & SCA (CVEs en Vivo) -->
+        <div class="tab-content" id="tab-sca">
+          <div class="pillar-summary-bar">
+            <div>
+              <h3 id="scaPillarTitle">Seguridad de Dependencias & SCA (CVEs en Vivo)</h3>
+              <p id="scaPillarDesc">Auditoría en tiempo real contra vulnerabilidades de dependencias directas y transitivas con severidad CVSS vía bases NVD / GitHub Advisory.</p>
+            </div>
+            <div class="pillar-score-badge" id="scaScoreBadge">100/100</div>
+          </div>
+          <div class="findings-list" id="scaFindings"></div>
+        </div>
+
+        <!-- Contenido Pestaña 3: IP & Licencias -->
         <div class="tab-content" id="tab-ip">
           <div class="pillar-summary-bar">
             <div>
@@ -170,19 +184,31 @@
           <div class="findings-list" id="ipFindings"></div>
         </div>
 
-        <!-- Contenido Pestaña 3: Arquitectura & Deuda -->
+        <!-- Contenido Pestaña 4: Arquitectura & McCabe AST -->
         <div class="tab-content" id="tab-arch">
           <div class="pillar-summary-bar">
             <div>
-              <h3 id="archPillarTitle">Arquitectura, Métricas & Deuda Técnica (Rigor Hardcore)</h3>
-              <p id="archPillarDesc">Penalización estricta por ausencia de tests unitarios (-28 pts), archivos monolito (>800 líneas) y tipado estático.</p>
+              <h3 id="archPillarTitle">Arquitectura, McCabe AST & Verificador de Tests Dinámicos</h3>
+              <p id="archPillarDesc">Evaluación de Complejidad Ciclomática de McCabe (V(G) <= 20), ejecución en vivo de suites de test (Pass Rate), God Files (>800l) y tipado estático.</p>
             </div>
             <div class="pillar-score-badge" id="archScoreBadge">100/100</div>
           </div>
           <div class="findings-list" id="archFindings"></div>
         </div>
 
-        <!-- Contenido Pestaña 4: Vendibilidad M&A -->
+        <!-- Contenido Pestaña 5: Form Shield & UX Móvil -->
+        <div class="tab-content" id="tab-form">
+          <div class="pillar-summary-bar">
+            <div>
+              <h3 id="formPillarTitle">Ergonomía de Formularios & UX Móvil (Form Shield Standard)</h3>
+              <p id="formPillarDesc">Prevención estricta de 'Modal Jail' con overflow-y adaptable, sanitización .trim(), accesibilidad (a11y) y neutralización de :-webkit-autofill.</p>
+            </div>
+            <div class="pillar-score-badge" id="formScoreBadge">100/100</div>
+          </div>
+          <div class="findings-list" id="formFindings"></div>
+        </div>
+
+        <!-- Contenido Pestaña 6: Vendibilidad M&A -->
         <div class="tab-content" id="tab-comm">
           <div class="pillar-summary-bar">
             <div>
@@ -194,24 +220,24 @@
           <div class="findings-list" id="commFindings"></div>
         </div>
 
-        <!-- Contenido Pestaña 5: Resiliencia & Producción -->
+        <!-- Contenido Pestaña 7: Resiliencia & Producción -->
         <div class="tab-content" id="tab-res">
           <div class="pillar-summary-bar">
             <div>
               <h3 id="resPillarTitle">Resiliencia Operativa & Estándares de Producción</h3>
-              <p id="resPillarDesc">Cumplimiento del Protocolo Anti-Timeout en IA (<= 8.000 ms), arquitectura Offline-First y accesibilidad.</p>
+              <p id="resPillarDesc">Cumplimiento del Protocolo Anti-Timeout en IA (<= 8.000 ms), arquitectura Offline-First y tolerancia a fallos.</p>
             </div>
             <div class="pillar-score-badge" id="resScoreBadge">100/100</div>
           </div>
           <div class="findings-list" id="resFindings"></div>
         </div>
 
-        <!-- Contenido Pestaña 6: Gobernanza & Git -->
+        <!-- Contenido Pestaña 8: Gobernanza & Git Forensics -->
         <div class="tab-content" id="tab-gov">
           <div class="pillar-summary-bar">
             <div>
-              <h3 id="govPillarTitle">Gobernanza, Git & Data Room de Inversores</h3>
-              <p id="govPillarDesc">Estado del árbol Git, historial de commits, README y vinculación con Cerebros Obsidian SSOT.</p>
+              <h3 id="govPillarTitle">Gobernanza, Git Forensics & Data Room de Inversores</h3>
+              <p id="govPillarDesc">Análisis forense de Bus Factor, concentración de autoría, historial de commits y vinculación con Cerebros Obsidian SSOT.</p>
             </div>
             <div class="pillar-score-badge" id="govScoreBadge">100/100</div>
           </div>
@@ -224,7 +250,7 @@
     <section id="fleetModal" class="fleet-section hidden">
       <div class="fleet-card">
         <div class="fleet-header">
-          <h2>🏁 Matriz Comparativa de Due Diligence — Flota Completa (Rigor Institucional)</h2>
+          <h2>🏁 Matriz Comparativa de Due Diligence — Flota Completa (8 Pilares Institucionales)</h2>
           <button id="btnCloseFleet" class="btn btn-outline">Cerrar Matriz</button>
         </div>
         <div class="fleet-table-wrap">
@@ -235,12 +261,14 @@
                 <th>Score</th>
                 <th>Grado M&A</th>
                 <th>Deal Breakers</th>
-                <th>Seguridad</th>
+                <th>SAST</th>
+                <th>SCA (CVEs)</th>
                 <th>IP / Licencias</th>
-                <th>Arquitectura</th>
+                <th>Arquitectura (McCabe)</th>
+                <th>Form Shield</th>
                 <th>Vendibilidad M&A</th>
                 <th>Resiliencia</th>
-                <th>Git & Gov</th>
+                <th>Git Forensics</th>
                 <th>Acción</th>
               </tr>
             </thead>
