@@ -215,11 +215,13 @@ def audit_architecture(project_path: str) -> dict:
     score = max(0, min(100, score))
     status = "EXCELLENT" if score >= 85 else ("GOOD" if score >= 70 else ("WARNING" if score >= 50 else "DANGER"))
 
+    cov_str = f" Cobertura: {test_run_res['coverage_pct']}%." if test_run_res.get("coverage_pct") else ""
+    e2e_str = f" E2E Playwright: {test_run_res['e2e_files_count']} specs." if test_run_res.get("has_e2e") else ""
     return {
         "pilar": "Arquitectura & Deuda Técnica",
         "score": score,
         "status": status,
-        "summary": f"{total_files} archivos ({total_code_lines:,} SLOC). {len(god_files)} archivos >{GOD_FILE_THRESHOLD}l. Complejidad Máx: V(G)={max_complexity} (Promedio: {avg_complexity}). {test_files_count} archivos de test.",
+        "summary": f"{total_files} archivos ({total_code_lines:,} SLOC). {len(god_files)} monolitos. Tests: {test_run_res.get('total_tests', test_files_count)} (Pass: {test_run_res.get('pass_rate', 0)}%).{cov_str}{e2e_str}",
         "findings": findings,
         "metrics": {
             "total_files": total_files,
