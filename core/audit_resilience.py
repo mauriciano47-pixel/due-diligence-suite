@@ -66,8 +66,12 @@ def audit_resilience(project_path: str) -> dict:
             except Exception:
                 continue
 
-            # Detección de uso de Gemini o LLMs
-            if "gemini" in content.lower() or "@google/genai" in content or "generativeai" in content.lower():
+            # Detección de uso de Gemini o LLMs (llamada real o cliente SDK)
+            has_llm_invocation = (
+                "@google/genai" in content or "generativeai" in content.lower() or
+                ("gemini" in content.lower() and any(k in content for k in ["fetch(", "fetch ", "axios", "generateContent", "getGenerativeModel", "client.models"]))
+            )
+            if has_llm_invocation:
                 has_gemini = True
                 
                 # Verificar protocolo Anti-Timeout (8000ms)
