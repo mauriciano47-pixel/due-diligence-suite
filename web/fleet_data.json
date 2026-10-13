@@ -1008,9 +1008,9 @@
     "app_key": "ataraxia",
     "app_name": "Ataraxia",
     "project_path": "C:\\Users\\mauro\\OneDrive\\Documentos\\ATARAXIA_APP",
-    "timestamp": "2026-10-12 17:30:38",
-    "date": "2026-10-12",
-    "global_score": 90.8,
+    "timestamp": "2026-10-13 15:17:26",
+    "date": "2026-10-13",
+    "global_score": 94.6,
     "grade": "AAA",
     "grade_label": "Grado Institucional Élite (Apto M&A Directo)",
     "grade_color": "#10b981",
@@ -1021,11 +1021,11 @@
         "pilar": "Ciberseguridad & Zero-Leakage",
         "score": 100,
         "status": "EXCELLENT",
-        "summary": "0 críticos, 0 altos, 0 medios en 127 archivos inspeccionados.",
+        "summary": "0 críticos, 0 altos, 0 medios en 131 archivos inspeccionados.",
         "findings": [],
         "metrics": {
-          "scanned_files": 127,
-          "clean_files": 127,
+          "scanned_files": 131,
+          "clean_files": 131,
           "critical_issues": 0,
           "high_issues": 0,
           "medium_issues": 0,
@@ -1078,12 +1078,12 @@
         "pilar": "Arquitectura & Deuda Técnica",
         "score": 88,
         "status": "EXCELLENT",
-        "summary": "129 archivos (29,921 SLOC). 0 archivos >800l. Complejidad Máx: V(G)=161 (Promedio: 16.1). 11 archivos de test.",
+        "summary": "133 archivos (30,628 SLOC). 0 archivos >800l. Complejidad Máx: V(G)=161 (Promedio: 15.6). 12 archivos de test.",
         "findings": [
           {
             "severity": "INFO",
-            "title": "Suite de Pruebas Verificada (45/45 exitosas)",
-            "detail": "Ejecución dinámica exitosa en 11.38s (11 suites, 45 aserciones aprobadas al 100%).",
+            "title": "Suite de Pruebas Verificada (50/50 exitosas)",
+            "detail": "Ejecución dinámica exitosa en 12.51s (12 suites, 50 aserciones aprobadas al 100%).",
             "file": "package.json"
           },
           {
@@ -1144,40 +1144,40 @@
           }
         ],
         "metrics": {
-          "total_files": 129,
-          "total_lines": 32015,
-          "total_code_lines": 29921,
+          "total_files": 133,
+          "total_lines": 32779,
+          "total_code_lines": 30628,
           "languages": {
             "JSON": 14,
             "JavaScript": 3,
-            "TypeScript": 52,
+            "TypeScript": 54,
             "HTML": 1,
             "Python": 1,
             "PowerShell": 1,
             "CSS": 2,
-            "React TSX": 55
+            "React TSX": 57
           },
           "god_files_count": 0,
           "god_files": [],
           "todos_count": 0,
           "debug_calls_count": 0,
-          "test_files_count": 11,
+          "test_files_count": 12,
           "has_typescript": true,
           "has_linter": true,
           "test_run": {
             "executed": true,
             "runner_type": "Node.js Test Runner",
-            "total_tests": 45,
-            "passed_count": 45,
+            "total_tests": 50,
+            "passed_count": 50,
             "failed_count": 0,
             "pass_rate": 100.0,
-            "suites_count": 11,
-            "duration_s": 11.38,
+            "suites_count": 12,
+            "duration_s": 12.51,
             "findings": [
               {
                 "severity": "INFO",
-                "title": "Suite de Pruebas Verificada (45/45 exitosas)",
-                "detail": "Ejecución dinámica exitosa en 11.38s (11 suites, 45 aserciones aprobadas al 100%).",
+                "title": "Suite de Pruebas Verificada (50/50 exitosas)",
+                "detail": "Ejecución dinámica exitosa en 12.51s (12 suites, 50 aserciones aprobadas al 100%).",
                 "file": "package.json"
               }
             ]
@@ -1199,15 +1199,14 @@
       },
       "commercial": {
         "pilar": "Vendibilidad M&A & Viabilidad Comercial",
-        "score": 53,
-        "status": "LOW POTENTIAL",
-        "summary": "Vendibilidad: MEDIA (53/100). Modelo: SaaS Fitness & Coaching Estoico. Key-Person Risk: MEDIO (React Native / Expo requiere mant...",
+        "score": 78,
+        "status": "MODERATE",
+        "summary": "Vendibilidad: MEDIA (78/100). Modelo: SaaS Fitness & Coaching Estoico. Key-Person Risk: MEDIO (React Native / Expo requiere mant...",
         "findings": [
           {
-            "severity": "HIGH",
-            "title": "Ausencia de pasarela de pago activa (Zero-Billing Infrastructure)",
-            "detail": "No se detectaron integraciones con Stripe, PayPal ni LemonSqueezy. En una auditoría de M&A, un software sin sistema de cobro activo requiere inversión previa del comprador antes de generar el primer dólar.",
-            "file": "billing"
+            "severity": "LOW",
+            "title": "Pasarela de pago detectada en código",
+            "detail": "El proyecto cuenta con integraciones o referencias para monetización directa."
           }
         ],
         "metrics": {
@@ -1218,7 +1217,7 @@
           "key_person_risk": "MEDIO (React Native / Expo requiere mantenimiento continuo de dependencias nativas).",
           "operational_moat": "Algoritmo PPG de contacto físico + Arquetipos estoicos. Mercado saturado con alto churn (>12%).",
           "exit_recommendation": "Venta en Flippa orientada a influencers fitness o comunidades de desarrollo personal estoico.",
-          "has_payment_gateway": false
+          "has_payment_gateway": true
         }
       },
       "resilience": {
@@ -1262,7 +1261,7 @@
         "pilar": "Gobernanza & Data Room",
         "score": 95,
         "status": "EXCELLENT",
-        "summary": "Git: ✅ Activo (master • 471a942). Bus Factor: 3 (51.5% en Mauricio). Obsidian: ✅ cerebro_ataraxia.",
+        "summary": "Git: ✅ Activo (master • ca691aa). Bus Factor: 3 (51.5% en Mauricio). Obsidian: ✅ cerebro_ataraxia.",
         "findings": [
           {
             "severity": "INFO",
@@ -1284,14 +1283,14 @@
         "metrics": {
           "is_git_repo": true,
           "branch": "master",
-          "last_commit_hash": "471a942",
-          "last_commit_date": "2026-10-10",
-          "last_commit_msg": "chore(submodule): actualizar referencia de ataraxia con suite de 45 tests y desacoplamiento limpio",
-          "total_commits": 507,
+          "last_commit_hash": "ca691aa",
+          "last_commit_date": "2026-10-12",
+          "last_commit_msg": "chore: sincronizar ataraxia v2.9.1 con calificación AAA (90.8/100) y CHANGELOG institucional",
+          "total_commits": 509,
           "bus_factor": 3,
           "primary_author": "Mauricio",
           "concentration_pct": 51.5,
-          "dirty_files_count": 3,
+          "dirty_files_count": 1,
           "has_readme": true,
           "has_changelog": true,
           "obsidian_cerebro_found": true,
@@ -1309,8 +1308,8 @@
       },
       {
         "severity": "INFO",
-        "title": "Suite de Pruebas Verificada (45/45 exitosas)",
-        "detail": "Ejecución dinámica exitosa en 11.38s (11 suites, 45 aserciones aprobadas al 100%).",
+        "title": "Suite de Pruebas Verificada (50/50 exitosas)",
+        "detail": "Ejecución dinámica exitosa en 12.51s (12 suites, 50 aserciones aprobadas al 100%).",
         "file": "package.json",
         "pilar": "Arquitectura & Deuda Técnica"
       },
@@ -1379,10 +1378,9 @@
         "pilar": "Arquitectura & Deuda Técnica"
       },
       {
-        "severity": "HIGH",
-        "title": "Ausencia de pasarela de pago activa (Zero-Billing Infrastructure)",
-        "detail": "No se detectaron integraciones con Stripe, PayPal ni LemonSqueezy. En una auditoría de M&A, un software sin sistema de cobro activo requiere inversión previa del comprador antes de generar el primer dólar.",
-        "file": "billing",
+        "severity": "LOW",
+        "title": "Pasarela de pago detectada en código",
+        "detail": "El proyecto cuenta con integraciones o referencias para monetización directa.",
         "pilar": "Vendibilidad M&A & Viabilidad Comercial"
       },
       {
@@ -1429,7 +1427,7 @@
         "pilar": "Gobernanza & Data Room"
       }
     ],
-    "markdown_report": "# 🏛️ Dossier Ejecutivo de Tech Due Diligence — Ataraxia\n\n**Fecha de Auditoría:** 2026-10-12 17:30:38  \n**Ruta del Repositorio:** `C:\\Users\\mauro\\OneDrive\\Documentos\\ATARAXIA_APP`  \n**Titularidad & Autoría:** Mauricio Uribe Maldonado  \n**Veredicto de Inversión (Rigor Institucional):** **AAA (90.8/100)** — *Grado Institucional Élite (Apto M&A Directo)*\n\n---\n\n## 📊 Resumen Ejecutivo del Score (Estándar M&A)\n\n| Pilar de Evaluación | Ponderación | Score Obtenido | Estado |\n| :--- | :---: | :---: | :---: |\n| 🛡️ **1. Ciberseguridad & Zero-Leakage (SAST)** | 15% | **100/100** | EXCELLENT |\n| 📦 **2. Seguridad de Dependencias & SCA (CVEs)** | 10% | **100/100** | EXCELLENT |\n| 📜 **3. Propiedad Intelectual & Licencias** | 15% | **100/100** | EXCELLENT |\n| 🏗️ **4. Arquitectura & Deuda Técnica** | 15% | **88/100** | EXCELLENT |\n| 📱 **5. Ergonomía de Formularios & UX Móvil** | 15% | **100/100** | EXCELENTE |\n| 💼 **6. Vendibilidad M&A & Viabilidad Comercial** | 15% | **53/100** | LOW POTENTIAL |\n| ⚡ **7. Resiliencia & Producción** | 8% | **100/100** | EXCELLENT |\n| 🏛️ **8. Gobernanza & Data Room** | 7% | **95/100** | EXCELLENT |\n| **TOTAL PONDERADO** | **100%** | **90.8/100** | **AAA** |\n\n---\n\n## 🚨 Alertas Críticas & Deal Breakers (0)\n✅ **CERO DEAL BREAKERS DETECTADOS.** No se observaron filtraciones de claves maestras ni riesgos de contaminación de código privativo por licencias copyleft virales.\n\n---\n\n## 🔍 Desglose Detallado por Pilares\n\n### Ciberseguridad & Zero-Leakage (Score: 100/100 - EXCELLENT)\n> **Diagnóstico:** 0 críticos, 0 altos, 0 medios en 127 archivos inspeccionados.\n\n✅ No se detectaron anomalías ni advertencias en este pilar.\n\n### Seguridad de Dependencias & SCA (Score: 100/100 - EXCELLENT)\n> **Diagnóstico:** 0 críticas, 0 altas, 0 moderadas en 0 dependencias auditadas.\n\n✅ No se detectaron anomalías ni advertencias en este pilar.\n\n### Propiedad Intelectual & Licencias (Score: 100/100 - EXCELLENT)\n> **Diagnóstico:** 39 dependencias analizadas. IP de fundador ✅ Acreditada. 0 riesgos de copyleft.\n\n* 🔵 **[LOW] Titularidad de IP verificada en LICENSE**\n  - *Detalle:* El archivo de licencia reconoce formalmente a 'Mauricio Uribe Maldonado' como titular exclusivo.\n  - *Ubicación:* `LICENSE`\n\n### Arquitectura & Deuda Técnica (Score: 88/100 - EXCELLENT)\n> **Diagnóstico:** 129 archivos (29,921 SLOC). 0 archivos >800l. Complejidad Máx: V(G)=161 (Promedio: 16.1). 11 archivos de test.\n\n* 🔵 **[INFO] Suite de Pruebas Verificada (45/45 exitosas)**\n  - *Detalle:* Ejecución dinámica exitosa en 11.38s (11 suites, 45 aserciones aprobadas al 100%).\n  - *Ubicación:* `package.json`\n* 🟠 **[HIGH] Complejidad Ciclomática Crítica en `generateStoicMentorResponse()` (V(G) = 161)**\n  - *Detalle:* La función `generateStoicMentorResponse` supera el umbral máximo de 20 caminos independientes. Requiere desacople y modularización para asegurar testeabilidad y evitar regresiones.\n  - *Ubicación:* `ataraxia/src/lib/stoicMentorEngine.ts` (Línea 90)\n* 🟠 **[HIGH] Complejidad Ciclomática Crítica en `DailyLogProvider()` (V(G) = 142)**\n  - *Detalle:* La función `DailyLogProvider` supera el umbral máximo de 20 caminos independientes. Requiere desacople y modularización para asegurar testeabilidad y evitar regresiones.\n  - *Ubicación:* `ataraxia/src/context/DailyLogContext.tsx` (Línea 55)\n* 🟠 **[HIGH] Complejidad Ciclomática Crítica en `HoyScreen()` (V(G) = 118)**\n  - *Detalle:* La función `HoyScreen` supera el umbral máximo de 20 caminos independientes. Requiere desacople y modularización para asegurar testeabilidad y evitar regresiones.\n  - *Ubicación:* `ataraxia/src/app/index.tsx` (Línea 30)\n* 🟠 **[HIGH] Complejidad Ciclomática Crítica en `ProgressScreen()` (V(G) = 116)**\n  - *Detalle:* La función `ProgressScreen` supera el umbral máximo de 20 caminos independientes. Requiere desacople y modularización para asegurar testeabilidad y evitar regresiones.\n  - *Ubicación:* `ataraxia/src/app/progress.tsx` (Línea 22)\n* 🟠 **[HIGH] Complejidad Ciclomática Crítica en `usePedometerSensor()` (V(G) = 112)**\n  - *Detalle:* La función `usePedometerSensor` supera el umbral máximo de 20 caminos independientes. Requiere desacople y modularización para asegurar testeabilidad y evitar regresiones.\n  - *Ubicación:* `ataraxia/src/hooks/usePedometerSensor.ts` (Línea 51)\n* 🔵 **[LOW] Complejidad Lógica Moderada en `ArchonThroneScreen()` (V(G) = 19)**\n  - *Detalle:* Función con 19 caminos de decisión lógica. Mantenible pero candidata a simplificación.\n  - *Ubicación:* `ataraxia/src/app/archon.tsx` (Línea 111)\n* 🔵 **[LOW] Complejidad Lógica Moderada en `StoicTwinMetabolicCards()` (V(G) = 18)**\n  - *Detalle:* Función con 18 caminos de decisión lógica. Mantenible pero candidata a simplificación.\n  - *Ubicación:* `ataraxia/src/components/StoicTwinMetabolicCards.tsx` (Línea 19)\n* 🔵 **[LOW] Complejidad Lógica Moderada en `HonorDiplomaModal()` (V(G) = 16)**\n  - *Detalle:* Función con 16 caminos de decisión lógica. Mantenible pero candidata a simplificación.\n  - *Ubicación:* `ataraxia/src/components/HonorDiplomaModal.tsx` (Línea 25)\n\n### Ergonomía de Formularios & UX Móvil (Score: 100/100 - EXCELENTE)\n> **Diagnóstico:** Auditados 15 archivos frontend y 1 campos de entrada. Se detectaron 0 observaciones ergonómicas. Los formularios implementan estándares modernos de UX móvil y autocompletado nativo.\n\n✅ No se detectaron anomalías ni advertencias en este pilar.\n\n### Vendibilidad M&A & Viabilidad Comercial (Score: 53/100 - LOW POTENTIAL)\n> **Diagnóstico:** Vendibilidad: MEDIA (53/100). Modelo: SaaS Fitness & Coaching Estoico. Key-Person Risk: MEDIO (React Native / Expo requiere mant...\n\n* 🟠 **[HIGH] Ausencia de pasarela de pago activa (Zero-Billing Infrastructure)**\n  - *Detalle:* No se detectaron integraciones con Stripe, PayPal ni LemonSqueezy. En una auditoría de M&A, un software sin sistema de cobro activo requiere inversión previa del comprador antes de generar el primer dólar.\n  - *Ubicación:* `billing`\n\n### Resiliencia & Producción (Score: 100/100 - EXCELLENT)\n> **Diagnóstico:** Offline-First: ✅ Sí. PWA: ✅ Sí. IA Timeout: ✅ Blindado.\n\n* 🔵 **[LOW] Protocolo Anti-Timeout en IA verificado**\n  - *Detalle:* Las llamadas a Gemini implementan control de tiempo y mitigación de cuotas.\n* 🔵 **[LOW] Arquitectura de Fallback para IA presente**\n  - *Detalle:* El sistema contempla conmutación a simulación o caché ante fallos de conectividad.\n* 🔵 **[LOW] Persistencia Offline-First verificada**\n  - *Detalle:* Se detectó uso de almacenamiento local autónomo (SafeStorage / AsyncStorage / localStorage).\n* 🔵 **[LOW] Capacidades PWA detectadas**\n  - *Detalle:* Presencia de manifiesto o service worker para funcionamiento desacoplado.\n\n### Gobernanza & Data Room (Score: 95/100 - EXCELLENT)\n> **Diagnóstico:** Git: ✅ Activo (master • 471a942). Bus Factor: 3 (51.5% en Mauricio). Obsidian: ✅ cerebro_ataraxia.\n\n* 🔵 **[INFO] Equipo Distribuido (Bus Factor = 3)**\n  - *Detalle:* El código tiene historial colaborativo con 5 autores activos.\n  - *Ubicación:* `.git`\n* 🔵 **[LOW] Documentación técnica README.md presente**\n  - *Detalle:* Existe documentación de arquitectura e instrucciones de despliegue.\n* 🔵 **[LOW] Bóveda Obsidian SSOT vinculada (cerebro_ataraxia)**\n  - *Detalle:* El proyecto cuenta con gemelo digital de documentación y MOCs en Obsidian.\n\n---\n\n## 💼 Proyección Comercial & Recomendaciones para M&A\n1. **Key-Person Risk:** Reducir la dependencia del desarrollador único mediante la incorporación de suites de pruebas automatizadas (Jest / Pytest) y documentación de despliegue reproducible.\n2. **Infraestructura de Facturación:** Conectar pasarelas de pago directas (Stripe / LemonSqueezy) para convertir el prototipo en un activo con flujo de caja auditable.\n3. **Refactorización de Monolitos:** Modularizar los archivos que superan las 800 líneas antes de auditorías técnicas de compradores institucionales.\n\n*Informe generado bajo el Estándar Institucional V-GUARD Due Diligence.*\n"
+    "markdown_report": "# 🏛️ Dossier Ejecutivo de Tech Due Diligence — Ataraxia\n\n**Fecha de Auditoría:** 2026-10-13 15:17:26  \n**Ruta del Repositorio:** `C:\\Users\\mauro\\OneDrive\\Documentos\\ATARAXIA_APP`  \n**Titularidad & Autoría:** Mauricio Uribe Maldonado  \n**Veredicto de Inversión (Rigor Institucional):** **AAA (94.6/100)** — *Grado Institucional Élite (Apto M&A Directo)*\n\n---\n\n## 📊 Resumen Ejecutivo del Score (Estándar M&A)\n\n| Pilar de Evaluación | Ponderación | Score Obtenido | Estado |\n| :--- | :---: | :---: | :---: |\n| 🛡️ **1. Ciberseguridad & Zero-Leakage (SAST)** | 15% | **100/100** | EXCELLENT |\n| 📦 **2. Seguridad de Dependencias & SCA (CVEs)** | 10% | **100/100** | EXCELLENT |\n| 📜 **3. Propiedad Intelectual & Licencias** | 15% | **100/100** | EXCELLENT |\n| 🏗️ **4. Arquitectura & Deuda Técnica** | 15% | **88/100** | EXCELLENT |\n| 📱 **5. Ergonomía de Formularios & UX Móvil** | 15% | **100/100** | EXCELENTE |\n| 💼 **6. Vendibilidad M&A & Viabilidad Comercial** | 15% | **78/100** | MODERATE |\n| ⚡ **7. Resiliencia & Producción** | 8% | **100/100** | EXCELLENT |\n| 🏛️ **8. Gobernanza & Data Room** | 7% | **95/100** | EXCELLENT |\n| **TOTAL PONDERADO** | **100%** | **94.6/100** | **AAA** |\n\n---\n\n## 🚨 Alertas Críticas & Deal Breakers (0)\n✅ **CERO DEAL BREAKERS DETECTADOS.** No se observaron filtraciones de claves maestras ni riesgos de contaminación de código privativo por licencias copyleft virales.\n\n---\n\n## 🔍 Desglose Detallado por Pilares\n\n### Ciberseguridad & Zero-Leakage (Score: 100/100 - EXCELLENT)\n> **Diagnóstico:** 0 críticos, 0 altos, 0 medios en 131 archivos inspeccionados.\n\n✅ No se detectaron anomalías ni advertencias en este pilar.\n\n### Seguridad de Dependencias & SCA (Score: 100/100 - EXCELLENT)\n> **Diagnóstico:** 0 críticas, 0 altas, 0 moderadas en 0 dependencias auditadas.\n\n✅ No se detectaron anomalías ni advertencias en este pilar.\n\n### Propiedad Intelectual & Licencias (Score: 100/100 - EXCELLENT)\n> **Diagnóstico:** 39 dependencias analizadas. IP de fundador ✅ Acreditada. 0 riesgos de copyleft.\n\n* 🔵 **[LOW] Titularidad de IP verificada en LICENSE**\n  - *Detalle:* El archivo de licencia reconoce formalmente a 'Mauricio Uribe Maldonado' como titular exclusivo.\n  - *Ubicación:* `LICENSE`\n\n### Arquitectura & Deuda Técnica (Score: 88/100 - EXCELLENT)\n> **Diagnóstico:** 133 archivos (30,628 SLOC). 0 archivos >800l. Complejidad Máx: V(G)=161 (Promedio: 15.6). 12 archivos de test.\n\n* 🔵 **[INFO] Suite de Pruebas Verificada (50/50 exitosas)**\n  - *Detalle:* Ejecución dinámica exitosa en 12.51s (12 suites, 50 aserciones aprobadas al 100%).\n  - *Ubicación:* `package.json`\n* 🟠 **[HIGH] Complejidad Ciclomática Crítica en `generateStoicMentorResponse()` (V(G) = 161)**\n  - *Detalle:* La función `generateStoicMentorResponse` supera el umbral máximo de 20 caminos independientes. Requiere desacople y modularización para asegurar testeabilidad y evitar regresiones.\n  - *Ubicación:* `ataraxia/src/lib/stoicMentorEngine.ts` (Línea 90)\n* 🟠 **[HIGH] Complejidad Ciclomática Crítica en `DailyLogProvider()` (V(G) = 142)**\n  - *Detalle:* La función `DailyLogProvider` supera el umbral máximo de 20 caminos independientes. Requiere desacople y modularización para asegurar testeabilidad y evitar regresiones.\n  - *Ubicación:* `ataraxia/src/context/DailyLogContext.tsx` (Línea 55)\n* 🟠 **[HIGH] Complejidad Ciclomática Crítica en `HoyScreen()` (V(G) = 118)**\n  - *Detalle:* La función `HoyScreen` supera el umbral máximo de 20 caminos independientes. Requiere desacople y modularización para asegurar testeabilidad y evitar regresiones.\n  - *Ubicación:* `ataraxia/src/app/index.tsx` (Línea 30)\n* 🟠 **[HIGH] Complejidad Ciclomática Crítica en `ProgressScreen()` (V(G) = 116)**\n  - *Detalle:* La función `ProgressScreen` supera el umbral máximo de 20 caminos independientes. Requiere desacople y modularización para asegurar testeabilidad y evitar regresiones.\n  - *Ubicación:* `ataraxia/src/app/progress.tsx` (Línea 22)\n* 🟠 **[HIGH] Complejidad Ciclomática Crítica en `usePedometerSensor()` (V(G) = 112)**\n  - *Detalle:* La función `usePedometerSensor` supera el umbral máximo de 20 caminos independientes. Requiere desacople y modularización para asegurar testeabilidad y evitar regresiones.\n  - *Ubicación:* `ataraxia/src/hooks/usePedometerSensor.ts` (Línea 51)\n* 🔵 **[LOW] Complejidad Lógica Moderada en `ArchonThroneScreen()` (V(G) = 19)**\n  - *Detalle:* Función con 19 caminos de decisión lógica. Mantenible pero candidata a simplificación.\n  - *Ubicación:* `ataraxia/src/app/archon.tsx` (Línea 111)\n* 🔵 **[LOW] Complejidad Lógica Moderada en `StoicTwinMetabolicCards()` (V(G) = 18)**\n  - *Detalle:* Función con 18 caminos de decisión lógica. Mantenible pero candidata a simplificación.\n  - *Ubicación:* `ataraxia/src/components/StoicTwinMetabolicCards.tsx` (Línea 19)\n* 🔵 **[LOW] Complejidad Lógica Moderada en `HonorDiplomaModal()` (V(G) = 16)**\n  - *Detalle:* Función con 16 caminos de decisión lógica. Mantenible pero candidata a simplificación.\n  - *Ubicación:* `ataraxia/src/components/HonorDiplomaModal.tsx` (Línea 25)\n\n### Ergonomía de Formularios & UX Móvil (Score: 100/100 - EXCELENTE)\n> **Diagnóstico:** Auditados 15 archivos frontend y 1 campos de entrada. Se detectaron 0 observaciones ergonómicas. Los formularios implementan estándares modernos de UX móvil y autocompletado nativo.\n\n✅ No se detectaron anomalías ni advertencias en este pilar.\n\n### Vendibilidad M&A & Viabilidad Comercial (Score: 78/100 - MODERATE)\n> **Diagnóstico:** Vendibilidad: MEDIA (78/100). Modelo: SaaS Fitness & Coaching Estoico. Key-Person Risk: MEDIO (React Native / Expo requiere mant...\n\n* 🔵 **[LOW] Pasarela de pago detectada en código**\n  - *Detalle:* El proyecto cuenta con integraciones o referencias para monetización directa.\n\n### Resiliencia & Producción (Score: 100/100 - EXCELLENT)\n> **Diagnóstico:** Offline-First: ✅ Sí. PWA: ✅ Sí. IA Timeout: ✅ Blindado.\n\n* 🔵 **[LOW] Protocolo Anti-Timeout en IA verificado**\n  - *Detalle:* Las llamadas a Gemini implementan control de tiempo y mitigación de cuotas.\n* 🔵 **[LOW] Arquitectura de Fallback para IA presente**\n  - *Detalle:* El sistema contempla conmutación a simulación o caché ante fallos de conectividad.\n* 🔵 **[LOW] Persistencia Offline-First verificada**\n  - *Detalle:* Se detectó uso de almacenamiento local autónomo (SafeStorage / AsyncStorage / localStorage).\n* 🔵 **[LOW] Capacidades PWA detectadas**\n  - *Detalle:* Presencia de manifiesto o service worker para funcionamiento desacoplado.\n\n### Gobernanza & Data Room (Score: 95/100 - EXCELLENT)\n> **Diagnóstico:** Git: ✅ Activo (master • ca691aa). Bus Factor: 3 (51.5% en Mauricio). Obsidian: ✅ cerebro_ataraxia.\n\n* 🔵 **[INFO] Equipo Distribuido (Bus Factor = 3)**\n  - *Detalle:* El código tiene historial colaborativo con 5 autores activos.\n  - *Ubicación:* `.git`\n* 🔵 **[LOW] Documentación técnica README.md presente**\n  - *Detalle:* Existe documentación de arquitectura e instrucciones de despliegue.\n* 🔵 **[LOW] Bóveda Obsidian SSOT vinculada (cerebro_ataraxia)**\n  - *Detalle:* El proyecto cuenta con gemelo digital de documentación y MOCs en Obsidian.\n\n---\n\n## 💼 Proyección Comercial & Recomendaciones para M&A\n1. **Key-Person Risk:** Reducir la dependencia del desarrollador único mediante la incorporación de suites de pruebas automatizadas (Jest / Pytest) y documentación de despliegue reproducible.\n2. **Infraestructura de Facturación:** Conectar pasarelas de pago directas (Stripe / LemonSqueezy) para convertir el prototipo en un activo con flujo de caja auditable.\n3. **Refactorización de Monolitos:** Modularizar los archivos que superan las 800 líneas antes de auditorías técnicas de compradores institucionales.\n\n*Informe generado bajo el Estándar Institucional V-GUARD Due Diligence.*\n"
   },
   {
     "app_key": "hidoctor",
