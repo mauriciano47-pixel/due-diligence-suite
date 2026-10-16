@@ -87,6 +87,20 @@ def scan_project(project_path: str, app_key: str = None, app_name: str = None) -
             if finding.get("severity") == "CRITICAL":
                 deal_breakers.append(finding_copy)
 
+    pillars_dict = {
+        "security": sec_res,
+        "sca": sca_res,
+        "ip_licenses": ip_res,
+        "architecture": arch_res,
+        "form_shield": form_res,
+        "commercial": comm_res,
+        "resilience": res_res,
+        "governance": gov_res
+    }
+
+    from audit_valuation import calculate_ma_valuation
+    valuation = calculate_ma_valuation(global_score, pillars_dict, len(deal_breakers))
+
     # Generar Dossier Markdown para Obsidian / Inversores
     markdown_report = generate_markdown_dossier(
         app_name=display_name,
@@ -96,7 +110,8 @@ def scan_project(project_path: str, app_key: str = None, app_name: str = None) -
         grade=grade,
         grade_label=grade_label,
         deal_breakers=deal_breakers,
-        pillars=[sec_res, sca_res, ip_res, arch_res, form_res, comm_res, res_res, gov_res]
+        pillars=[sec_res, sca_res, ip_res, arch_res, form_res, comm_res, res_res, gov_res],
+        valuation=valuation
     )
 
     return {
@@ -111,28 +126,30 @@ def scan_project(project_path: str, app_key: str = None, app_name: str = None) -
         "grade_color": grade_color,
         "deal_breakers_count": len(deal_breakers),
         "deal_breakers": deal_breakers,
-        "pillars": {
-            "security": sec_res,
-            "sca": sca_res,
-            "ip_licenses": ip_res,
-            "architecture": arch_res,
-            "form_shield": form_res,
-            "commercial": comm_res,
-            "resilience": res_res,
-            "governance": gov_res
-        },
+        "valuation": valuation,
+        "pillars": pillars_dict,
         "all_findings": all_findings,
         "markdown_report": markdown_report
     }
 
-def generate_markdown_dossier(app_name, project_path, timestamp, score, grade, grade_label, deal_breakers, pillars) -> str:
+def generate_markdown_dossier(app_name, project_path, timestamp, score, grade, grade_label, deal_breakers, pillars, valuation=None) -> str:
+    val_block = ""
+    if valuation:
+        val_block = f"""
+## 💎 Simulador de Valuación Institucional M&A (Acquire.com / Private Equity Standard)
+- **Nivel de Madurez Institucional:** `{valuation['tier']}`
+- **Multiplicador Estimado de Salida:** **{valuation['arr_multiple']}**
+- **Descuento por Deuda Técnica (Haircut):** `{valuation['haircut_pct']}%`
+- **Estado Turnkey:** {valuation['turnkey_status']}
+- **Capacidades de Ingeniería Élite Activas:** `{valuation['elite_score_ratio']}`
+"""
     md = f"""# 🏛️ Dossier Ejecutivo de Tech Due Diligence — {app_name}
 
 **Fecha de Auditoría:** {timestamp}  
 **Ruta del Repositorio:** `{project_path}`  
 **Titularidad & Autoría:** Mauricio Uribe Maldonado  
 **Veredicto de Inversión (Rigor Institucional):** **{grade} ({score}/100)** — *{grade_label}*
-
+{val_block}
 ---
 
 ## 📊 Resumen Ejecutivo del Score (Estándar M&A)

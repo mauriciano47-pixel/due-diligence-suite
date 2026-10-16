@@ -212,16 +212,35 @@ def audit_architecture(project_path: str) -> dict:
     elif max_complexity > 20:
         score -= 6
 
+    # 7. Bonificación por Ingeniería de Testing de Grado Aeroespacial/Institucional
+    if (test_run_res.get("coverage_pct") or 0) >= 90.0:
+        score += 4
+    if test_run_res.get("has_pbt_fuzzing"):
+        score += 3
+    if test_run_res.get("has_chaos"):
+        score += 3
+    if test_run_res.get("has_mutation"):
+        score += 3
+
     score = max(0, min(100, score))
     status = "EXCELLENT" if score >= 85 else ("GOOD" if score >= 70 else ("WARNING" if score >= 50 else "DANGER"))
 
     cov_str = f" Cobertura: {test_run_res['coverage_pct']}%." if test_run_res.get("coverage_pct") else ""
     e2e_str = f" E2E Playwright: {test_run_res['e2e_files_count']} specs." if test_run_res.get("has_e2e") else ""
+    elite_tags = []
+    if test_run_res.get("has_pbt_fuzzing"):
+        elite_tags.append("PBT-Fuzzing")
+    if test_run_res.get("has_chaos"):
+        elite_tags.append("Chaos")
+    if test_run_res.get("has_mutation"):
+        elite_tags.append("Mutation-100%")
+    elite_str = f" Élite: [{', '.join(elite_tags)}]." if elite_tags else ""
+
     return {
         "pilar": "Arquitectura & Deuda Técnica",
         "score": score,
         "status": status,
-        "summary": f"{total_files} archivos ({total_code_lines:,} SLOC). {len(god_files)} monolitos. Tests: {test_run_res.get('total_tests', test_files_count)} (Pass: {test_run_res.get('pass_rate', 0)}%).{cov_str}{e2e_str}",
+        "summary": f"{total_files} archivos ({total_code_lines:,} SLOC). {len(god_files)} monolitos. Tests: {test_run_res.get('total_tests', test_files_count)} (Pass: {test_run_res.get('pass_rate', 0)}%).{cov_str}{e2e_str}{elite_str}",
         "findings": findings,
         "metrics": {
             "total_files": total_files,

@@ -90,26 +90,26 @@ def sync_to_obsidian():
 
 ---
 
-## 📋 Tabla Comparativa de Calificación de la Flota (7 Pilares)
+## 📋 Tabla Comparativa de Calificación y Valuación Institucional de la Flota
 
-| Aplicación | Score Global | Grado M&A | Veredicto | Deal Breakers | Ciberseguridad (20%) | IP & Licencias (15%) | Arquitectura (15%) | Form Shield & UX (15%) | Comercial (15%) | Resiliencia (10%) | Gobernanza (10%) | Dossier Detallado |
-| :--- | :---: | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
+| Aplicación | Score Global | Grado M&A | Tier Institucional | Multiplicador ARR | Haircut Deuda | Armas Élite | Deal Breakers | Arquitectura | SCA & SBOM | Dossier Detallado |
+| :--- | :---: | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
 """
 
     for d in data:
         p = d.get("pillars", {})
-        sec_score = p.get("security", {}).get("score", 0)
-        ip_score = p.get("ip_licenses", {}).get("score", 0)
+        val = d.get("valuation", {})
+        sca_score = p.get("sca", {}).get("score", 0)
         arch_score = p.get("architecture", {}).get("score", 0)
-        form_score = p.get("form_shield", {}).get("score", 0)
-        comm_score = p.get("commercial", {}).get("score", 0)
-        res_score = p.get("resilience", {}).get("score", 0)
-        gov_score = p.get("governance", {}).get("score", 0)
-        
+        tier_str = val.get("tier", "N/A").split("—")[0].strip() if val else "N/A"
+        mult_str = val.get("arr_multiple", "N/A") if val else "N/A"
+        haircut_str = f"{val.get('haircut_pct', 0)}%" if val else "N/A"
+        elite_str = val.get("elite_score_ratio", "N/A") if val else "N/A"
+
         vault_name, filename = VAULT_MAP.get(d.get("app_key"), ("cerebro_vguard_seguridad", ""))
         link = f"[[{vault_name}/{filename[:-3]}|Ver Dossier]]"
 
-        master_md += f"| **{d.get('app_name')}** | **{d.get('global_score')}/100** | `{d.get('grade')}` | {d.get('grade_label')} | {d.get('deal_breakers_count')} | {sec_score}/100 | {ip_score}/100 | {arch_score}/100 | {form_score}/100 | {comm_score}/100 | {res_score}/100 | {gov_score}/100 | {link} |\n"
+        master_md += f"| **{d.get('app_name')}** | **{d.get('global_score')}/100** | `{d.get('grade')}` | `{tier_str}` | **{mult_str}** | `{haircut_str}` | `{elite_str}` | {d.get('deal_breakers_count')} | {arch_score}/100 | {sca_score}/100 | {link} |\n"
 
     master_md += f"""
 ---

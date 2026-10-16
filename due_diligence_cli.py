@@ -60,6 +60,14 @@ def run_single_audit(app_data: dict, save_obsidian: bool = False):
     print(f"   Calificación: {result['grade_label']}")
     print(f"   🚨 Deal Breakers / Alertas Críticas: {result['deal_breakers_count']}")
 
+    val = result.get("valuation")
+    if val:
+        print("\n   [💎 Simulador de Valuación Institucional M&A]:")
+        print(f"   🏛️  Madurez Institucional : {val['tier']}")
+        print(f"   💰 Multiplicador Salida  : {val['arr_multiple']}")
+        print(f"   ✂️  Haircut Deuda Técnica : {val['haircut_pct']}% ({val['turnkey_status']})")
+        print(f"   🧬 Armas Élite Activas   : {val['elite_score_ratio']}")
+
     print("\n   [Desglose por Pilares]:")
     for k, p in result["pillars"].items():
         icon = "✅" if p["score"] >= 80 else ("⚠️" if p["score"] >= 60 else "❌")
