@@ -90,14 +90,14 @@ COMMERCIAL_PROFILES = {
         "exit_recommendation": "Monetizar con programa de afiliados Binance/Bybit o vender acceso a comunidades privadas de trading en Telegram/Discord."
     },
     "faro": {
-        "model": "Seguridad Personal & SOS PWA",
-        "market": "Familias / Estudiantes / Turnos Nocturnos",
-        "salability": "MEDIA",
-        "salability_score": 64,
-        "take_rate_potential": "Complejo en B2C directo sin alto gasto en ads. Mejor modelo: B2G (acuerdos universitarios/municipales).",
-        "key_person_risk": "BAJO (Frontend ligero PWA).",
-        "operational_moat": "PWA offline-first con linterna estroboscópica y geocercas sin dependencia de servidores caros.",
-        "exit_recommendation": "Presentar como proyecto de licitación municipal para ciudades seguras o protección universitaria."
+        "model": "Micro-SaaS de Seguridad Personal & SOS PWA (B2C Familias & B2B Campus/Empresas)",
+        "market": "Familias / Estudiantes / Trabajadores Nocturnos / Universidades & Empresas",
+        "salability": "ALTA (Micro-SaaS Turnkey para Acquire.com / Flippa)",
+        "salability_score": 86,
+        "take_rate_potential": "Suscripción B2C Escudo Familiar ($3.99/mes o $29.99/año) y Campus/B2B ($299/año). Contratos Stripe verificados.",
+        "key_person_risk": "BAJO (Arquitectura modular PWA Offline-First, suite de 18 tests automatizados, cero dependencias pesadas).",
+        "operational_moat": "PWA Offline-First con geocercas inteligentes, botón SOS dual, linterna estroboscópica de auxilio y cifrado local de PIN.",
+        "exit_recommendation": "Publicar en Acquire.com / Flippa como Micro-SaaS de Seguridad Personal llave en mano o licenciar a aseguradoras y campus universitarios por $15k-$35k USD."
     },
     "vitrina": {
         "model": "Hub Showcase / Portfolio Inversor",
