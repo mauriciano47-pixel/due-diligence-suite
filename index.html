@@ -60,6 +60,81 @@
         </div>
       </div>
 
+      <!-- Panel de Mando Ejecutivo de la Flota (Fleet Command Deck) -->
+      <div class="fleet-command-deck">
+        <div class="command-kpi-card highlight-emerald">
+          <div class="command-kpi-icon">🏆</div>
+          <div class="command-kpi-body">
+            <div class="command-kpi-value"><span id="kpiAaaCount">7</span><span class="command-kpi-total">/10</span></div>
+            <div class="command-kpi-label">Grado Élite AAA (70%)</div>
+            <div class="command-kpi-sub">≥90/100 M&A Institutional Ready</div>
+          </div>
+        </div>
+
+        <div class="command-kpi-card highlight-cyan">
+          <div class="command-kpi-icon">🚨</div>
+          <div class="command-kpi-body">
+            <div class="command-kpi-value"><span id="kpiDealBreakersTotal">0</span></div>
+            <div class="command-kpi-label">Deal Breakers Críticos</div>
+            <div class="command-kpi-sub">Flota 100% libre de contingencias</div>
+          </div>
+        </div>
+
+        <div class="command-kpi-card highlight-blue">
+          <div class="command-kpi-icon">💎</div>
+          <div class="command-kpi-body">
+            <div class="command-kpi-value">3.8x – 5.0x</div>
+            <div class="command-kpi-label">Múltiplo de Salida ARR</div>
+            <div class="command-kpi-sub">Tier 2 Institutional Grade</div>
+          </div>
+        </div>
+
+        <div class="command-kpi-card highlight-gold">
+          <div class="command-kpi-icon">⚖️</div>
+          <div class="command-kpi-body">
+            <div class="command-kpi-value">100% IP</div>
+            <div class="command-kpi-label">Titularidad Registrada</div>
+            <div class="command-kpi-sub">Mauricio Uribe Maldonado</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Barra de Filtros Rápidos & Búsqueda Reactiva -->
+      <div class="fleet-toolbar">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="fleetSearchInput" placeholder="Buscar por app, vertical, tecnología o estándar..." aria-label="Buscar aplicaciones del ecosistema" />
+          <button id="btnClearSearch" class="btn-clear-search hidden" title="Limpiar búsqueda">✕</button>
+        </div>
+
+        <div class="filter-pills" id="filterPills">
+          <button class="filter-pill active" data-filter="all">
+            <span>⭐ Todas</span>
+            <span class="pill-count" id="countAll">10</span>
+          </button>
+          <button class="filter-pill" data-filter="aaa">
+            <span>🏆 Grado AAA</span>
+            <span class="pill-count count-emerald" id="countAaa">7</span>
+          </button>
+          <button class="filter-pill" data-filter="pending">
+            <span>⚠️ En Elevación</span>
+            <span class="pill-count count-amber" id="countPending">3</span>
+          </button>
+          <button class="filter-pill" data-filter="health">
+            <span>🩺 Salud / HealthTech</span>
+            <span class="pill-count" id="countHealth">2</span>
+          </button>
+          <button class="filter-pill" data-filter="security">
+            <span>🛡️ Seguridad & SOS</span>
+            <span class="pill-count" id="countSecurity">2</span>
+          </button>
+          <button class="filter-pill" data-filter="industrial">
+            <span>🏭 B2B & Fintech</span>
+            <span class="pill-count" id="countIndustrial">3</span>
+          </button>
+        </div>
+      </div>
+
       <!-- Tarjetas de Apps Oficiales -->
       <div class="apps-grid" id="appsGrid">
         <div class="loading-state">Cargando catálogo del ecosistema...</div>

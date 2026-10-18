@@ -143,33 +143,304 @@ body {
   margin-top: 4px;
 }
 
-/* Apps Grid */
+/* ==========================================================================
+   Fleet Command Deck (Métricas Ejecutivas Globales)
+   ========================================================================== */
+.fleet-command-deck {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-bottom: 1.25rem;
+}
+
+.command-kpi-card {
+  background: linear-gradient(145deg, rgba(13, 17, 28, 0.9) 0%, rgba(18, 24, 38, 0.6) 100%);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  transition: all 0.25s ease;
+}
+
+.command-kpi-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-active);
+  box-shadow: 0 6px 20px rgba(0, 229, 255, 0.12);
+}
+
+.command-kpi-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+}
+
+.command-kpi-card.highlight-emerald::before { background: var(--accent-emerald); }
+.command-kpi-card.highlight-cyan::before { background: var(--accent-cyan); }
+.command-kpi-card.highlight-blue::before { background: var(--accent-blue); }
+.command-kpi-card.highlight-gold::before { background: var(--accent-amber); }
+
+.command-kpi-icon {
+  font-size: 1.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+}
+
+.command-kpi-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.command-kpi-value {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #fff;
+  font-family: var(--font-mono);
+  line-height: 1.1;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.command-kpi-total {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.command-kpi-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-top: 3px;
+}
+
+.command-kpi-sub {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ==========================================================================
+   Fleet Toolbar (Búsqueda Reactiva & Filtros)
+   ========================================================================== */
+.fleet-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 1.5rem;
+  background: rgba(13, 17, 28, 0.75);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  backdrop-filter: blur(8px);
+}
+
+@media (min-width: 900px) {
+  .fleet-toolbar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 260px;
+  max-width: 480px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 0 12px;
+  transition: border-color 0.2s;
+}
+
+.search-box:focus-within {
+  border-color: var(--accent-cyan);
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.15);
+}
+
+.search-icon {
+  margin-right: 8px;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+.search-box input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 0.85rem;
+  padding: 8px 0;
+}
+
+.search-box input::placeholder {
+  color: var(--text-dim);
+}
+
+.btn-clear-search {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+.btn-clear-search:hover { color: #fff; }
+
+.filter-pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.filter-pill {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.filter-pill:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.filter-pill.active {
+  background: rgba(0, 229, 255, 0.12);
+  color: var(--accent-cyan);
+  border-color: rgba(0, 229, 255, 0.45);
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.15);
+}
+
+.pill-count {
+  font-size: 0.68rem;
+  padding: 1px 6px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.filter-pill.active .pill-count {
+  background: rgba(0, 229, 255, 0.25);
+  color: #fff;
+}
+
+.pill-count.count-emerald {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+.pill-count.count-amber {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+}
+
+/* ==========================================================================
+   Apps Grid & Tarjetas Ultra-Pro M&A
+   ========================================================================== */
 .apps-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 14px;
-  margin-bottom: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  gap: 16px;
+  margin-bottom: 2rem;
 }
 
 .app-card {
-  background: var(--bg-card);
+  background: linear-gradient(155deg, rgba(13, 17, 28, 0.95) 0%, rgba(10, 14, 22, 0.98) 100%);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: 1rem;
+  border-radius: var(--radius-lg);
+  padding: 18px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.app-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.4), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .app-card:hover {
-  background: var(--bg-card-hover);
-  border-color: var(--border-active);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-glow);
+  background: linear-gradient(155deg, rgba(19, 24, 38, 0.98) 0%, rgba(13, 17, 28, 1) 100%);
+  transform: translateY(-4px);
+  border-color: rgba(0, 229, 255, 0.45);
+  box-shadow: 0 12px 32px -8px rgba(0, 229, 255, 0.2), 0 0 1px 1px rgba(0, 229, 255, 0.25);
+}
+
+.app-card:hover::after {
+  opacity: 1;
+}
+
+/* Grados Específicos */
+.app-card.grade-aaa {
+  border-color: rgba(16, 185, 129, 0.3);
+}
+.app-card.grade-aaa:hover {
+  border-color: rgba(16, 185, 129, 0.6);
+  box-shadow: 0 12px 32px -8px rgba(16, 185, 129, 0.25), 0 0 1px 1px rgba(16, 185, 129, 0.3);
+}
+
+.app-card.grade-aa {
+  border-color: rgba(0, 229, 255, 0.25);
+}
+.app-card.grade-aa:hover {
+  border-color: rgba(0, 229, 255, 0.55);
+}
+
+.app-card.grade-a {
+  border-color: rgba(245, 158, 11, 0.25);
+}
+.app-card.grade-a:hover {
+  border-color: rgba(245, 158, 11, 0.55);
+  box-shadow: 0 12px 32px -8px rgba(245, 158, 11, 0.2), 0 0 1px 1px rgba(245, 158, 11, 0.3);
 }
 
 .app-card.disabled {
@@ -177,87 +448,301 @@ body {
   cursor: not-allowed;
 }
 
+/* Cabecera de la Tarjeta */
 .app-card-top {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 8px;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
 }
 
-.app-card-icon {
-  font-size: 1.4rem;
+.app-card-icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  flex-shrink: 0;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: transform 0.2s;
+}
+
+.app-card:hover .app-card-icon-box {
+  transform: scale(1.08);
+  border-color: var(--accent-cyan);
+}
+
+.app-card-title-group {
+  flex: 1;
+  min-width: 0;
 }
 
 .app-card-name {
-  font-size: 1.05rem;
-  font-weight: 600;
+  font-size: 1.15rem;
+  font-weight: 700;
   color: #fff;
+  letter-spacing: -0.3px;
+  line-height: 1.2;
+  margin-bottom: 3px;
 }
 
 .app-card-category {
   font-size: 0.72rem;
   color: var(--accent-cyan);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-weight: 600;
+  letter-spacing: 0.6px;
+  font-weight: 700;
 }
 
-.app-card-role {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  margin-bottom: 8px;
-  line-height: 1.4;
+/* Placa de Grado Institucional (Score Badge) */
+.app-grade-pill {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
 }
 
-.app-card-audit-time {
+.grade-box {
   display: flex;
   align-items: center;
   gap: 6px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 4px 10px;
   border-radius: var(--radius-sm);
-  padding: 5px 9px;
-  margin-bottom: 12px;
-  font-size: 0.74rem;
-  color: var(--text-muted);
-}
-
-.app-card-audit-time.has-audit {
-  border-color: rgba(0, 229, 255, 0.2);
-  background: rgba(0, 229, 255, 0.03);
-}
-
-.app-card-audit-time.unperformed {
-  border-style: dashed;
-  color: var(--text-dim);
-}
-
-.audit-badge-icon {
-  font-size: 0.85rem;
-}
-
-.audit-date-highlight {
-  color: var(--accent-cyan);
-  font-weight: 600;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
   font-family: var(--font-mono);
 }
 
+.grade-box.grade-aaa {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.4);
+  color: #34d399;
+}
+
+.grade-box.grade-aa {
+  background: rgba(0, 229, 255, 0.1);
+  border-color: rgba(0, 229, 255, 0.35);
+  color: #38bdf8;
+}
+
+.grade-box.grade-a {
+  background: rgba(245, 158, 11, 0.1);
+  border-color: rgba(245, 158, 11, 0.35);
+  color: #fbbf24;
+}
+
+.grade-letter {
+  font-size: 1rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.grade-score {
+  font-size: 0.8rem;
+  font-weight: 700;
+  opacity: 0.9;
+}
+
+.grade-tag {
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.grade-tag.tag-aaa { color: #34d399; background: rgba(16, 185, 129, 0.15); }
+.grade-tag.tag-aa { color: #38bdf8; background: rgba(0, 229, 255, 0.15); }
+.grade-tag.tag-a { color: #fbbf24; background: rgba(245, 158, 11, 0.15); }
+
+/* Rol / Resumen de la App */
+.app-card-role {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.4em;
+}
+
+/* Fila de Valuación M&A (ARR Multiple, Haircut, Tier) */
+.app-valuation-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  margin-bottom: 12px;
+}
+
+.val-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.val-label {
+  font-size: 0.62rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+.val-value {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #fff;
+  font-family: var(--font-mono);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.val-value.text-emerald { color: #34d399; }
+.val-value.text-amber { color: #fbbf24; }
+
+/* Mini Matriz de Chips de Pilares (5 Pilares Clave) */
+.pillar-chips-bar {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.pillar-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+  padding: 2px 7px;
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.pillar-chip.chip-pass {
+  background: rgba(16, 185, 129, 0.08);
+  border-color: rgba(16, 185, 129, 0.25);
+  color: #34d399;
+}
+
+.pillar-chip.chip-warn {
+  background: rgba(245, 158, 11, 0.08);
+  border-color: rgba(245, 158, 11, 0.25);
+  color: #fbbf24;
+}
+
+.pillar-chip.chip-alert {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.25);
+  color: #f87171;
+}
+
+/* Barra de Salud / Health Progress Bar */
+.health-progress-wrapper {
+  margin-bottom: 12px;
+}
+
+.health-progress-bg {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.health-progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.6s ease;
+}
+
+.health-progress-fill.fill-aaa {
+  background: linear-gradient(90deg, #059669, #10b981, #34d399);
+}
+
+.health-progress-fill.fill-aa {
+  background: linear-gradient(90deg, #0284c7, #00e5ff);
+}
+
+.health-progress-fill.fill-a {
+  background: linear-gradient(90deg, #d97706, #f59e0b);
+}
+
+/* Footer de la Tarjeta */
 .app-card-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 0.75rem;
-  padding-top: 8px;
+  padding-top: 10px;
   border-top: 1px solid var(--border-subtle);
+  margin-top: auto;
 }
 
-.status-badge-ready {
-  color: var(--accent-emerald);
-  font-weight: 600;
-}
-
-.status-badge-missing {
+.app-card-time-text {
+  font-size: 0.7rem;
   color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.app-card-time-text strong {
+  color: var(--accent-cyan);
+  font-family: var(--font-mono);
+}
+
+.app-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-card-dossier {
+  background: rgba(0, 229, 255, 0.1);
+  border: 1px solid rgba(0, 229, 255, 0.35);
+  color: var(--accent-cyan);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-card-dossier:hover {
+  background: var(--accent-cyan);
+  color: #000;
+  box-shadow: 0 0 14px rgba(0, 229, 255, 0.35);
+}
+
+.app-card.grade-aaa .btn-card-dossier {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.4);
+  color: #34d399;
+}
+
+.app-card.grade-aaa .btn-card-dossier:hover {
+  background: #10b981;
+  color: #000;
+  box-shadow: 0 0 14px rgba(16, 185, 129, 0.4);
 }
 
 /* Custom Path Input Bar */

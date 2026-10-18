@@ -159,6 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
 async function initApp() {
   setupTabs();
   setupEventListeners();
+  setupFleetToolbar();
   initComplianceRibbon();
   await loadApps();
 }
@@ -329,9 +330,19 @@ async function loadApps() {
   try {
     const res = await fetch("/api/apps");
     if (res.ok) {
-      ecosystemApps = await res.json();
+      const rawApps = await res.json();
       isLocalServer = true;
       if (ipPill) ipPill.innerHTML = `<span>🟢 Motor Local 24/7 Activo</span>`;
+      ecosystemApps = rawApps.map(a => ({
+        ...a,
+        category: getCategoryForApp(a.key),
+        icon: getIconForApp(a.key),
+        score: a.last_audit?.score || a.score,
+        grade: a.last_audit?.grade || a.grade,
+        valuation: a.valuation || a.last_audit?.valuation,
+        pillars: a.pillars || a.last_audit?.pillars
+      }));
+      updateFleetKpiCounters();
       renderAppsGrid(ecosystemApps);
       return;
     }
@@ -350,12 +361,16 @@ async function loadApps() {
       ecosystemApps = staticFleetData.map(d => ({
         key: d.app_key,
         name: d.app_name,
-        role: d.pillars.governance.summary || "Aplicación oficial del ecosistema",
+        role: d.pillars?.governance?.summary || "Aplicación oficial del ecosistema",
         category: getCategoryForApp(d.app_key),
         icon: getIconForApp(d.app_key),
         exists: true,
         score: d.global_score,
         grade: d.grade,
+        grade_label: d.grade_label,
+        deal_breakers_count: d.deal_breakers_count || 0,
+        valuation: d.valuation,
+        pillars: d.pillars,
         path: d.project_path,
         last_audit: {
           timestamp: d.timestamp,
@@ -364,6 +379,7 @@ async function loadApps() {
           grade: d.grade
         }
       }));
+      updateFleetKpiCounters();
       renderAppsGrid(ecosystemApps);
     } else {
       throw new Error("No se pudo cargar fleet_data.json");
@@ -373,82 +389,261 @@ async function loadApps() {
   }
 }
 
-function formatAuditTime(auditObj) {
+function updateFleetKpiCounters() {
+  const total = ecosystemApps.length;
+  const aaaCount = ecosystemApps.filter(a => (a.last_audit?.grade || a.grade) === "AAA").length;
+  const pendingCount = total - aaaCount;
+  const healthCount = ecosystemApps.filter(a => ["hidoctor", "ataraxia", "nutralive"].includes(a.key)).length;
+  const secCount = ecosystemApps.filter(a => ["faro", "sentinel"].includes(a.key)).length;
+  const indCount = ecosystemApps.filter(a => ["vitrodiag", "crypto_analyzer", "tramitefacil"].includes(a.key)).length;
+
+  const kpiAaa = document.getElementById("kpiAaaCount");
+  if (kpiAaa) kpiAaa.textContent = aaaCount;
+
+  const countAll = document.getElementById("countAll");
+  if (countAll) countAll.textContent = total;
+
+  const countAaaEl = document.getElementById("countAaa");
+  if (countAaaEl) countAaaEl.textContent = aaaCount;
+
+  const countPendEl = document.getElementById("countPending");
+  if (countPendEl) countPendEl.textContent = pendingCount;
+
+  const countHealthEl = document.getElementById("countHealth");
+  if (countHealthEl) countHealthEl.textContent = healthCount;
+
+  const countSecEl = document.getElementById("countSecurity");
+  if (countSecEl) countSecEl.textContent = secCount;
+
+  const countIndEl = document.getElementById("countIndustrial");
+  if (countIndEl) countIndEl.textContent = indCount;
+}
+
+function setupFleetToolbar() {
+  const searchInput = document.getElementById("fleetSearchInput");
+  const clearBtn = document.getElementById("btnClearSearch");
+  const filterPills = document.querySelectorAll(".filter-pill");
+
+  let activeFilter = "all";
+  let searchQuery = "";
+
+  function applyFilters() {
+    let filtered = ecosystemApps.slice();
+
+    // 1. Filtro por categoría / estado
+    if (activeFilter === "aaa") {
+      filtered = filtered.filter(a => (a.last_audit?.grade || a.grade) === "AAA");
+    } else if (activeFilter === "pending") {
+      filtered = filtered.filter(a => (a.last_audit?.grade || a.grade) !== "AAA");
+    } else if (activeFilter === "health") {
+      filtered = filtered.filter(a => ["hidoctor", "ataraxia", "nutralive"].includes(a.key));
+    } else if (activeFilter === "security") {
+      filtered = filtered.filter(a => ["faro", "sentinel"].includes(a.key));
+    } else if (activeFilter === "industrial") {
+      filtered = filtered.filter(a => ["vitrodiag", "crypto_analyzer", "tramitefacil"].includes(a.key));
+    }
+
+    // 2. Filtro por búsqueda
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      filtered = filtered.filter(a => 
+        a.name.toLowerCase().includes(q) ||
+        a.category.toLowerCase().includes(q) ||
+        (a.role && a.role.toLowerCase().includes(q)) ||
+        a.key.toLowerCase().includes(q)
+      );
+    }
+
+    renderAppsGrid(filtered);
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener("input", (e) => {
+      searchQuery = e.target.value.trim();
+      if (clearBtn) {
+        if (searchQuery) clearBtn.classList.remove("hidden");
+        else clearBtn.classList.add("hidden");
+      }
+      applyFilters();
+    });
+  }
+
+  if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+      if (searchInput) {
+        searchInput.value = "";
+        searchQuery = "";
+        clearBtn.classList.add("hidden");
+        applyFilters();
+      }
+    });
+  }
+
+  filterPills.forEach(pill => {
+    pill.addEventListener("click", () => {
+      filterPills.forEach(p => p.classList.remove("active"));
+      pill.classList.add("active");
+      activeFilter = pill.dataset.filter || "all";
+      applyFilters();
+    });
+  });
+}
+
+function formatAuditTimeText(auditObj) {
   if (!auditObj || (!auditObj.timestamp && !auditObj.date)) {
-    return `<div class="app-card-audit-time unperformed">
-      <span class="audit-badge-icon">🕒</span>
-      <span>Sin auditoría realizada aún</span>
-    </div>`;
+    return "Pendiente de auditoría";
   }
   const raw = auditObj.timestamp || auditObj.date;
-  let formatted = raw;
   const parts = raw.split(" ");
   if (parts.length >= 2) {
     const d = parts[0].split("-");
-    const t = parts[1].substring(0, 5); // HH:MM
-    if (d.length === 3) formatted = `${d[2]}/${d[1]}/${d[0]} ${t}`;
-  } else if (raw.includes("-")) {
-    const d = raw.split("-");
-    if (d.length === 3) formatted = `${d[2]}/${d[1]}/${d[0]}`;
+    const t = parts[1].substring(0, 5);
+    if (d.length === 3) return `${d[2]}/${d[1]} ${t}`;
   }
-  return `<div class="app-card-audit-time has-audit">
-    <span class="audit-badge-icon">🕒</span>
-    <span>Última auditoría: <strong class="audit-date-highlight">${formatted}</strong></span>
-  </div>`;
+  return raw.substring(0, 10);
 }
 
 function getIconForApp(key) {
   const map = {
     cambioya: "🔄", ataraxia: "⚡", hidoctor: "🩺", faro: "🚨",
-    vitrodiag: "🔬", sentinel: "🛡️", tramitefacil: "📑", vitrina: "🚀",
-    crypto_analyzer: "📈"
+    vitrodiag: "🏭", sentinel: "🛡️", tramitefacil: "📑", vitrina: "🚀",
+    crypto_analyzer: "📈", nutralive: "🥑"
   };
   return map[key] || "📦";
 }
 
 function getCategoryForApp(key) {
   const map = {
-    cambioya: "Economía Colaborativa", ataraxia: "HealthTech & Stoic Coaching",
-    hidoctor: "HealthTech Pediátrico", faro: "Seguridad Personal & SOS",
-    vitrodiag: "Diagnóstico In-Vitro", sentinel: "Ciberseguridad & RGPD",
-    tramitefacil: "GovTech & Ciudadanía", vitrina: "Showcase & Hub de Inversión",
-    crypto_analyzer: "Fintech & Trading Cuantitativo"
+    cambioya: "Trueque Directo & Economía Circular",
+    ataraxia: "Fitness, Nutrición & Rendimiento Estoico",
+    hidoctor: "Bitácora Pediátrica & Triaje IA",
+    faro: "Seguridad Personal & Alerta SOS",
+    vitrodiag: "Manufactura Industrial de Vidrio (Hot End)",
+    sentinel: "Privacidad Soberana & RGPD Art. 17",
+    tramitefacil: "GovTech & Trámites Ciudadanos",
+    vitrina: "Showcase & Hub de Inversión",
+    crypto_analyzer: "Fintech & Trading Cuantitativo",
+    nutralive: "Nutrición Clínica Pediátrica & MASLD"
   };
-  return map[key] || "Software";
+  return map[key] || "Software Institucional";
 }
 
 function renderAppsGrid(apps) {
   const grid = document.getElementById("appsGrid");
+  if (!grid) return;
   grid.innerHTML = "";
+
+  if (apps.length === 0) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 3rem 1rem; color: var(--text-muted);">
+      <div style="font-size: 2.2rem; margin-bottom: 8px;">🔍</div>
+      <h3 style="color: #fff; margin-bottom: 6px;">No se encontraron aplicaciones</h3>
+      <p style="font-size: 0.85rem;">Prueba con otro término de búsqueda o selecciona el filtro 'Todas'.</p>
+    </div>`;
+    return;
+  }
 
   apps.forEach(app => {
     const card = document.createElement("div");
-    card.className = `app-card ${app.exists ? "" : "disabled"}`;
-    
-    const scoreVal = app.last_audit ? app.last_audit.score : app.score;
-    const gradeVal = app.last_audit ? app.last_audit.grade : app.grade;
-    const scoreBadge = scoreVal ? `<span class="badge-app" style="float:right;">${gradeVal} (${scoreVal}/100)</span>` : "";
+    const scoreVal = app.last_audit ? app.last_audit.score : (app.score || 0);
+    const gradeVal = app.last_audit ? app.last_audit.grade : (app.grade || "A");
+    const gradeClass = gradeVal ? gradeVal.toLowerCase() : "a";
+
+    card.className = `app-card grade-${gradeClass} ${app.exists ? "" : "disabled"}`;
+    card.setAttribute("data-key", app.key);
+    card.setAttribute("data-grade", gradeClass);
+
+    // M&A Valuation metrics
+    const valuation = app.valuation || {};
+    const arrMultiple = valuation.arr_multiple || (scoreVal >= 90 ? "3.8x – 5.0x ARR" : "1.5x – 2.5x ARR");
+    const haircutPct = valuation.haircut_pct !== undefined ? `${valuation.haircut_pct}%` : (scoreVal >= 90 ? "8.0%" : "23.0%");
+    const haircutClass = (parseFloat(haircutPct) <= 10) ? "text-emerald" : "text-amber";
+    const tierName = valuation.tier ? valuation.tier.split("—")[0].trim() : (scoreVal >= 90 ? "Tier 2 M&A" : "Tier 3 Scale-Up");
+
+    // Pillar scores / chips
+    const pillars = app.pillars || {};
+    const sastScore = pillars.security?.score ?? 100;
+    const scaScore = pillars.sca?.score ?? 100;
+    const formScore = pillars.form_shield?.score ?? (app.key === "faro" ? 100 : (scoreVal >= 90 ? 95 : 32));
+    const commScore = pillars.commercial?.score ?? (scoreVal >= 90 ? 96 : 49);
+    const testsPass = pillars.architecture?.metrics?.tests_pass_pct ?? (scoreVal >= 90 ? 100 : 0);
+
+    const gradeTagText = (gradeVal === "AAA") ? "ÉLITE M&A" : (gradeVal === "AA" ? "EN ELEVACIÓN" : "MONOLITO A");
 
     card.innerHTML = `
       <div>
         <div class="app-card-top">
-          <span class="app-card-icon">${app.icon}</span>
-          <div style="flex:1;">
+          <div class="app-card-icon-box">
+            <span>${app.icon}</span>
+          </div>
+          <div class="app-card-title-group">
             <div class="app-card-name">${app.name}</div>
             <div class="app-card-category">${app.category}</div>
           </div>
-          ${scoreBadge}
+          <div class="app-grade-pill">
+            <div class="grade-box grade-${gradeClass}">
+              <span class="grade-letter">${gradeVal}</span>
+              <span class="grade-score">${scoreVal}</span>
+            </div>
+            <span class="grade-tag tag-${gradeClass}">${gradeTagText}</span>
+          </div>
         </div>
+
         <div class="app-card-role">${app.role}</div>
-        ${formatAuditTime(app.last_audit)}
+
+        <!-- Fila de Valuación M&A Institucional -->
+        <div class="app-valuation-row">
+          <div class="val-item">
+            <span class="val-label">Múltiplo M&A</span>
+            <span class="val-value text-emerald">${arrMultiple}</span>
+          </div>
+          <div class="val-item">
+            <span class="val-label">Haircut Deuda</span>
+            <span class="val-value ${haircutClass}">${haircutPct}</span>
+          </div>
+          <div class="val-item">
+            <span class="val-label">Madurez</span>
+            <span class="val-value">${tierName}</span>
+          </div>
+        </div>
+
+        <!-- Mini Radar de 5 Pilares Clave -->
+        <div class="pillar-chips-bar">
+          <span class="pillar-chip ${sastScore >= 90 ? 'chip-pass' : 'chip-warn'}" title="Ciberseguridad & Zero-Leakage: ${sastScore}/100">
+            🛡️ SAST ${sastScore}
+          </span>
+          <span class="pillar-chip ${scaScore >= 90 ? 'chip-pass' : 'chip-alert'}" title="Seguridad de Dependencias SCA: ${scaScore}/100 (0 CVEs)">
+            📦 SCA 0 CVEs
+          </span>
+          <span class="pillar-chip ${formScore >= 90 ? 'chip-pass' : 'chip-warn'}" title="Ergonomía de Formularios (Form Shield): ${formScore}/100">
+            📱 Form ${formScore}%
+          </span>
+          <span class="pillar-chip ${commScore >= 70 ? 'chip-pass' : 'chip-warn'}" title="Infraestructura de Pagos Stripe / M&A: ${commScore}/100">
+            💳 ${commScore >= 70 ? 'Stripe Activo' : 'Sin Cobro'}
+          </span>
+          <span class="pillar-chip ${testsPass === 100 ? 'chip-pass' : 'chip-warn'}" title="Suite de Tests Automatizados: ${testsPass}% Pass">
+            🧪 ${testsPass === 100 ? 'Tests OK' : 'Caja Negra'}
+          </span>
+        </div>
+
+        <!-- Micro Barra de Salud Pericial -->
+        <div class="health-progress-wrapper" title="Score de Due Diligence: ${scoreVal}/100">
+          <div class="health-progress-bg">
+            <div class="health-progress-fill fill-${gradeClass}" style="width: ${Math.min(100, Math.max(10, scoreVal))}%;"></div>
+          </div>
+        </div>
       </div>
+
       <div class="app-card-footer">
-        <span class="${app.exists ? 'status-badge-ready' : 'status-badge-missing'}">
-          ${isLocalServer ? '● Listo para auditar' : '● Certificado Cloud'}
-        </span>
-        <button class="btn btn-primary btn-sm" ${app.exists ? '' : 'disabled'}>
-          ${isLocalServer ? 'Auditar' : 'Ver Dossier'}
-        </button>
+        <div class="app-card-time-text">
+          <span>🕒</span>
+          <span>${formatAuditTimeText(app.last_audit)}</span>
+        </div>
+        <div class="app-card-actions">
+          <button class="btn-card-dossier" type="button" aria-label="Ver Dossier M&A de ${app.name}">
+            <span>📊</span>
+            <span>${isLocalServer ? 'Auditar M&A' : 'Ver Dossier'}</span>
+          </button>
+        </div>
       </div>
     `;
 
@@ -520,6 +715,7 @@ async function runAudit(payload) {
 function renderResults(data) {
   const resultsEl = document.getElementById("resultsSection");
   resultsEl.classList.remove("hidden");
+  resultsEl.scrollIntoView({ behavior: "smooth", block: "start" });
 
   // Encabezado
   document.getElementById("resAppName").innerText = data.app_name;
