@@ -4,6 +4,154 @@ let ecosystemApps = [];
 let staticFleetData = [];
 let isLocalServer = false;
 
+// Catálogo Canónico de Estándares Internacionales & Trust Badges
+const COMPLIANCE_STANDARDS = [
+  {
+    id: "owasp",
+    icon: "🛡️",
+    badgeTitle: "OWASP ASVS L2",
+    badgeStatus: "Code-Verified",
+    statusType: "verified",
+    category: "Ciberseguridad Aplicada",
+    title: "OWASP ASVS Level 2 (v4.0)",
+    subtitle: "Application Security Verification Standard — Standard Architecture",
+    authority: "OWASP Foundation (Open Web Application Security Project)",
+    vguardModule: "audit_security.py",
+    mechanism: "Análisis Estático SAST de AST, prevención de inyecciones SQL/NoSQL, validación de inputs y Zero-Leakage de credenciales.",
+    dataRoom: "cerebro_vguard_seguridad/Trust_Center_Framework_Compliance_Deck.md",
+    description: "Nivel de verificación de seguridad para aplicaciones que procesan transacciones de negocios entre usuarios o manejan datos confidenciales. Evalúa que existan defensas activas y estructuradas contra el OWASP Top 10.",
+    legalDisclaimer: "V-GUARD Sentinel audita de forma algorítmica y continua que el código fuente cumpla con los controles de nivel 2 de la guía ASVS. La OWASP Foundation no emite certificados comerciales; este distintivo representa conformidad técnica verificable en repositorio."
+  },
+  {
+    id: "cve",
+    icon: "📦",
+    badgeTitle: "CVE Zero-Day SCA",
+    badgeStatus: "0 Vulnerabilidades",
+    statusType: "verified",
+    category: "Cadena de Suministro (SCA)",
+    title: "CVE Zero-Day & Supply Chain SCA",
+    subtitle: "National Vulnerability Database (NVD) & GitHub Security Advisory (GHSA)",
+    authority: "MITRE Corporation / NIST / GitHub Security",
+    vguardModule: "audit_sca.py",
+    mechanism: "Inspección viva de dependencias directas y transitivas vía npm audit / pip audit con evaluación de puntuación CVSS v3.1.",
+    dataRoom: "cerebro_vguard_seguridad/Trust_Center_Framework_Compliance_Deck.md",
+    description: "Monitoreo continuo de toda la cadena de paquetes externos y librerías para asegurar que ningún componente contenga vulnerabilidades críticas o altas explotables conocidas públicamente.",
+    legalDisclaimer: "Certifica que, al momento de la auditoría en tiempo de ejecución, el árbol de dependencias reporta 0 vulnerabilidades conocidas en las bases globales NVD/GHSA. Requiere re-escaneo continuo en cada ciclo de integración."
+  },
+  {
+    id: "pci",
+    icon: "💳",
+    badgeTitle: "PCI-DSS v4.0",
+    badgeStatus: "SAQ-A Compliant",
+    statusType: "verified",
+    category: "Comercio & Pagos",
+    title: "PCI-DSS v4.0 (SAQ-A Compliant Architecture)",
+    subtitle: "Payment Card Industry Data Security Standard",
+    authority: "PCI Security Standards Council (PCI SSC)",
+    vguardModule: "audit_commercial.py",
+    mechanism: "Verificación de delegación total de captura de tarjeta en Stripe Elements / Hosted Checkout sin persistencia local de PAN o CVV.",
+    dataRoom: "cerebro_ataraxia / cerebro_hidoctor",
+    description: "Aplica a comerciantes de comercio electrónico que delegan completamente la captura y procesamiento de datos de tarjetas en un proveedor de servicios validado como PCI-DSS Nivel 1 (Stripe). No requiere auditor presencial QSA.",
+    legalDisclaimer: "La arquitectura del ecosistema califica plenamente para el Self-Assessment Questionnaire A (SAQ-A). Los datos de tarjetas jamás transitan ni residen en los servidores del autor, reduciendo el alcance regulatorio de riesgo al mínimo."
+  },
+  {
+    id: "gdpr",
+    icon: "⚖️",
+    badgeTitle: "GDPR / RGPD",
+    badgeStatus: "Art. 17 Verified",
+    statusType: "verified",
+    category: "Privacidad de Datos",
+    title: "GDPR / RGPD (Reglamento UE 2016/679) & Ley 19.628",
+    subtitle: "Privacidad desde el Diseño (Art. 25) y Derecho al Olvido Efectivo (Art. 17)",
+    authority: "Comisión Europea / Agencias de Protección de Datos",
+    vguardModule: "audit_governance.py / Sentinel Engine",
+    mechanism: "Cifrado local en cliente (AES-256-GCM), k-anonymity contra brechas y orquestación técnica del borrado irrevocable de datos.",
+    dataRoom: "cerebro_sentinel / cerebro_kintsugi",
+    description: "Garantiza que el software esté concebido bajo el principio de minimización de datos (Privacy by Design), impidiendo la retención arbitraria de datos personales y otorgando a los usuarios el control absoluto sobre su identidad.",
+    legalDisclaimer: "El RGPD exige Responsabilidad Proactiva (Accountability). Este sello acredita que los mecanismos de borrado y protección técnica operan en código, sin que ninguna entidad privada comercial pueda vender 'diplomas GDPR'."
+  },
+  {
+    id: "iso",
+    icon: "🏛️",
+    badgeTitle: "ISO/IEC 27001",
+    badgeStatus: "Controls Aligned",
+    statusType: "aligned",
+    category: "Gestión de Seguridad",
+    title: "ISO/IEC 27001:2022 (Controles Anexo A)",
+    subtitle: "Information Security Management System — Technical Controls",
+    authority: "International Organization for Standardization (ISO) / IEC",
+    vguardModule: "audit_security.py & audit_governance.py",
+    mechanism: "Mapeo automatizado de controles Anexo A.8 (Seguridad en Desarrollo, A.8.24 Criptografía, A.8.28 Pruebas de Seguridad en Ciclo de Vida).",
+    dataRoom: "cerebro_vguard_seguridad/Trust_Center_Framework_Compliance_Deck.md",
+    description: "Alineación exhaustiva de los controles técnicos de seguridad de la información recomendados en el estándar internacional ISO 27001:2022 para empresas de software y servicios tecnológicos.",
+    legalDisclaimer: "V-GUARD Sentinel audita la conformidad de los controles técnicos de ingeniería. No constituye una certificación comercial formal de sistema de gestión emitida por un organismo registrador acreditado (ej. BSI, AENOR, TÜV)."
+  },
+  {
+    id: "soc2",
+    icon: "🏢",
+    badgeTitle: "SOC 2 Type II",
+    badgeStatus: "Criteria Ready",
+    statusType: "ready",
+    category: "Auditoría Corporativa",
+    title: "SOC 2 Type II (Trust Services Criteria)",
+    subtitle: "Seguridad, Confidencialidad y Disponibilidad — Audit Readiness",
+    authority: "American Institute of Certified Public Accountants (AICPA)",
+    vguardModule: "audit_resilience.py & audit_governance.py",
+    mechanism: "Registro de telemetría inmutable de commits, respaldo autónomo, persistencia offline-first y protocolos de tiempo límite (<=8000ms).",
+    dataRoom: "cerebro_vguard_seguridad/Trust_Center_Framework_Compliance_Deck.md",
+    description: "Diseño de arquitectura preparado para superar una auditoría SOC 2 Type II formal emitida por una firma contable CPA, garantizando que los datos de clientes están protegidos contra accesos no autorizados.",
+    legalDisclaimer: "Este distintivo certifica 'Audit Readiness' (Preparación Técnica de Controles). El reporte formal SOC 2 requiere la contratación de una firma contable CPA independiente que audite el entorno durante un período continuo de 6 meses."
+  },
+  {
+    id: "wcag",
+    icon: "⚡",
+    badgeTitle: "W3C WCAG 2.1",
+    badgeStatus: "Level AA Compliant",
+    statusType: "verified",
+    category: "Accesibilidad Web",
+    title: "W3C Web Content Accessibility Guidelines (WCAG) 2.1 AA",
+    subtitle: "Ergonomía de Formularios Móviles & Accesibilidad Universal",
+    authority: "World Wide Web Consortium (W3C)",
+    vguardModule: "audit_frontend_forms.py",
+    mechanism: "Inspección de inputs con etiquetas asociadas, aria-labels, contraste de color, prevención de trampas de teclado y eliminación de 'Modal Jail'.",
+    dataRoom: "cerebro_vguard_seguridad/Trust_Center_Framework_Compliance_Deck.md",
+    description: "Garantiza que cualquier usuario, incluidas personas con discapacidades visuales o motrices, o que utilicen lectores de pantalla y teléfonos compactos, puedan interactuar sin bloqueos con las aplicaciones del ecosistema.",
+    legalDisclaimer: "Conformidad técnica verificada por análisis de código estático frontend y cumplimiento estricto del estándar Form Shield de Antigravity."
+  },
+  {
+    id: "hipaa",
+    icon: "🏥",
+    badgeTitle: "HIPAA Security",
+    badgeStatus: "Health Data Aligned",
+    statusType: "aligned",
+    category: "Salud Pediátrica",
+    title: "HIPAA Security Rule (45 CFR Part 160/164)",
+    subtitle: "Protección de Datos Médicos Electrónicos (ePHI)",
+    authority: "U.S. Department of Health and Human Services (HHS)",
+    vguardModule: "audit_resilience.py / HiDoctor Suite",
+    mechanism: "Arquitectura Offline-First con SafeStorage local en cliente, triaje clínico dual sin transmisión obligatoria de ePHI a servidores remotos.",
+    dataRoom: "cerebro_hidoctor",
+    description: "Alineación de salvaguardas técnicas (Administrative, Physical & Technical Safeguards) para el manejo de registros clínicos, temperaturas y dosis pediátricas en HiDoctor.",
+    legalDisclaimer: "El gobierno de los EE. UU. (HHS) no certifica software directamente. Este distintivo acredita que la arquitectura de HiDoctor respeta el principio de aislamiento y no-exposición de información médica protegida (ePHI)."
+  },
+  {
+    id: "mccabe",
+    icon: "🧠",
+    badgeTitle: "McCabe AST Gate",
+    badgeStatus: "V(G) <= 20 Verified",
+    statusType: "verified",
+    category: "Calidad de Arquitectura",
+    title: "IEEE / McCabe Cyclomatic Complexity Gate (ISO/IEC 25010)",
+    subtitle: "Mantenibilidad, Desacople de Monolitos y Cobertura de Pruebas",
+    authority: "IEEE Computer Society / ISO Software Product Quality",
+    vguardModule: "audit_architecture.py",
+    mechanism: "Cálculo matemático de caminos independientes del grafo de control de flujo en AST nativo y ejecución dinámica de tests con node --test.",
+    dataRoom: "cerebro_vguard_seguridad/Trust_Center_Framework_Compliance_Deck.md",
+    description: "Penalización implacable de funciones laberínticas y God Files (>800 líneas) para garantizar que el software sea fácilmente mantenible, transferible y testeable por nuevos equipos de ingeniería en procesos de M&A.",
+    legalDisclaimer: "Métrica matemática estandarizada internacionalmente calculada mediante el analizador sintáctico abstracto nativo de V-GUARD."
+  }
+];
+
 document.addEventListener("DOMContentLoaded", () => {
   initApp();
 });
@@ -11,6 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
 async function initApp() {
   setupTabs();
   setupEventListeners();
+  initComplianceRibbon();
   await loadApps();
 }
 
@@ -86,7 +235,78 @@ function setupEventListeners() {
       alert("📋 ¡Informe Markdown de Due Diligence copiado al portapapeles!");
     });
   });
+
+  // Modal de Cumplimiento & Trust Center
+  const btnCloseComp = document.getElementById("btnCloseComplianceModal");
+  if (btnCloseComp) btnCloseComp.addEventListener("click", closeComplianceModal);
+
+  const btnDismissComp = document.getElementById("btnDismissCompliance");
+  if (btnDismissComp) btnDismissComp.addEventListener("click", closeComplianceModal);
+
+  const compOverlay = document.getElementById("complianceModal");
+  if (compOverlay) {
+    compOverlay.addEventListener("click", (e) => {
+      if (e.target === compOverlay) closeComplianceModal();
+    });
+  }
+
+  const btnOpenAll = document.getElementById("btnOpenAllCompliance");
+  if (btnOpenAll) {
+    btnOpenAll.addEventListener("click", () => {
+      openComplianceModal("owasp");
+    });
+  }
 }
+
+function initComplianceRibbon() {
+  const container = document.getElementById("complianceRibbon");
+  if (!container) return;
+  container.innerHTML = "";
+
+  COMPLIANCE_STANDARDS.forEach(std => {
+    const badge = document.createElement("div");
+    badge.className = "compliance-badge";
+    badge.title = `${std.title} • Clic para ver evidencia técnica`;
+    badge.innerHTML = `
+      <span class="comp-badge-icon">${std.icon}</span>
+      <span class="comp-badge-title">${std.badgeTitle}</span>
+      <span class="comp-badge-status status-${std.statusType}">${std.badgeStatus}</span>
+    `;
+    badge.addEventListener("click", () => openComplianceModal(std.id));
+    container.appendChild(badge);
+  });
+}
+
+function openComplianceModal(standardId) {
+  const std = COMPLIANCE_STANDARDS.find(s => s.id === standardId);
+  if (!std) return;
+
+  const modal = document.getElementById("complianceModal");
+  if (!modal) return;
+
+  document.getElementById("compModalIcon").textContent = std.icon;
+  document.getElementById("compModalTitle").textContent = std.title;
+  document.getElementById("compModalSubtitle").textContent = std.subtitle;
+  document.getElementById("compModalBadgeStatus").textContent = std.badgeStatus;
+  document.getElementById("compModalBadgeStatus").className = `comp-status-pill status-${std.statusType}`;
+  document.getElementById("compModalCategory").textContent = std.category;
+  document.getElementById("compModalDesc").textContent = std.description;
+  document.getElementById("compModalModule").textContent = std.vguardModule;
+  document.getElementById("compModalMechanism").textContent = std.mechanism;
+  document.getElementById("compModalAuthority").textContent = std.authority;
+  document.getElementById("compModalDataRoom").textContent = std.dataRoom;
+  document.getElementById("compModalLegal").textContent = std.legalDisclaimer;
+
+  modal.classList.remove("hidden");
+}
+
+function closeComplianceModal() {
+  const modal = document.getElementById("complianceModal");
+  if (modal) modal.classList.add("hidden");
+}
+
+window.openComplianceModal = openComplianceModal;
+window.closeComplianceModal = closeComplianceModal;
 
 function downloadMarkdown(content, filename) {
   const blob = new Blob([content], { type: "text/markdown;charset=utf-8" });

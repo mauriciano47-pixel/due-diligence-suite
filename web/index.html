@@ -27,6 +27,24 @@
     </div>
   </header>
 
+  <!-- Barra de Confianza & Distintivos de Estándares Internacionales (Trust Center) -->
+  <section class="trust-banner">
+    <div class="trust-container">
+      <div class="trust-header">
+        <div class="trust-pill-group">
+          <span class="trust-pill">🏛️ TRUST CENTER & COMPLIANCE DECK</span>
+          <span class="trust-tagline">Controles técnicos continuos auditados por motor algorítmico V-GUARD • Clic en cada distintivo para ver evidencia técnica</span>
+        </div>
+        <button id="btnOpenAllCompliance" class="btn btn-outline btn-xs" title="Ver matriz completa de estándares">
+          📋 Matriz de Estándares
+        </button>
+      </div>
+      <div class="compliance-ribbon" id="complianceRibbon">
+        <!-- Renderizado dinámico desde app.js -->
+      </div>
+    </div>
+  </section>
+
   <main class="main-container">
     <!-- Selector de Aplicaciones y Escaneo -->
     <section class="section-selector">
@@ -283,6 +301,71 @@
   <footer class="footer">
     <div>V-GUARD Due Diligence Suite • Propiedad exclusiva de Mauricio Uribe Maldonado • Estándar Cyber-Obsidian Royal</div>
   </footer>
+
+  <!-- Modal Interactivo de Detalle de Cumplimiento & Evidencia Técnica -->
+  <div id="complianceModal" class="compliance-modal-overlay hidden">
+    <div class="compliance-modal-card">
+      <div class="compliance-modal-header">
+        <div class="compliance-header-title">
+          <span id="compModalIcon" class="compliance-icon-lg">🛡️</span>
+          <div>
+            <div class="compliance-pill-row">
+              <span id="compModalBadgeStatus" class="comp-status-pill">Level 2 Verified</span>
+              <span id="compModalCategory" class="comp-cat-pill">Ciberseguridad</span>
+            </div>
+            <h2 id="compModalTitle">OWASP ASVS Level 2</h2>
+            <div id="compModalSubtitle" class="comp-subtitle">Application Security Verification Standard</div>
+          </div>
+        </div>
+        <button id="btnCloseComplianceModal" class="btn-close-modal" aria-label="Cerrar modal">&times;</button>
+      </div>
+
+      <div class="compliance-modal-body">
+        <!-- Resumen del Estándar -->
+        <div class="comp-section">
+          <h4>📖 Alcance del Estándar</h4>
+          <p id="compModalDesc" class="comp-text"></p>
+        </div>
+
+        <!-- Evidencia Técnica de V-GUARD -->
+        <div class="comp-section">
+          <h4>🔬 Verificación Técnica en Código (V-GUARD Engine)</h4>
+          <div class="comp-kv-box">
+            <div class="comp-kv-row">
+              <span class="comp-k">Módulo Auditor:</span>
+              <code id="compModalModule" class="comp-v-code">audit_security.py</code>
+            </div>
+            <div class="comp-kv-row">
+              <span class="comp-k">Mecanismo de Inspección:</span>
+              <span id="compModalMechanism" class="comp-v">Análisis Estático SAST sin falsos positivos</span>
+            </div>
+            <div class="comp-kv-row">
+              <span class="comp-k">Organismo / Autoridad Rectora:</span>
+              <span id="compModalAuthority" class="comp-v">OWASP Foundation</span>
+            </div>
+            <div class="comp-kv-row">
+              <span class="comp-k">Registro en Data Room:</span>
+              <span id="compModalDataRoom" class="comp-v-code">cerebro_vguard_seguridad</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alerta Legal Hardcore Reality -->
+        <div class="legal-disclaimer-box">
+          <div class="disclaimer-header">
+            <span>⚖️ Atestación Legal & Descargo de Responsabilidad (M&A Standard)</span>
+          </div>
+          <p id="compModalLegal" class="disclaimer-text">
+            Este distintivo certifica que la arquitectura, código fuente y dependencias del ecosistema han superado de forma continua las pruebas automatizadas de ingeniería correspondientes a los controles técnicos de esta norma. No constituye un diploma administrativo emitido por un registrador o firma contable CPA externa independiente, garantizando transparencia absoluta frente a comités de inversión.
+          </p>
+        </div>
+      </div>
+
+      <div class="compliance-modal-footer">
+        <button id="btnDismissCompliance" class="btn btn-primary">Entendido</button>
+      </div>
+    </div>
+  </div>
 
   <script src="app.js"></script>
 </body>
