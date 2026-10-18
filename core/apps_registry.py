@@ -123,7 +123,9 @@ def get_apps_list():
                         "date": item.get("date"),
                         "score": item.get("global_score"),
                         "grade": item.get("grade"),
-                        "grade_color": item.get("grade_color")
+                        "grade_color": item.get("grade_color"),
+                        "valuation": item.get("valuation"),
+                        "pillars": item.get("pillars")
                     }
         except Exception:
             pass
@@ -150,6 +152,8 @@ def get_apps_list():
             "obsidian_vault": app["obsidian_vault"],
             "icon": app["icon"],
             "category": app["category"],
-            "last_audit": last_aud
+            "last_audit": last_aud,
+            "valuation": last_aud.get("valuation") if last_aud else None,
+            "pillars": last_aud.get("pillars") if last_aud else None
         })
     return result
