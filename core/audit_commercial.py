@@ -70,14 +70,14 @@ COMMERCIAL_PROFILES = {
         "exit_recommendation": "Comercializar a agencias de marketing o despachos legales como addon de cumplimiento de privacidad."
     },
     "tramitefacil": {
-        "model": "Pay-per-use LegalTech / Gestoría B2C",
-        "market": "Ciudadanía España / Latam (Hacienda, Tráfico, Multas)",
-        "salability": "ALTA (Excelente Product-Market Fit local)",
-        "salability_score": 82,
-        "take_rate_potential": "Micropago por escrito oficial generado (€4.99 - €9.99 por carta/alegación).",
-        "key_person_risk": "BAJO (Arquitectura basada en plantillas legales estandarizadas y Gemini Flash).",
-        "operational_moat": "Fundamentación jurídica real (Ley 39/2015) y modo de impresión oficial A4 sin fricción.",
-        "exit_recommendation": "Instalar cobro por Bizum/Stripe y publicitar en foros de trámites burocráticos o vender a una gestoría online."
+        "model": "Micro-SaaS LegalTech & GovTech (B2C Ciudadano & B2B Gestorías)",
+        "market": "Ciudadanía España / Latam (Hacienda, Tráfico, Multas) & Gestorías / Asesorías",
+        "salability": "ALTA (Micro-SaaS Turnkey para Acquire.com / Flippa)",
+        "salability_score": 86,
+        "take_rate_potential": "Pay-per-use por trámite ($1.99 USD), Suscripción Anual ($29.99 USD) y Licencia B2B Gestorías ($149.00 USD/año). Contratos Stripe verificados.",
+        "key_person_risk": "BAJO (Arquitectura modular PWA Offline-First, suite de 28 tests automatizados, cero dependencias pesadas).",
+        "operational_moat": "Motor OCR WebAssembly local (Tesseract.js v5), fundamentación jurídica real y catálogo de 8 plantillas oficiales.",
+        "exit_recommendation": "Publicar en Acquire.com / Flippa como Micro-SaaS GovTech/LegalTech llave en mano o licenciar a cadenas de gestorías online por $18k-$35k USD."
     },
     "crypto_analyzer": {
         "model": "Fintech SaaS Trading Cuantitativo",
