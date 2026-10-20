@@ -100,14 +100,14 @@ COMMERCIAL_PROFILES = {
         "exit_recommendation": "Publicar en Acquire.com / Flippa como Micro-SaaS de Seguridad Personal llave en mano o licenciar a aseguradoras y campus universitarios por $15k-$35k USD."
     },
     "vitrina": {
-        "model": "Hub Showcase / Portfolio Inversor",
-        "market": "Inversores / Partners / Ecosistema",
-        "salability": "ACTIVO DE SOPORTE",
-        "salability_score": 70,
-        "take_rate_potential": "No monetizable por sí misma; es la vitrina de conversión del resto de la flota.",
-        "key_person_risk": "BAJO.",
-        "operational_moat": "Simulador en vivo iPhone/Tablet integrado a telemetría.",
-        "exit_recommendation": "Mantener como cuartel general de demostración de activos."
+        "model": "Investor Showcase & Launchpad de Portafolio M&A (Conversión B2B)",
+        "market": "Fondos de Inversión / Compradores M&A (Acquire.com / Flippa) & Partners",
+        "salability": "ALTA (Cuartel General & Deal Room de Conversión de Activos)",
+        "salability_score": 84,
+        "take_rate_potential": "Canal de captación y conversión de donaciones (BTC/ETH/USDC/MercadoPago) y venta de licencias B2B (HiDoc $18k USD). Pasarela activa.",
+        "key_person_risk": "BAJO (Arquitectura estática pura, simuladores de dispositivos móviles y suite de 10 tests unitarios).",
+        "operational_moat": "Simulador interactivo iPhone/Tablet, telemetría de latencia en vivo y centro unificado de auditoría técnica.",
+        "exit_recommendation": "Empaquetar como Deal Room institucional y portal showcase llave en mano en ventas de portafolio o rondas de inversión."
     }
 }
 
