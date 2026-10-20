@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-V-GUARD Due Diligence Suite - Módulo de Arquitectura, Deuda Técnica & Calidad de Código (Pilar 3)
-Analiza: SLOC, distribución por lenguajes, God Files (>800 líneas), deuda técnica (TODOs/FIXMEs), código residual de depuración y cobertura de tests.
+V-GUARD Due Diligence Suite v2.4.0 - Módulo de Arquitectura, Deuda Técnica & Calidad de Código (Pilar 4)
+Analiza: SLOC, God Files (>800 líneas), Complejidad Ciclomática Estricta (V(G)<=20),
+Contratos en Runtime, Fuzzing, Chaos, Mutation y Cobertura de Tests.
 """
 import os
 import re
@@ -53,11 +54,11 @@ def audit_architecture(project_path: str) -> dict:
     debug_calls_count = 0
     test_files_count = 0
 
-    has_typescript = (root / "tsconfig.json").exists() or any((root / d / "tsconfig.json").exists() for d in ["crypto-frontend", "frontend", "client", "src", "web"])
+    has_typescript = (root / "tsconfig.json").exists() or any((root / d / "tsconfig.json").exists() for d in ["ataraxia", "crypto-frontend", "frontend", "client", "src", "web"])
     has_linter = any((root / f).exists() for f in [".eslintrc", ".eslintrc.json", ".eslintrc.js", "eslint.config.js", ".hintrc"]) or any(
-        (root / d / f).exists() for d in ["crypto-frontend", "frontend", "client", "src", "web"] for f in [".eslintrc", ".eslintrc.json", ".eslintrc.js", "eslint.config.js", ".hintrc"]
+        (root / d / f).exists() for d in ["ataraxia", "crypto-frontend", "frontend", "client", "src", "web"] for f in [".eslintrc", ".eslintrc.json", ".eslintrc.js", "eslint.config.js", ".hintrc"]
     )
-    has_tests_dir = (root / "tests").exists() or (root / "test").exists() or (root / "__tests__").exists()
+    has_tests_dir = (root / "tests").exists() or (root / "test").exists() or (root / "__tests__").exists() or (root / "ataraxia" / "tests").exists()
 
     for dirpath, dirnames, filenames in os.walk(root):
         dirnames[:] = [d for d in dirnames if d not in IGNORE_DIRS and not d.startswith(".")]
@@ -68,7 +69,7 @@ def audit_architecture(project_path: str) -> dict:
                 continue
 
             full_path = Path(dirpath) / fname
-            if fname in ["package-lock.json", "yarn.lock", "pnpm-lock.yaml"] or ".min." in fname:
+            if fname in ["package-lock.json", "yarn.lock", "pnpm-lock.yaml", "sbom.cdx.json"] or ".min." in fname:
                 continue
 
             rel_path = full_path.relative_to(root).as_posix()
@@ -76,7 +77,6 @@ def audit_architecture(project_path: str) -> dict:
             lang = CODE_EXT_MAP[ext]
             language_breakdown[lang] = language_breakdown.get(lang, 0) + 1
 
-            # Chequeo de tests
             if "test" in fname.lower() or "spec" in fname.lower():
                 test_files_count += 1
 
@@ -89,11 +89,9 @@ def audit_architecture(project_path: str) -> dict:
             line_count = len(lines)
             total_lines += line_count
 
-            # Contar líneas reales de código (no vacías)
             code_lines = [l for l in lines if l.strip()]
             total_code_lines += len(code_lines)
 
-            # Detectar God Files (>800 líneas)
             if line_count > GOD_FILE_THRESHOLD and ext in [".py", ".js", ".jsx", ".ts", ".tsx"]:
                 god_files.append({"file": rel_path, "lines": line_count})
                 findings.append({
@@ -103,12 +101,11 @@ def audit_architecture(project_path: str) -> dict:
                     "file": rel_path
                 })
 
-            # Detectar deuda técnica (TODO, FIXME, HACK) y console.log
             for idx, line in enumerate(lines, 1):
                 clean_l = line.strip()
                 if re.search(r"\b(TODO|FIXME|HACK|XXX|BUG)\b", clean_l):
                     todos_count += 1
-                    if todos_count <= 8:  # Reportar los primeros 8 para no saturar
+                    if todos_count <= 8:
                         findings.append({
                             "severity": "LOW",
                             "title": f"Deuda técnica detectada ({clean_l[:35]}...)",
@@ -117,7 +114,6 @@ def audit_architecture(project_path: str) -> dict:
                             "line": idx
                         })
 
-                # Debug calls en JS/TS
                 if ext in [".js", ".jsx", ".ts", ".tsx"] and "test" not in fname.lower():
                     if re.search(r"\bconsole\.(log|debug|warn)\s*\(", clean_l):
                         debug_calls_count += 1
@@ -130,10 +126,9 @@ def audit_architecture(project_path: str) -> dict:
                                 "line": idx
                             })
 
-    # Cálculo del Score Rigor Institucional (Base 100)
     score = 100
-    
-    # 1. Auditoría Dinámica de Pruebas Automatizadas (Estándar M&A de Silicon Valley)
+
+    # 1. Auditoría Dinámica de Pruebas Automatizadas
     from audit_test_runner import audit_test_runner
     test_run_res = audit_test_runner(project_path)
     for t_find in test_run_res.get("findings", []):
@@ -196,7 +191,7 @@ def audit_architecture(project_path: str) -> dict:
             "file": "tsconfig.json"
         })
 
-    # 6. Auditoría de Complejidad Ciclomática (McCabe AST / SonarQube Standard)
+    # 6. Auditoría de Complejidad Ciclomática Estricta (McCabe AST / Big Tech Standard V(G) <= 20)
     from audit_complexity import audit_complexity
     comp_res = audit_complexity(project_path)
     comp_metrics = comp_res.get("metrics", {})
@@ -212,15 +207,28 @@ def audit_architecture(project_path: str) -> dict:
     elif max_complexity > 20:
         score -= 6
 
-    # 7. Bonificación por Ingeniería de Testing de Grado Aeroespacial/Institucional
-    if (test_run_res.get("coverage_pct") or 0) >= 90.0:
-        score += 4
-    if test_run_res.get("has_pbt_fuzzing"):
-        score += 3
-    if test_run_res.get("has_chaos"):
-        score += 3
-    if test_run_res.get("has_mutation"):
-        score += 3
+    # 7. Auditoría de Contratos en Runtime (Zero-Trust I/O)
+    from audit_bigtech_gates import audit_runtime_contracts
+    contract_res = audit_runtime_contracts(project_path)
+    has_runtime_contracts = contract_res.get("has_runtime_contracts", False)
+    for ct_find in contract_res.get("findings", []):
+        findings.append(ct_find)
+
+    # 8. Bonificación por Ingeniería de Testing de Grado Aeroespacial/Institucional
+    # REGLA DE GRANDES LIGAS: Ningún proyecto con funciones críticas V(G) > 20 puede obtener 100/100 en Arquitectura.
+    if critical_funcs_count == 0:
+        if (test_run_res.get("coverage_pct") or 0) >= 90.0:
+            score += 4
+        if test_run_res.get("has_pbt_fuzzing"):
+            score += 3
+        if test_run_res.get("has_chaos"):
+            score += 3
+        if test_run_res.get("has_mutation"):
+            score += 3
+        if has_runtime_contracts:
+            score += 2
+    else:
+        score = min(score, max(70, 94 - (critical_funcs_count * 2)))
 
     score = max(0, min(100, score))
     status = "EXCELLENT" if score >= 85 else ("GOOD" if score >= 70 else ("WARNING" if score >= 50 else "DANGER"))
@@ -234,13 +242,17 @@ def audit_architecture(project_path: str) -> dict:
         elite_tags.append("Chaos")
     if test_run_res.get("has_mutation"):
         elite_tags.append("Mutation-100%")
+    if has_runtime_contracts:
+        elite_tags.append("Runtime-Contracts")
+    if critical_funcs_count == 0:
+        elite_tags.append("McCabe-Clean")
     elite_str = f" Élite: [{', '.join(elite_tags)}]." if elite_tags else ""
 
     return {
         "pilar": "Arquitectura & Deuda Técnica",
         "score": score,
         "status": status,
-        "summary": f"{total_files} archivos ({total_code_lines:,} SLOC). {len(god_files)} monolitos. Tests: {test_run_res.get('total_tests', test_files_count)} (Pass: {test_run_res.get('pass_rate', 0)}%).{cov_str}{e2e_str}{elite_str}",
+        "summary": f"{total_files} archivos ({total_code_lines:,} SLOC). {len(god_files)} monolitos. V(G) máx: {max_complexity} ({critical_funcs_count} críticas). Tests: {test_run_res.get('total_tests', test_files_count)} (Pass: {test_run_res.get('pass_rate', 0)}%).{cov_str}{e2e_str}{elite_str}",
         "findings": findings,
         "metrics": {
             "total_files": total_files,
@@ -254,6 +266,10 @@ def audit_architecture(project_path: str) -> dict:
             "test_files_count": test_files_count,
             "has_typescript": has_typescript,
             "has_linter": has_linter,
+            "max_complexity": max_complexity,
+            "avg_complexity": avg_complexity,
+            "critical_functions_count": critical_funcs_count,
+            "has_runtime_contracts": has_runtime_contracts,
             "test_run": test_run_res
         }
     }

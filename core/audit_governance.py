@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 """
-V-GUARD Due Diligence Suite - Módulo de Gobernanza, Git & Data Room (Pilar 5)
-Analiza: Salud del repositorio Git, historial de commits, sincronización con Cerebros Obsidian, documentación técnica (README/Changelog) y preparación para inversores.
+V-GUARD Due Diligence Suite v2.4.0 - Módulo de Gobernanza, Git Hooks & Data Room (Pilar 8)
+Analiza: Salud del repositorio Git, historial de commits, Shift-Left Pre-Push Gate,
+sincronización con Cerebros Obsidian y preparación para inversores.
 """
-import os
 import subprocess
 from pathlib import Path
+from audit_git_forensics import audit_git_forensics
 
 OBSIDIAN_BASE_PATH = Path(r"C:\Users\mauro\OneDrive\Desktop\Cerebros_Obsidian")
 
@@ -25,8 +26,6 @@ def run_git(cmd_args, cwd):
     except Exception:
         return None
 
-from audit_git_forensics import audit_git_forensics
-
 def audit_governance(project_path: str, app_key: str = None) -> dict:
     root = Path(project_path)
     if not root.exists():
@@ -39,35 +38,34 @@ def audit_governance(project_path: str, app_key: str = None) -> dict:
         }
 
     findings = []
-    is_git_repo = (root / ".git").exists()
+    git_root = root if (root / ".git").exists() else (root / "ataraxia" if (root / "ataraxia" / ".git").exists() else root)
+    is_git_repo = (git_root / ".git").exists()
     branch = "N/A"
     last_commit_hash = "N/A"
     last_commit_date = "N/A"
     last_commit_msg = "N/A"
     dirty_files_count = 0
-    has_readme = (root / "README.md").exists()
+    has_readme = (root / "README.md").exists() or (root / "ataraxia" / "README.md").exists()
     has_changelog = any((root / f).exists() for f in ["CHANGELOG.md", "CHANGELOG", "HISTORY.md"])
     obsidian_cerebro_found = False
     obsidian_cerebro_name = "N/A"
 
-    # 1. Comprobar Git y ejecutar Forense de Autoría (Bus Factor)
-    forensics = audit_git_forensics(project_path)
+    forensics = audit_git_forensics(str(git_root))
     forensics_metrics = forensics.get("metrics", {})
     bus_factor = forensics_metrics.get("bus_factor", 1)
     concentration_pct = forensics_metrics.get("concentration_pct", 100.0)
     primary_author = forensics_metrics.get("primary_author", "N/A")
     total_commits = forensics_metrics.get("total_commits", 0)
 
-    # Añadir hallazgos forenses
     for f_find in forensics.get("findings", []):
         findings.append(f_find)
 
     if is_git_repo:
-        b_res = run_git(["branch", "--show-current"], root)
+        b_res = run_git(["branch", "--show-current"], git_root)
         if b_res:
             branch = b_res
 
-        commit_res = run_git(["log", "-1", "--format=%h|%an|%ad|%s", "--date=short"], root)
+        commit_res = run_git(["log", "-1", "--format=%h|%an|%ad|%s", "--date=short"], git_root)
         if commit_res:
             parts = commit_res.split("|")
             if len(parts) >= 4:
@@ -75,7 +73,7 @@ def audit_governance(project_path: str, app_key: str = None) -> dict:
                 last_commit_date = parts[2]
                 last_commit_msg = parts[3]
 
-        status_res = run_git(["status", "--porcelain"], root)
+        status_res = run_git(["status", "--porcelain"], git_root)
         if status_res:
             dirty_files = [l for l in status_res.splitlines() if l.strip()]
             dirty_files_count = len(dirty_files)
@@ -98,7 +96,6 @@ def audit_governance(project_path: str, app_key: str = None) -> dict:
             "detail": "El control de versiones es un requisito básico e innegociable en cualquier auditoría de adquisición o inversión."
         })
 
-    # 2. Comprobar documentación
     if has_readme:
         findings.append({
             "severity": "LOW",
@@ -112,7 +109,6 @@ def audit_governance(project_path: str, app_key: str = None) -> dict:
             "detail": "Se recomienda documentar el propósito del proyecto, stack técnico y guía de despliegue."
         })
 
-    # 3. Comprobar sincronización con Cerebros Obsidian
     if OBSIDIAN_BASE_PATH.exists():
         app_name_lower = root.name.lower().replace("-", "").replace("_", "").replace(" ", "")
         for d in OBSIDIAN_BASE_PATH.iterdir():
@@ -127,7 +123,7 @@ def audit_governance(project_path: str, app_key: str = None) -> dict:
         findings.append({
             "severity": "LOW",
             "title": f"Bóveda Obsidian SSOT vinculada ({obsidian_cerebro_name})",
-            "detail": f"El proyecto cuenta con gemelo digital de documentación y MOCs en Obsidian."
+            "detail": "El proyecto cuenta con gemelo digital de documentación y MOCs en Obsidian."
         })
     else:
         findings.append({
@@ -136,7 +132,13 @@ def audit_governance(project_path: str, app_key: str = None) -> dict:
             "detail": "No se localizó carpeta cerebro_* coincidente en Cerebros_Obsidian."
         })
 
-    # Cálculo del Score (Base 100)
+    # Auditoría de Git Pre-Push Gate (Shift-Left Big Tech Standard)
+    from audit_bigtech_gates import audit_git_hooks
+    hook_res = audit_git_hooks(project_path)
+    has_shift_left_hook = hook_res.get("has_shift_left_hook", False)
+    for h_find in hook_res.get("findings", []):
+        findings.append(h_find)
+
     score = 65
     if is_git_repo:
         score += 15
@@ -144,7 +146,7 @@ def audit_governance(project_path: str, app_key: str = None) -> dict:
         score += 5
     if obsidian_cerebro_found:
         score += 10
-    if forensics_metrics.get("turnkey_ready"):
+    if forensics_metrics.get("turnkey_ready") or has_shift_left_hook:
         score += 5
     if dirty_files_count > 20:
         score -= 10
@@ -156,7 +158,7 @@ def audit_governance(project_path: str, app_key: str = None) -> dict:
         "pilar": "Gobernanza & Data Room",
         "score": score,
         "status": status,
-        "summary": f"Git: {'✅ Activo' if is_git_repo else '❌ Inactivo'} ({branch} • {last_commit_hash}). Bus Factor: {bus_factor} ({concentration_pct}% en {primary_author}). Obsidian: {'✅ ' + obsidian_cerebro_name if obsidian_cerebro_found else '⚠️ No vinculado'}.",
+        "summary": f"Git: {'✅ Activo' if is_git_repo else '❌ Inactivo'} ({branch} • {last_commit_hash}). Pre-Push Gate: {'✅' if has_shift_left_hook else '⚠️'}. Obsidian: {'✅ ' + obsidian_cerebro_name if obsidian_cerebro_found else '⚠️ No vinculado'}.",
         "findings": findings,
         "metrics": {
             "is_git_repo": is_git_repo,
@@ -171,6 +173,7 @@ def audit_governance(project_path: str, app_key: str = None) -> dict:
             "dirty_files_count": dirty_files_count,
             "has_readme": has_readme,
             "has_changelog": has_changelog,
+            "has_shift_left_hook": has_shift_left_hook,
             "obsidian_cerebro_found": obsidian_cerebro_found,
             "obsidian_cerebro_name": obsidian_cerebro_name
         }

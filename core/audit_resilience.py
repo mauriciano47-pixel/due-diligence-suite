@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-V-GUARD Due Diligence Suite - Módulo de Resiliencia, Fallback & Estándares de Producción (Pilar 4)
-Analiza: Protocolo Anti-Timeout en llamadas a IA (<= 8.000 ms), arquitectura Offline-First, PWA / Service Workers, y accesibilidad.
+V-GUARD Due Diligence Suite v2.4.0 - Módulo de Resiliencia, Performance Budget & Producción (Pilar 7)
+Analiza: Protocolo Anti-Timeout en llamadas a IA (<= 8.000 ms), arquitectura Offline-First,
+PWA / Service Workers, accesibilidad y Performance Budget de activos (<800 KB).
 """
 import os
-import re
 from pathlib import Path
 
 IGNORE_DIRS = {
@@ -33,8 +33,7 @@ def audit_resilience(project_path: str) -> dict:
     has_accessibility_hints = False
     checked_files = 0
 
-    # 1. Comprobar PWA manifest y Service Worker en la raíz o carpetas comunes
-    for pwa_file in ["manifest.json", "app.json", "public/manifest.json", "static/manifest.json"]:
+    for pwa_file in ["manifest.json", "app.json", "ataraxia/app.json", "public/manifest.json", "static/manifest.json"]:
         if (root / pwa_file).exists():
             has_pwa_manifest = True
             break
@@ -44,11 +43,9 @@ def audit_resilience(project_path: str) -> dict:
             has_service_worker = True
             break
 
-    # 2. Comprobar accesibilidad (.hintrc)
-    if (root / ".hintrc").exists():
+    if (root / ".hintrc").exists() or (root / "ataraxia" / ".hintrc").exists():
         has_accessibility_hints = True
 
-    # 3. Recorrer archivos de código para auditar IA y Offline-First
     for dirpath, dirnames, filenames in os.walk(root):
         dirnames[:] = [d for d in dirnames if d not in IGNORE_DIRS and not d.startswith(".")]
 
@@ -66,38 +63,31 @@ def audit_resilience(project_path: str) -> dict:
             except Exception:
                 continue
 
-            # Detección de uso de Gemini o LLMs (llamada real o cliente SDK)
             has_llm_invocation = (
                 "@google/genai" in content or "generativeai" in content.lower() or
                 ("gemini" in content.lower() and any(k in content for k in ["fetch(", "fetch ", "axios", "generateContent", "getGenerativeModel", "client.models"]))
             )
             if has_llm_invocation:
                 has_gemini = True
-                
-                # Verificar protocolo Anti-Timeout (8000ms)
                 has_abort_controller = "AbortController" in content or "timeout" in content.lower() or "8000" in content or "signal:" in content
                 if not has_abort_controller:
                     gemini_timeout_compliant = False
                     findings.append({
                         "severity": "HIGH",
-                        "title": f"Invocación a Gemini sin Timeout explícito (Regla Anti-Timeout)",
+                        "title": "Invocación a Gemini sin Timeout explícito (Regla Anti-Timeout)",
                         "detail": "Las llamadas a LLM deben implementar límite de 8.000 ms y AbortSignal para evitar bloqueos por latencia de red.",
                         "file": rel_path
                     })
 
-                # Verificar fallback / simulación
                 if "fallback" in content.lower() or "offline" in content.lower() or "simulaci" in content.lower():
                     has_fallback_mechanism = True
 
-            # Detección de almacenamiento offline
             if any(k in content for k in ["AsyncStorage", "SafeStorage", "localStorage", "indexedDB", "sqlite"]):
                 has_offline_storage = True
 
-            # Detección de accesibilidad en HTML/JSX
-            if "aria-label" in content or "role=" in content:
+            if "aria-label" in content or "role=" in content or "accessibilityLabel" in content:
                 has_accessibility_hints = True
 
-    # Resumen y hallazgos
     if has_gemini:
         if gemini_timeout_compliant:
             findings.append({
@@ -134,11 +124,17 @@ def audit_resilience(project_path: str) -> dict:
     if has_pwa_manifest or has_service_worker:
         findings.append({
             "severity": "LOW",
-            "title": "Capacidades PWA detectadas",
+            "title": "Capacidades PWA / App Manifest detectadas",
             "detail": "Presencia de manifiesto o service worker para funcionamiento desacoplado."
         })
 
-    # Puntuación (Base 100)
+    # Auditoría de Performance Budget (Big Tech Gate)
+    from audit_bigtech_gates import audit_performance_budget
+    perf_res = audit_performance_budget(project_path)
+    perf_compliant = perf_res.get("performance_budget_compliant", True)
+    for p_find in perf_res.get("findings", []):
+        findings.append(p_find)
+
     score = 80
     if has_offline_storage:
         score += 10
@@ -148,6 +144,8 @@ def audit_resilience(project_path: str) -> dict:
         score -= 20
     if has_accessibility_hints:
         score += 5
+    if not perf_compliant:
+        score -= min(15, perf_res.get("oversized_count", 1) * 5)
 
     score = max(0, min(100, score))
     status = "EXCELLENT" if score >= 85 else ("GOOD" if score >= 70 else ("WARNING" if score >= 50 else "DANGER"))
@@ -156,7 +154,7 @@ def audit_resilience(project_path: str) -> dict:
         "pilar": "Resiliencia & Producción",
         "score": score,
         "status": status,
-        "summary": f"Offline-First: {'✅ Sí' if has_offline_storage else '⚠️ No'}. PWA: {'✅ Sí' if has_pwa_manifest else 'No'}. IA Timeout: {'✅ Blindado' if (not has_gemini or gemini_timeout_compliant) else '⚠️ Revisar'}.",
+        "summary": f"Offline-First: {'✅ Sí' if has_offline_storage else '⚠️ No'}. PWA: {'✅ Sí' if has_pwa_manifest else 'No'}. Perf Budget: {'✅ OK' if perf_compliant else '⚠️ Excedido'}. IA Timeout: {'✅ Blindado' if (not has_gemini or gemini_timeout_compliant) else '⚠️ Revisar'}.",
         "findings": findings,
         "metrics": {
             "has_gemini": has_gemini,
@@ -165,6 +163,8 @@ def audit_resilience(project_path: str) -> dict:
             "has_offline_storage": has_offline_storage,
             "has_pwa_manifest": has_pwa_manifest,
             "has_service_worker": has_service_worker,
-            "has_accessibility_hints": has_accessibility_hints
+            "has_accessibility_hints": has_accessibility_hints,
+            "performance_budget_compliant": perf_compliant,
+            "max_asset_kb": perf_res.get("max_asset_kb", 0.0)
         }
     }

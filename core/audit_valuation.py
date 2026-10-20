@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-V-GUARD Due Diligence Suite - Motor de Valuación M&A, Haircut Técnico & Tier Institucional
+V-GUARD Due Diligence Suite v2.4.0 - Motor de Valuación M&A, Haircut Técnico & Tier Institucional (Big Tech Standard)
 Calcula el multiplicador de valuación (ARR Multiple), el descuento por deuda técnica (Haircut %)
-y el Nivel de Madurez Institucional (Tier 1 a Tier 5) bajo estándares de Acquire.com,
-FE International y fondos de Private Equity de Software.
+y el Nivel de Madurez Institucional (Tier 1 a Tier 5) con las 14 Armas Institucionales de Grandes Ligas.
 """
 
 def calculate_ma_valuation(global_score: float, pillars: dict, deal_breakers_count: int) -> dict:
@@ -15,8 +14,13 @@ def calculate_ma_valuation(global_score: float, pillars: dict, deal_breakers_cou
     comm = pillars.get("commercial", {})
     comm_metrics = comm.get("metrics", {})
     sec = pillars.get("security", {})
+    sec_metrics = sec.get("metrics", {})
+    res = pillars.get("resilience", {})
+    res_metrics = res.get("metrics", {})
+    gov = pillars.get("governance", {})
+    gov_metrics = gov.get("metrics", {})
 
-    # 1. Checklist de Ingeniería de Grado Institucional Élite
+    # 1. Checklist de 14 Armas de Ingeniería Institucional (Big Tech Tier-1 Standard)
     has_unit_tests = bool(test_run.get("executed") and test_run.get("pass_rate", 0) == 100.0 and test_run.get("total_tests", 0) >= 10)
     coverage_pct = test_run.get("coverage_pct") or 0.0
     has_coverage_gate = coverage_pct >= 80.0
@@ -29,6 +33,13 @@ def calculate_ma_valuation(global_score: float, pillars: dict, deal_breakers_cou
     has_billing = bool(comm_metrics.get("has_payment_gateway"))
     zero_god_files = arch_metrics.get("god_files_count", 0) == 0
 
+    # Nuevas 4 Armas de Grandes Ligas (v2.4.0)
+    crit_funcs = arch_metrics.get("critical_functions_count", 0)
+    zero_critical_complexity = (crit_funcs == 0)
+    has_dast_headers = bool(sec_metrics.get("has_dast_headers"))
+    has_runtime_contracts = bool(arch_metrics.get("has_runtime_contracts"))
+    has_shift_left_and_perf = bool(gov_metrics.get("has_shift_left_hook")) and bool(res_metrics.get("performance_budget_compliant", True))
+
     elite_capabilities = {
         "unit_tests_100": has_unit_tests,
         "coverage_gate_80": has_coverage_gate,
@@ -40,8 +51,13 @@ def calculate_ma_valuation(global_score: float, pillars: dict, deal_breakers_cou
         "ci_cd_quality_gates": has_ci,
         "zero_god_files": zero_god_files,
         "active_billing_gateway": has_billing,
+        "zero_critical_complexity": zero_critical_complexity,
+        "dast_http_headers": has_dast_headers,
+        "runtime_contract_guard": has_runtime_contracts,
+        "shift_left_git_gate": has_shift_left_and_perf,
     }
     elite_count = sum(1 for v in elite_capabilities.values() if v)
+    total_elite = len(elite_capabilities)
 
     # 2. Cálculo de Technical Debt Haircut (% de descuento que aplica un comprador en M&A)
     haircut_pct = 0.0
@@ -64,6 +80,11 @@ def calculate_ma_valuation(global_score: float, pillars: dict, deal_breakers_cou
         haircut_pct += pen
         haircut_reasons.append(f"-{int(pen)}% por {god_count} archivo(s) monolítico(s) (>800 líneas)")
 
+    if crit_funcs > 0:
+        comp_pen = min(10.0, crit_funcs * 2.0)
+        haircut_pct += comp_pen
+        haircut_reasons.append(f"-{int(comp_pen)}% por {crit_funcs} función(es) con complejidad ciclomática crítica V(G)>20")
+
     if not has_billing:
         haircut_pct += 15.0
         haircut_reasons.append("-15% por ausencia de pasarela de cobro integrada (Turnkey Billing)")
@@ -72,17 +93,21 @@ def calculate_ma_valuation(global_score: float, pillars: dict, deal_breakers_cou
         haircut_pct += 10.0
         haircut_reasons.append("-10% por vulnerabilidades abiertas en cadena de suministro (SCA)")
 
-    # Bonificación de compresión de riesgo por capacidades Élite (Fuzzing, Chaos, Mutation, E2E)
-    if has_pbt_fuzzing and has_chaos and has_mutation and has_e2e:
+    if not has_dast_headers:
+        haircut_pct += 3.0
+        haircut_reasons.append("-3% por ausencia de cabeceras de blindaje HTTP DAST (CSP / HSTS / X-Frame-Options)")
+
+    # Bonificación de compresión de riesgo por capacidades Élite (Fuzzing, Chaos, Mutation, E2E, Runtime Contracts)
+    if has_pbt_fuzzing and has_chaos and has_mutation and has_e2e and zero_critical_complexity and has_dast_headers:
         haircut_pct = max(0.0, haircut_pct - 8.0)
 
     haircut_pct = min(75.0, round(haircut_pct, 1))
 
     # 3. Determinación de Tier Institucional y Multiplicador ARR
-    if global_score >= 92 and haircut_pct == 0.0 and elite_count >= 9:
-        tier = "Tier 1 — Sovereign Institutional (Golden Path Élite)"
+    if global_score >= 92 and haircut_pct == 0.0 and elite_count >= 13 and zero_critical_complexity:
+        tier = "Tier 1 — Sovereign Institutional (Big Tech Golden Path)"
         arr_multiple = "4.8x – 6.5x ARR"
-        turnkey_status = "LISTO PARA ADQUISICIÓN INMEDIATA (0% Haircut Técnico)"
+        turnkey_status = "LISTO PARA ADQUISICIÓN INMEDIATA (0% Haircut Técnico • Estándar Grandes Ligas)"
     elif global_score >= 90 and haircut_pct <= 15.0:
         tier = "Tier 2 — Institutional Grade (M&A Ready)"
         arr_multiple = "3.8x – 5.0x ARR"
@@ -107,5 +132,5 @@ def calculate_ma_valuation(global_score: float, pillars: dict, deal_breakers_cou
         "arr_multiple": arr_multiple,
         "turnkey_status": turnkey_status,
         "elite_capabilities": elite_capabilities,
-        "elite_score_ratio": f"{elite_count}/10",
+        "elite_score_ratio": f"{elite_count}/{total_elite}",
     }

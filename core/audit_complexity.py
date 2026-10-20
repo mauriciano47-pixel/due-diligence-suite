@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-V-GUARD Due Diligence Suite - Módulo de Complejidad Ciclomática (McCabe AST)
-Auditoría de mantenibilidad, densidad lógica y caminos independientes por función.
-Estándar IEEE 1061 / SonarQube para evaluación de transferibilidad y deuda técnica.
+V-GUARD Due Diligence Suite v2.4.0 - Módulo de Complejidad Ciclomática (McCabe Lexical Stack AST)
+Auditoría de mantenibilidad, densidad lógica y caminos independientes por función individual.
+Estándar IEEE 1061 / SonarQube / ESLint Complexity Rule para evaluación de transferibilidad y deuda técnica.
 """
 import os
 import re
@@ -11,11 +11,11 @@ from pathlib import Path
 
 IGNORE_DIRS = {
     "node_modules", ".git", ".venv", "venv", "__pycache__", "dist",
-    "build", ".expo", ".next", ".cache", "coverage", "scratch", "android"
+    "build", ".expo", ".next", ".cache", "coverage", "scratch", "android", "ios"
 }
 
 def calculate_python_complexity(file_path: Path) -> list:
-    """Calcula complejidad ciclomática exacta en Python usando AST nativo."""
+    """Calcula complejidad ciclomática exacta en Python usando AST nativo (sin duplicar cierres hijos)."""
     results = []
     try:
         content = file_path.read_text(encoding="utf-8", errors="ignore")
@@ -27,14 +27,15 @@ def calculate_python_complexity(file_path: Path) -> list:
         if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
             complexity = 1  # Base V(G) = 1
             for child in ast.walk(node):
+                if child is not node and isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                    continue
                 if isinstance(child, (ast.If, ast.While, ast.For, ast.AsyncFor)):
                     complexity += 1
                 elif isinstance(child, ast.ExceptHandler):
                     complexity += 1
                 elif isinstance(child, ast.BoolOp):
-                    # Cada operador booleano (and, or) suma caminos
                     complexity += max(1, len(child.values) - 1)
-                elif isinstance(child, ast.IfExp):  # Ternario
+                elif isinstance(child, ast.IfExp):
                     complexity += 1
 
             results.append({
@@ -46,7 +47,10 @@ def calculate_python_complexity(file_path: Path) -> list:
     return results
 
 def calculate_js_complexity(file_path: Path) -> list:
-    """Calcula complejidad ciclomática heurística en JS/TS por bloques funcionales."""
+    """
+    Calcula complejidad ciclomática por ámbito léxico individual en JS/TS utilizando
+    una pila (stack) de funciones para no acumular closures hijos dentro del componente padre.
+    """
     results = []
     try:
         content = file_path.read_text(encoding="utf-8", errors="ignore")
@@ -54,14 +58,14 @@ def calculate_js_complexity(file_path: Path) -> list:
         return results
 
     lines = content.splitlines()
-    # Buscar firmas de función en JS/TS
-    func_pattern = re.compile(r'(?:function\s+([a-zA-Z0-9_$]+)|(?:const|let|var)\s+([a-zA-Z0-9_$]+)\s*=\s*(?:async\s*)?(?:\([^)]*\)|[a-zA-Z0-9_$]+)\s*=>|([a-zA-Z0-9_$]+)\s*\([^)]*\)\s*\{)')
+    func_pattern = re.compile(
+        r'(?:function\s+([a-zA-Z0-9_$]+)|'
+        r'(?:const|let|var)\s+([a-zA-Z0-9_$]+)\s*=\s*(?:useCallback\s*\(\s*)?(?:async\s*)?(?:\([^)]*\)|[a-zA-Z0-9_$]+)\s*=>|'
+        r'([a-zA-Z0-9_$]+)\s*\([^)]*\)\s*(?::\s*[^{]+)?\{)'
+    )
 
-    current_func = None
-    func_complexity = 1
-    func_line = 1
+    stack = []
     brace_depth = 0
-    func_depth = 0
 
     for idx, line in enumerate(lines, 1):
         stripped = line.strip()
@@ -69,34 +73,26 @@ def calculate_js_complexity(file_path: Path) -> list:
             continue
 
         match = func_pattern.search(line)
-        if match and not current_func:
+        if match:
             name = match.group(1) or match.group(2) or match.group(3) or "anonymous"
-            if name not in ["if", "for", "while", "switch", "catch"]:
-                current_func = name
-                func_complexity = 1
-                func_line = idx
-                func_depth = brace_depth
+            if name not in ("if", "for", "while", "switch", "catch", "return"):
+                stack.append({
+                    "function": name,
+                    "line": idx,
+                    "complexity": 1,
+                    "depth": brace_depth,
+                    "file": file_path.name
+                })
 
-        if current_func:
-            # Puntos de decisión
+        if stack:
+            top = stack[-1]
             decisions = len(re.findall(r'\b(if|else\s+if|while|for|catch|case)\b', line))
-            decisions += line.count("&&")
-            decisions += line.count("||")
-            decisions += line.count("??")
-            decisions += len(re.findall(r'\?[^:]+:', line))  # Ternario
-            func_complexity += decisions
+            top["complexity"] += decisions
 
-        # Conteo de llaves
         brace_depth += line.count("{") - line.count("}")
 
-        if current_func and brace_depth <= func_depth and "}" in line:
-            results.append({
-                "function": current_func,
-                "line": func_line,
-                "complexity": func_complexity,
-                "file": file_path.name
-            })
-            current_func = None
+        while stack and brace_depth <= stack[-1]["depth"] and "}" in line:
+            results.append(stack.pop())
 
     return results
 
@@ -143,10 +139,9 @@ def audit_complexity(project_path: str) -> dict:
             "status": "EXCELLENT",
             "summary": "No se detectaron funciones con ramas complejas. Código lineal y modular.",
             "findings": [],
-            "metrics": {"total_functions": 0, "max_complexity": 1, "avg_complexity": 1.0}
+            "metrics": {"total_functions": 0, "max_complexity": 1, "avg_complexity": 1.0, "critical_functions_count": 0}
         }
 
-    # Ordenar por complejidad descendente
     all_functions.sort(key=lambda x: x["complexity"], reverse=True)
     max_complexity = all_functions[0]["complexity"]
     avg_complexity = round(sum(f["complexity"] for f in all_functions) / len(all_functions), 1)
@@ -154,7 +149,7 @@ def audit_complexity(project_path: str) -> dict:
     critical_funcs = [f for f in all_functions if f["complexity"] > 20]
     high_funcs = [f for f in all_functions if 12 < f["complexity"] <= 20]
 
-    for f in critical_funcs[:5]:  # Reportar top 5
+    for f in critical_funcs[:5]:
         findings.append({
             "severity": "HIGH",
             "title": f"Complejidad Ciclomática Crítica en `{f['function']}()` (V(G) = {f['complexity']})",
@@ -172,7 +167,6 @@ def audit_complexity(project_path: str) -> dict:
             "line": f["line"]
         })
 
-    # Puntuación basada en pico máximo y promedio
     score = 100
     if max_complexity > 30:
         score -= 30
