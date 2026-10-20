@@ -27,6 +27,10 @@ sys.path.insert(0, str(CORE_DIR))
 from scanner import scan_project
 from apps_registry import get_apps_list, ECOSYSTEM_APPS
 from due_diligence_cli import save_to_obsidian
+from audit_delta import run_delta_quality_gate
+from auto_remediator import run_auto_remediation
+from audit_telemetry import record_audit_event, get_app_history
+from vdr_packager import export_vdr_package
 
 PORT = 7770
 HOST = "0.0.0.0"
@@ -85,6 +89,10 @@ class DueDiligenceHandler(SimpleHTTPRequestHandler):
             self._send_json(200, apps)
         elif parsed.path == "/api/health":
             self._send_json(200, {"status": "ok", "service": "V-GUARD Due Diligence Hub"})
+        elif parsed.path == "/api/history":
+            q = urllib.parse.parse_qs(parsed.query)
+            app_key = q.get("app", ["ataraxia"])[0]
+            self._send_json(200, get_app_history(app_key))
         else:
             # Servir archivos estáticos desde WEB_DIR
             super().do_GET()
@@ -123,6 +131,7 @@ class DueDiligenceHandler(SimpleHTTPRequestHandler):
                 return
 
             result = scan_project(target_path, app_key=app_key, app_name=target_name)
+            record_audit_event(result)
             self._update_fleet_cache(result)
             self._send_json(200, result)
 
@@ -135,6 +144,40 @@ class DueDiligenceHandler(SimpleHTTPRequestHandler):
                     results.append(res)
             self._update_fleet_cache(results)
             self._send_json(200, results)
+
+        elif parsed.path == "/api/fix":
+            app_key = data.get("key")
+            apps = get_apps_list()
+            matched = next((a for a in apps if a["key"] == app_key), None)
+            if matched and matched["exists"]:
+                res = run_auto_remediation(matched["path"])
+                self._send_json(200, res)
+            else:
+                self._send_json(400, {"error": "App no encontrada"})
+            return
+
+        elif parsed.path == "/api/delta":
+            app_key = data.get("key")
+            apps = get_apps_list()
+            matched = next((a for a in apps if a["key"] == app_key), None)
+            if matched and matched["exists"]:
+                res = run_delta_quality_gate(matched["path"])
+                self._send_json(200, res)
+            else:
+                self._send_json(400, {"error": "App no encontrada"})
+            return
+
+        elif parsed.path == "/api/export-vdr":
+            app_key = data.get("key")
+            apps = get_apps_list()
+            matched = next((a for a in apps if a["key"] == app_key), None)
+            if matched and matched["exists"]:
+                scan_res = scan_project(matched["path"], app_key=app_key, app_name=matched["name"])
+                vdr_zip = export_vdr_package(matched["path"], scan_res)
+                self._send_json(200, {"success": True, "vdr_path": vdr_zip})
+            else:
+                self._send_json(400, {"error": "App no encontrada"})
+            return
 
         elif parsed.path == "/api/save-obsidian":
             app_key = data.get("key", "custom")
