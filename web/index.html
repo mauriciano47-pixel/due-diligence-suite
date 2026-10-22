@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>V-GUARD Due Diligence Suite | Auditoría de Software e Inversión</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏛️</text></svg>">
+</head>
+<body>
+  <!-- Header Principal Cyber-Obsidian Royal -->
+  <header class="navbar">
+    <div class="nav-brand">
+      <div class="logo-icon">🏛️</div>
+      <div>
+        <div class="brand-title">V-GUARD Due Diligence Suite</div>
+        <div class="brand-sub">Motor Autónomo de Auditoría de Código, M&A & Blindaje de Inversión</div>
+      </div>
+    </div>
+    <div class="nav-status">
+      <div class="status-pill status-live">
+        <span class="dot-pulse"></span> Motor Activo
+      </div>
+      <div class="status-pill" id="ipPill">
+        <span>🌐 Local / Wi-Fi</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Barra de Confianza & Distintivos de Estándares Internacionales (Trust Center) -->
+  <section class="trust-banner">
+    <div class="trust-container">
+      <div class="trust-header">
+        <div class="trust-pill-group">
+          <span class="trust-pill">🏛️ TRUST CENTER & COMPLIANCE DECK</span>
+          <span class="trust-tagline">Controles técnicos continuos auditados por motor algorítmico V-GUARD • Clic en cada distintivo para ver evidencia técnica</span>
+        </div>
+        <button id="btnOpenAllCompliance" class="btn btn-outline btn-xs" title="Ver matriz completa de estándares">
+          📋 Matriz de Estándares
+        </button>
+      </div>
+      <div class="compliance-ribbon" id="complianceRibbon">
+        <!-- Renderizado dinámico desde app.js -->
+      </div>
+    </div>
+  </section>
+
+  <main class="main-container">
+    <!-- Selector de Aplicaciones y Escaneo -->
+    <section class="section-selector">
+      <div class="section-header">
+        <div>
+          <h2>🚀 Inspección de Aplicaciones del Ecosistema</h2>
+          <p class="subtitle">Selecciona una aplicación oficial o ingresa cualquier ruta de directorio para iniciar la Tech Due Diligence.</p>
+        </div>
+        <div class="action-buttons">
+          <button id="btnAuditAll" class="btn btn-secondary">
+            <span>⚡ Auditar Toda la Flota</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Panel de Mando Ejecutivo de la Flota (Fleet Command Deck) -->
+      <div class="fleet-command-deck">
+        <div class="command-kpi-card highlight-emerald">
+          <div class="command-kpi-icon">🏆</div>
+          <div class="command-kpi-body">
+            <div class="command-kpi-value"><span id="kpiAaaCount">9</span><span class="command-kpi-total">/10</span></div>
+            <div class="command-kpi-label">Grado Élite AAA (90%)</div>
+            <div class="command-kpi-sub">≥90/100 M&A Institutional Ready</div>
+          </div>
+        </div>
+
+        <div class="command-kpi-card highlight-cyan">
+          <div class="command-kpi-icon">🚨</div>
+          <div class="command-kpi-body">
+            <div class="command-kpi-value"><span id="kpiDealBreakersTotal">0</span></div>
+            <div class="command-kpi-label">Deal Breakers Críticos</div>
+            <div class="command-kpi-sub">Flota 100% libre de contingencias</div>
+          </div>
+        </div>
+
+        <div class="command-kpi-card highlight-blue">
+          <div class="command-kpi-icon">💎</div>
+          <div class="command-kpi-body">
+            <div class="command-kpi-value">4.8x – 6.5x</div>
+            <div class="command-kpi-label">Techo Múltiplo ARR (Tier 1)</div>
+            <div class="command-kpi-sub">Estándar 14 Armas Institucionales</div>
+          </div>
+        </div>
+
+        <div class="command-kpi-card highlight-gold">
+          <div class="command-kpi-icon">⚖️</div>
+          <div class="command-kpi-body">
+            <div class="command-kpi-value">100% IP</div>
+            <div class="command-kpi-label">Titularidad Registrada</div>
+            <div class="command-kpi-sub">Mauricio Uribe Maldonado</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Barra de Filtros Rápidos & Búsqueda Reactiva -->
+      <div class="fleet-toolbar">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="fleetSearchInput" placeholder="Buscar por app, vertical, tecnología o estándar..." aria-label="Buscar aplicaciones del ecosistema" />
+          <button id="btnClearSearch" class="btn-clear-search hidden" title="Limpiar búsqueda">✕</button>
+        </div>
+
+        <div class="filter-pills" id="filterPills">
+          <button class="filter-pill active" data-filter="all">
+            <span>⭐ Todas</span>
+            <span class="pill-count" id="countAll">10</span>
+          </button>
+          <button class="filter-pill" data-filter="aaa">
+            <span>🏆 Grado AAA</span>
+            <span class="pill-count count-emerald" id="countAaa">9</span>
+          </button>
+          <button class="filter-pill" data-filter="pending">
+            <span>⚠️ En Elevación</span>
+            <span class="pill-count count-amber" id="countPending">1</span>
+          </button>
+          <button class="filter-pill" data-filter="health">
+            <span>🩺 Salud / HealthTech</span>
+            <span class="pill-count" id="countHealth">2</span>
+          </button>
+          <button class="filter-pill" data-filter="security">
+            <span>🛡️ Seguridad & SOS</span>
+            <span class="pill-count" id="countSecurity">2</span>
+          </button>
+          <button class="filter-pill" data-filter="industrial">
+            <span>🏭 B2B & Fintech</span>
+            <span class="pill-count" id="countIndustrial">3</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Tarjetas de Apps Oficiales -->
+      <div class="apps-grid" id="appsGrid">
+        <div class="loading-state">Cargando catálogo del ecosistema...</div>
+      </div>
+
+      <!-- Inspector de Ruta Manual -->
+      <div class="custom-path-bar">
+        <div class="path-input-group">
+          <span class="path-icon">📂</span>
+          <input type="text" id="customPathInput" placeholder="O ingresa una ruta local: Ej. C:\Users\mauro\OneDrive\Documentos\CAMBIOYA!" />
+        </div>
+        <button id="btnAuditCustom" class="btn btn-primary">
+          <span>🔍 Auditar Ruta</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Estado de Escaneo en Proceso (Oculto por defecto) -->
+    <div id="scanningState" class="scanning-card hidden">
+      <div class="spinner"></div>
+      <div class="scanning-text">
+        <h3 id="scanningAppTitle">Ejecutando Tech Due Diligence...</h3>
+        <p id="scanningStep">Analizando secretos, dependencias, licencias de propiedad intelectual, métricas SLOC y resiliencia...</p>
+      </div>
+    </div>
+
+    <!-- Resultados de la Auditoría -->
+    <section id="resultsSection" class="section-results hidden">
+      <!-- Tarjeta Resumen Principal / Scoreboard -->
+      <div class="score-card">
+        <div class="score-header">
+          <div>
+            <div class="badge-app" id="resAppCategory">Ecosistema</div>
+            <h1 class="app-title" id="resAppName">CAMBIOYA!</h1>
+            <div class="app-path-code" id="resAppPath">C:\Users\mauro\cambioya</div>
+          </div>
+          <div class="export-actions">
+            <button id="btnSaveObsidian" class="btn btn-emerald" title="Guardar en Cerebros Obsidian">
+              <span>💾 Guardar en Obsidian</span>
+            </button>
+            <button id="btnPrintReport" class="btn btn-outline" title="Imprimir o Exportar PDF">
+              <span>🖨️ Imprimir / PDF</span>
+            </button>
+            <button id="btnCopySummary" class="btn btn-outline" title="Copiar Resumen">
+              <span>📋 Copiar Resumen</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Métrica Global / Gauge -->
+        <div class="score-grid">
+          <div class="score-kpi main-gauge-kpi">
+            <div class="gauge-container">
+              <svg class="gauge-svg" viewBox="0 0 120 120">
+                <circle class="gauge-bg" cx="60" cy="60" r="50"></circle>
+                <circle class="gauge-fill" id="gaugeCircle" cx="60" cy="60" r="50"></circle>
+              </svg>
+              <div class="gauge-number">
+                <span id="scoreValue">88</span>
+                <span class="gauge-unit">/100</span>
+              </div>
+            </div>
+            <div class="grade-badge" id="gradeBadge">AA</div>
+            <div class="grade-desc" id="gradeDesc">Grado de Inversión</div>
+          </div>
+
+          <!-- Mini KPIs -->
+          <div class="kpi-box">
+            <div class="kpi-icon">🚨</div>
+            <div class="kpi-value" id="kpiDealBreakers">0</div>
+            <div class="kpi-label">Deal Breakers (Alertas Críticas)</div>
+          </div>
+
+          <div class="kpi-box">
+            <div class="kpi-icon">📊</div>
+            <div class="kpi-value" id="kpiSLOC">14,200</div>
+            <div class="kpi-label">Líneas de Código (SLOC)</div>
+          </div>
+
+          <div class="kpi-box">
+            <div class="kpi-icon">⚖️</div>
+            <div class="kpi-value" id="kpiIP">Verificada</div>
+            <div class="kpi-label">Titularidad IP (M. Uribe)</div>
+          </div>
+
+          <div class="kpi-box">
+            <div class="kpi-icon">📦</div>
+            <div class="kpi-value" id="kpiDeps">18</div>
+            <div class="kpi-label">Dependencias Auditadas</div>
+          </div>
+
+          <div class="kpi-box">
+            <div class="kpi-icon">🧬</div>
+            <div class="kpi-value" id="kpiEliteWeapons">14/14</div>
+            <div class="kpi-label">Armas Élite (Big Tech Gate)</div>
+          </div>
+
+          <div class="kpi-box">
+            <div class="kpi-icon">✂️</div>
+            <div class="kpi-value" id="kpiHaircut">0.0%</div>
+            <div class="kpi-label">Haircut Deuda Técnica M&A</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pestañas de los 8 Pilares Institucionales de Inversión -->
+      <div class="pillars-container">
+        <div class="tabs-header">
+          <button class="tab-btn active" data-tab="tab-sec">🛡️ 1. Ciberseguridad (SAST)</button>
+          <button class="tab-btn" data-tab="tab-sca">🔍 2. Dependencias & SCA (CVEs)</button>
+          <button class="tab-btn" data-tab="tab-ip">📜 3. Propiedad Intelectual & Licencias</button>
+          <button class="tab-btn" data-tab="tab-arch">🏗️ 4. Arquitectura & McCabe AST</button>
+          <button class="tab-btn" data-tab="tab-form">📱 5. Form Shield & UX Móvil</button>
+          <button class="tab-btn" data-tab="tab-comm">💼 6. Vendibilidad M&A & Mercado</button>
+          <button class="tab-btn" data-tab="tab-res">⚡ 7. Resiliencia & Producción</button>
+          <button class="tab-btn" data-tab="tab-gov">🏛️ 8. Gobernanza & Git Forensics</button>
+        </div>
+
+        <!-- Contenido Pestaña 1: Seguridad SAST -->
+        <div class="tab-content active" id="tab-sec">
+          <div class="pillar-summary-bar">
+            <div>
+              <h3 id="secPillarTitle">Ciberseguridad & Zero-Leakage (SAST)</h3>
+              <p id="secPillarDesc">Auditoría estática de fuga de credenciales, secretos expuestos, reglas .gitignore y sanitización OWASP.</p>
+            </div>
+            <div class="pillar-score-badge" id="secScoreBadge">100/100</div>
+          </div>
+          <div class="findings-list" id="secFindings"></div>
+        </div>
+
+        <!-- Contenido Pestaña 2: Dependencias & SCA (CVEs en Vivo) -->
+        <div class="tab-content" id="tab-sca">
+          <div class="pillar-summary-bar">
+            <div>
+              <h3 id="scaPillarTitle">Seguridad de Dependencias & SCA (CVEs en Vivo)</h3>
+              <p id="scaPillarDesc">Auditoría en tiempo real contra vulnerabilidades de dependencias directas y transitivas con severidad CVSS vía bases NVD / GitHub Advisory.</p>
+            </div>
+            <div class="pillar-score-badge" id="scaScoreBadge">100/100</div>
+          </div>
+          <div class="findings-list" id="scaFindings"></div>
+        </div>
+
+        <!-- Contenido Pestaña 3: IP & Licencias -->
+        <div class="tab-content" id="tab-ip">
+          <div class="pillar-summary-bar">
+            <div>
+              <h3 id="ipPillarTitle">Propiedad Intelectual & Licencias</h3>
+              <p id="ipPillarDesc">Validación de riesgos de copyleft viral (GPL/AGPL) vs licencias permisivas (MIT/Apache), y titularidad de autor.</p>
+            </div>
+            <div class="pillar-score-badge" id="ipScoreBadge">100/100</div>
+          </div>
+          <div class="findings-list" id="ipFindings"></div>
+        </div>
+
+        <!-- Contenido Pestaña 4: Arquitectura & McCabe AST -->
+        <div class="tab-content" id="tab-arch">
+          <div class="pillar-summary-bar">
+            <div>
+              <h3 id="archPillarTitle">Arquitectura, McCabe AST & Verificador de Tests Dinámicos</h3>
+              <p id="archPillarDesc">Evaluación de Complejidad Ciclomática de McCabe (V(G) <= 20), ejecución en vivo de suites de test (Pass Rate), God Files (>800l) y tipado estático.</p>
+            </div>
+            <div class="pillar-score-badge" id="archScoreBadge">100/100</div>
+          </div>
+          <div class="findings-list" id="archFindings"></div>
+        </div>
+
+        <!-- Contenido Pestaña 5: Form Shield & UX Móvil -->
+        <div class="tab-content" id="tab-form">
+          <div class="pillar-summary-bar">
+            <div>
+              <h3 id="formPillarTitle">Ergonomía de Formularios & UX Móvil (Form Shield Standard)</h3>
+              <p id="formPillarDesc">Prevención estricta de 'Modal Jail' con overflow-y adaptable, sanitización .trim(), accesibilidad (a11y) y neutralización de :-webkit-autofill.</p>
+            </div>
+            <div class="pillar-score-badge" id="formScoreBadge">100/100</div>
+          </div>
+          <div class="findings-list" id="formFindings"></div>
+        </div>
+
+        <!-- Contenido Pestaña 6: Vendibilidad M&A -->
+        <div class="tab-content" id="tab-comm">
+          <div class="pillar-summary-bar">
+            <div>
+              <h3 id="commPillarTitle">Vendibilidad M&A & Viabilidad Comercial (Exit Readiness)</h3>
+              <p id="commPillarDesc">Facilidad de venta en Acquire.com / Flippa, modelo de monetización, Key-Person Risk y foso operativo (Moat).</p>
+            </div>
+            <div class="pillar-score-badge" id="commScoreBadge">100/100</div>
+          </div>
+          <div class="findings-list" id="commFindings"></div>
+        </div>
+
+        <!-- Contenido Pestaña 7: Resiliencia & Producción -->
+        <div class="tab-content" id="tab-res">
+          <div class="pillar-summary-bar">
+            <div>
+              <h3 id="resPillarTitle">Resiliencia Operativa & Estándares de Producción</h3>
+              <p id="resPillarDesc">Cumplimiento del Protocolo Anti-Timeout en IA (<= 8.000 ms), arquitectura Offline-First y tolerancia a fallos.</p>
+            </div>
+            <div class="pillar-score-badge" id="resScoreBadge">100/100</div>
+          </div>
+          <div class="findings-list" id="resFindings"></div>
+        </div>
+
+        <!-- Contenido Pestaña 8: Gobernanza & Git Forensics -->
+        <div class="tab-content" id="tab-gov">
+          <div class="pillar-summary-bar">
+            <div>
+              <h3 id="govPillarTitle">Gobernanza, Git Forensics & Data Room de Inversores</h3>
+              <p id="govPillarDesc">Análisis forense de Bus Factor, concentración de autoría, historial de commits y vinculación con Cerebros Obsidian SSOT.</p>
+            </div>
+            <div class="pillar-score-badge" id="govScoreBadge">100/100</div>
+          </div>
+          <div class="findings-list" id="govFindings"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Modal / Vista de Auditoría Masiva de la Flota -->
+    <section id="fleetModal" class="fleet-section hidden">
+      <div class="fleet-card">
+        <div class="fleet-header">
+          <h2>🏁 Matriz Comparativa de Due Diligence — Flota Completa (8 Pilares Institucionales)</h2>
+          <button id="btnCloseFleet" class="btn btn-outline">Cerrar Matriz</button>
+        </div>
+        <div class="fleet-table-wrap">
+          <table class="fleet-table" id="fleetTable">
+            <thead>
+              <tr>
+                <th>Aplicación</th>
+                <th>Score</th>
+                <th>Grado M&A</th>
+                <th>Deal Breakers</th>
+                <th>SAST</th>
+                <th>SCA (CVEs)</th>
+                <th>IP / Licencias</th>
+                <th>Arquitectura (McCabe)</th>
+                <th>Form Shield</th>
+                <th>Vendibilidad M&A</th>
+                <th>Resiliencia</th>
+                <th>Git Forensics</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody id="fleetTableBody">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div>V-GUARD Due Diligence Suite • Propiedad exclusiva de Mauricio Uribe Maldonado • Estándar Cyber-Obsidian Royal</div>
+  </footer>
+
+  <!-- Modal Interactivo de Detalle de Cumplimiento & Evidencia Técnica -->
+  <div id="complianceModal" class="compliance-modal-overlay hidden">
+    <div class="compliance-modal-card">
+      <div class="compliance-modal-header">
+        <div class="compliance-header-title">
+          <span id="compModalIcon" class="compliance-icon-lg">🛡️</span>
+          <div>
+            <div class="compliance-pill-row">
+              <span id="compModalBadgeStatus" class="comp-status-pill">Level 2 Verified</span>
+              <span id="compModalCategory" class="comp-cat-pill">Ciberseguridad</span>
+            </div>
+            <h2 id="compModalTitle">OWASP ASVS Level 2</h2>
+            <div id="compModalSubtitle" class="comp-subtitle">Application Security Verification Standard</div>
+          </div>
+        </div>
+        <button id="btnCloseComplianceModal" class="btn-close-modal" aria-label="Cerrar modal">&times;</button>
+      </div>
+
+      <div class="compliance-modal-body">
+        <!-- Resumen del Estándar -->
+        <div class="comp-section">
+          <h4>📖 Alcance del Estándar</h4>
+          <p id="compModalDesc" class="comp-text"></p>
+        </div>
+
+        <!-- Evidencia Técnica de V-GUARD -->
+        <div class="comp-section">
+          <h4>🔬 Verificación Técnica en Código (V-GUARD Engine)</h4>
+          <div class="comp-kv-box">
+            <div class="comp-kv-row">
+              <span class="comp-k">Módulo Auditor:</span>
+              <code id="compModalModule" class="comp-v-code">audit_security.py</code>
+            </div>
+            <div class="comp-kv-row">
+              <span class="comp-k">Mecanismo de Inspección:</span>
+              <span id="compModalMechanism" class="comp-v">Análisis Estático SAST sin falsos positivos</span>
+            </div>
+            <div class="comp-kv-row">
+              <span class="comp-k">Organismo / Autoridad Rectora:</span>
+              <span id="compModalAuthority" class="comp-v">OWASP Foundation</span>
+            </div>
+            <div class="comp-kv-row">
+              <span class="comp-k">Registro en Data Room:</span>
+              <span id="compModalDataRoom" class="comp-v-code">cerebro_vguard_seguridad</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alerta Legal Hardcore Reality -->
+        <div class="legal-disclaimer-box">
+          <div class="disclaimer-header">
+            <span>⚖️ Atestación Legal & Descargo de Responsabilidad (M&A Standard)</span>
+          </div>
+          <p id="compModalLegal" class="disclaimer-text">
+            Este distintivo certifica que la arquitectura, código fuente y dependencias del ecosistema han superado de forma continua las pruebas automatizadas de ingeniería correspondientes a los controles técnicos de esta norma. No constituye un diploma administrativo emitido por un registrador o firma contable CPA externa independiente, garantizando transparencia absoluta frente a comités de inversión.
+          </p>
+        </div>
+      </div>
+
+      <div class="compliance-modal-footer">
+        <button id="btnDismissCompliance" class="btn btn-primary">Entendido</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
