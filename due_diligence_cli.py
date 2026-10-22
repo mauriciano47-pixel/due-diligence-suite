@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-V-GUARD Due Diligence Suite - CLI Runner (v3.0 Sovereign Institutional)
+V-GUARD Due Diligence Suite - CLI Runner (v3.1 Sovereign Institutional)
 Plataforma Integral de Gobernanza, Delta Quality Gate, Auto-Remediación,
-Telemetría de Series Temporales y Virtual Data Room (M&A).
+Telemetría de Series Temporales, Certificaciones Internacionales y Virtual Data Room (M&A).
 """
 import sys
 import os
@@ -82,6 +82,18 @@ def run_single_audit(app_data: dict, save_obsidian: bool = False, export_vdr: bo
         if trend.get("has_history"):
             print(f"   📈 Tendencia Telemetría  : {trend['summary']}")
 
+    certs = result.get("certifications")
+    if certs:
+        openssf = certs.get("openssf", {})
+        asvs = certs.get("owasp_asvs", {})
+        slsa = certs.get("slsa_supply_chain", {})
+        reg = certs.get("domain_regulatory", {})
+        print("\n   [🎖️ Acreditaciones & Certificaciones Internacionales]:")
+        print(f"   🥇 OpenSSF Best Practices : {openssf.get('badge_icon')} {openssf.get('badge')} ({openssf.get('score')}%)")
+        print(f"   🛡️  OWASP ASVS v4.0.3      : {asvs.get('level')} (Score: {asvs.get('average_score')}/100)")
+        print(f"   ⛓️  Google SLSA / NIST     : {slsa.get('level')}")
+        print(f"   🏛️  Cumplimiento Sectorial : {reg.get('standard')} -> {reg.get('readiness_score')}% ({reg.get('status')})")
+
     print("\n   [Desglose por Pilares]:")
     for k, p in result["pillars"].items():
         icon = "✅" if p["score"] >= 80 else ("⚠️" if p["score"] >= 60 else "❌")
@@ -103,7 +115,7 @@ def run_single_audit(app_data: dict, save_obsidian: bool = False, export_vdr: bo
     return result
 
 def main():
-    parser = argparse.ArgumentParser(description="V-GUARD Due Diligence Suite (v3.0)")
+    parser = argparse.ArgumentParser(description="V-GUARD Due Diligence Suite (v3.1)")
     parser.add_argument("--list", action="store_true", help="Listar aplicaciones registradas en el ecosistema")
     parser.add_argument("--app", type=str, help="Clave de la aplicación a auditar (ej. ataraxia, cambioya, hidoctor, faro)")
     parser.add_argument("--all", action="store_true", help="Auditar toda la flota de aplicaciones del ecosistema")

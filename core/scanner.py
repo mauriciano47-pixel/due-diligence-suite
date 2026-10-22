@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-V-GUARD Due Diligence Suite - Orquestador Maestro de Auditoría Institucional (v2.0 Hardcore Reality)
-Ejecuta la auditoría integral de 6 pilares bajo estándares de Venture Capital y M&A (Acquire.com / Private Equity):
-Seguridad, Propiedad Intelectual, Arquitectura (Rigor Extremo), Vendibilidad M&A, Resiliencia y Gobernanza.
+V-GUARD Due Diligence Suite - Orquestador Maestro de Auditoría Institucional (v3.1 Sovereign Institutional)
+Ejecuta la auditoría integral de 8 pilares bajo estándares de Venture Capital y M&A (Acquire.com / Private Equity):
+Seguridad, Propiedad Intelectual, Arquitectura (Rigor Extremo), Vendibilidad M&A, Resiliencia, Gobernanza
+y Certificaciones Internacionales (OpenSSF, OWASP ASVS, SLSA y Cumplimiento Normativo).
 """
 import os
 import json
@@ -17,6 +18,7 @@ from audit_frontend_forms import audit_frontend_forms
 from audit_resilience import audit_resilience
 from audit_governance import audit_governance
 from audit_commercial import audit_commercial
+from audit_certifications import audit_certifications
 
 WEIGHTS = {
     "security": 0.15,      # 15% Ciberseguridad & Zero-Leakage (SAST)
@@ -101,6 +103,9 @@ def scan_project(project_path: str, app_key: str = None, app_name: str = None) -
     from audit_valuation import calculate_ma_valuation
     valuation = calculate_ma_valuation(global_score, pillars_dict, len(deal_breakers))
 
+    # Ejecutar sensor de Certificaciones Internacionales
+    cert_res = audit_certifications(project_path, app_key=app_key, app_name=display_name, context=pillars_dict)
+
     # Generar Dossier Markdown para Obsidian / Inversores
     markdown_report = generate_markdown_dossier(
         app_name=display_name,
@@ -111,7 +116,8 @@ def scan_project(project_path: str, app_key: str = None, app_name: str = None) -
         grade_label=grade_label,
         deal_breakers=deal_breakers,
         pillars=[sec_res, sca_res, ip_res, arch_res, form_res, comm_res, res_res, gov_res],
-        valuation=valuation
+        valuation=valuation,
+        certifications=cert_res
     )
 
     return {
@@ -127,12 +133,13 @@ def scan_project(project_path: str, app_key: str = None, app_name: str = None) -
         "deal_breakers_count": len(deal_breakers),
         "deal_breakers": deal_breakers,
         "valuation": valuation,
+        "certifications": cert_res,
         "pillars": pillars_dict,
         "all_findings": all_findings,
         "markdown_report": markdown_report
     }
 
-def generate_markdown_dossier(app_name, project_path, timestamp, score, grade, grade_label, deal_breakers, pillars, valuation=None) -> str:
+def generate_markdown_dossier(app_name, project_path, timestamp, score, grade, grade_label, deal_breakers, pillars, valuation=None, certifications=None) -> str:
     val_block = ""
     if valuation:
         val_block = f"""
@@ -143,6 +150,20 @@ def generate_markdown_dossier(app_name, project_path, timestamp, score, grade, g
 - **Estado Turnkey:** {valuation['turnkey_status']}
 - **Capacidades de Ingeniería Élite Activas:** `{valuation['elite_score_ratio']}`
 """
+    cert_block = ""
+    if certifications:
+        openssf = certifications.get("openssf", {})
+        asvs = certifications.get("owasp_asvs", {})
+        slsa = certifications.get("slsa_supply_chain", {})
+        reg = certifications.get("domain_regulatory", {})
+        cert_block = f"""
+## 🎖️ Acreditaciones y Certificaciones Internacionales (Big Tech Readiness)
+- **OpenSSF Best Practices (Linux Foundation):** {openssf.get('badge_icon')} **{openssf.get('badge')}** (`{openssf.get('score')}%` Cumplimiento)
+- **OWASP ASVS v4.0.3:** **{asvs.get('level')}** (Score: `{asvs.get('average_score')}/100` — Estado: `{asvs.get('status')}`)
+- **Google SLSA & NIST SP 800-218:** **{slsa.get('level')}**
+- **Cumplimiento Sectorial ({reg.get('standard')}):** `{reg.get('readiness_score')}%` ({reg.get('status')})
+"""
+
     md = f"""# 🏛️ Dossier Ejecutivo de Tech Due Diligence — {app_name}
 
 **Fecha de Auditoría:** {timestamp}  
@@ -150,6 +171,7 @@ def generate_markdown_dossier(app_name, project_path, timestamp, score, grade, g
 **Titularidad & Autoría:** Mauricio Uribe Maldonado  
 **Veredicto de Inversión (Rigor Institucional):** **{grade} ({score}/100)** — *{grade_label}*
 {val_block}
+{cert_block}
 ---
 
 ## 📊 Resumen Ejecutivo del Score (Estándar M&A)

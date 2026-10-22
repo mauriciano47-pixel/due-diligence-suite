@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-V-GUARD Due Diligence Suite - Virtual Data Room (VDR) Packager
+V-GUARD Due Diligence Suite - Virtual Data Room (VDR) Packager (v3.1 Sovereign Institutional)
 Genera un paquete sellado y auditado de debida diligencia técnica para
 procesos de M&A (Acquire.com / Flippa / Fondos Private Equity).
-Incluye dossiers, inventario SBOM, análisis forense Git y manifiesto SHA-256.
+Incluye dossiers, inventario SBOM, análisis forense Git, atestación de 14 armas,
+certificaciones internacionales (OpenSSF, OWASP ASVS, SLSA) y manifiesto SHA-256.
 """
 import os
 import json
@@ -12,6 +13,8 @@ import hashlib
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, Any
+
+from audit_certifications import generate_certifications_attestation
 
 DESKTOP_DIR = Path(r"C:\Users\mauro\OneDrive\Desktop")
 VDR_OUTPUT_DIR = DESKTOP_DIR / "VDR_PACKAGES"
@@ -107,7 +110,6 @@ def export_vdr_package(project_path: str, audit_result: Dict[str, Any]) -> str:
     if sbom_file.exists():
         files_to_pack["02_Software_Bill_of_Materials_CycloneDX_v1.5.json"] = sbom_file.read_bytes()
     else:
-        # Generar stub representativo
         stub_sbom = {
             "bomFormat": "CycloneDX",
             "specVersion": "1.5",
@@ -127,7 +129,12 @@ def export_vdr_package(project_path: str, audit_result: Dict[str, Any]) -> str:
     compliance_doc = generate_compliance_attestation(app_name, audit_result).encode("utf-8")
     files_to_pack["05_Compliance_and_14_Elite_Weapons_Attestation.md"] = compliance_doc
 
-    # 6. Manifiesto Criptográfico SHA-256
+    # 6. Atestación de Certificaciones Internacionales & Compliance Normativo
+    cert_data = audit_result.get("certifications", {})
+    cert_doc = generate_certifications_attestation(app_name, cert_data).encode("utf-8")
+    files_to_pack["06_International_Certifications_and_Standards_Attestation.md"] = cert_doc
+
+    # 7. Manifiesto Criptográfico SHA-256
     manifest_lines = [
         f"# MANIFIESTO CRIPTOGRÁFICO DE INTEGRIDAD SHA-256 — VDR {app_name.upper()}",
         f"# Fecha: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
