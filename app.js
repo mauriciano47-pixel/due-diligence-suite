@@ -224,6 +224,7 @@ document.addEventListener("DOMContentLoaded", () => {
 async function initApp() {
   setupTabs();
   setupEventListeners();
+  setupDealDeskListeners();
   setupFleetToolbar();
   initComplianceRibbon();
   await loadApps();
@@ -973,3 +974,212 @@ window.viewFleetAppDetail = function(appKey) {
   document.getElementById("fleetModal").classList.add("hidden");
   runAudit({ key: appKey });
 };
+
+/* ==========================================================================
+   Investor Deal Desk & Acquisition Terminal (Bóveda de Monetización M&A)
+   ========================================================================== */
+
+const DEAL_LISTINGS = {
+  ataraxia: {
+    title: "Ataraxia v2.9.9 — FitTech & Coach Estoico IA",
+    subtitle: "React Native (Expo 52) + Web PWA • Score AAA (96.7) • Valuación: $22,000 USD",
+    vdr: "VDR_ATARAXIA_20261021_221404.zip",
+    tier: "Tier 1 Sovereign Ready",
+    listingText: `================================================================================
+ACQUIRE.COM / FLIPPA LISTING TEASER: ATARAXIA (FITTECH & BIOHACKING ESTOICO)
+================================================================================
+Titular Exclusivo: Mauricio Uribe Maldonado
+Precio de Salida (Asset Sale): $22,000 USD (All-Cash Buyout)
+Múltiplo SaaS ARR Estimado: 4.8x – 6.5x ARR
+Vertical: Health, Fitness, AI Coaching & PWA Native App
+
+RESUMEN EJECUTIVO:
+Ataraxia es un ecosistema integral de bienestar y rendimiento físico de grado institucional.
+Combina la autodisciplina estoica con un podómetro biomecánico NEAT 24/7 sin GPS invasivo,
+coach de IA contextual con 3 arquetipos (Estoico, Espartano, Biohacker), cálculo dinámico
+de TDEE/BMR y balance calórico continuo a 60 FPS.
+
+ESPECIFICACIONES DE INGENIERÍA:
+- Frontend / Móvil: TypeScript, React Native (Expo SDK 52), React 19, Tailwind CSS / NativeWind.
+- Plataformas: Android nativo (EAS Build), PWA Web con soporte offline total.
+- Calidad de Código: 65 tests unitarios verificados con 100% Pass Rate.
+- Certificaciones: OpenSSF Gold Badge (100%), OWASP ASVS Level 2 (100/100), SLSA Level 2+.
+- Deuda Técnica Haircut: 0.0% (Cero archivos monolíticos, cero complejidad ciclomática crítica).
+- Costes de Servidor: $0 USD/mes (Arquitectura desacoplada Offline-First en Edge).
+
+ACTIVOS TRANSFERIDOS:
+1. Repositorio Git completo con historial de commits y ramas estructuradas.
+2. Cesión total, definitiva e irrevocable de Propiedad Intelectual (Founder Assignment).
+3. Paquete Virtual Data Room (VDR) sellado con hash inmutable SHA-256.
+4. Dominios oficiales (ataraxia-stoic.vercel.app) y portal de descarga PWA/APK.
+5. Gemelo digital en Obsidian (cerebro_ataraxia) con manuales operativos completos.
+6. Periodo de acompañamiento y soporte del fundador por 30 días (hasta 15 horas).`
+  },
+  hidoctor: {
+    title: "HiDoctor v3.0.0 — HealthTech Pediátrico & Triaje Clínico IA",
+    subtitle: "React 19 + Vite 8 • Score AAA (97.3) • Valuación: $18,000 USD",
+    vdr: "VDR_HIDOCTOR_20261021_221136.zip",
+    tier: "Tier 1 Sovereign Ready",
+    listingText: `================================================================================
+ACQUIRE.COM / FLIPPA LISTING TEASER: HIDOCTOR (PEDIATRIC HEALTHTECH & AI TRIAGE)
+================================================================================
+Titular Exclusivo: Mauricio Uribe Maldonado
+Precio de Salida (Asset Sale): $18,000 USD (All-Cash Buyout)
+Múltiplo SaaS ARR Estimado: 5.0x – 7.0x ARR
+Vertical: HealthTech, Clinical Triage, Telehealth & Pediatric Log
+
+RESUMEN EJECUTIVO:
+Bitácora clínica pediátrica y sistema de triaje asistencial dual minuto a minuto diseñada
+para apoyar a padres y profesionales de la salud:
+- Curva térmica vectorial SVG en tiempo real para respuesta a antipiréticos.
+- Calculadora de dosis por peso milimétrica para paracetamol e ibuprofeno.
+- Doctor IA con modelos multimodales Gemini con fallback a heurística pediátrica offline en < 8s.
+- Directorio de emergencias médicas precargado para 9 países.
+- Cero almacenamiento invasivo de expedientes clínicos en la nube (Privacidad Total).
+
+ESPECIFICACIONES DE INGENIERÍA:
+- Frontend: TypeScript, React 19, Vite 8, Tailwind CSS, SVG Vectorial nativo.
+- Batería de Pruebas: 54 tests unitarios dinámicos con 100% de aprobación.
+- Certificaciones: OpenSSF Gold Badge (100%), OWASP ASVS L1/L2 (98/100), HIPAA & RGPD Art. 9 (98.5%).
+- Deuda Técnica Haircut: 0.0% (Código Turnkey listo para clínicas y aseguradoras).
+- Costes de Servidor: $0 USD/mes (Static Edge CDN).
+
+ACTIVOS TRANSFERIDOS:
+1. Código fuente en TypeScript modular y altamente tipado.
+2. Cesión total de derechos patrimoniales y propiedad intelectual.
+3. Paquete Virtual Data Room (VDR) sellado con hash inmutable SHA-256.
+4. Repositorio de producción (GitHub Pages / Cloudflare Workers).
+5. Gemelo digital en Obsidian (cerebro_hidoctor) y propuesta B2B para clínicas.
+6. Soporte técnico directo de Mauricio Uribe por 30 días (hasta 15 horas).`
+  },
+  faro: {
+    title: "Faro v1.9.0 — SafetyTech & Geolocalización de Emergencia SOS",
+    subtitle: "PWA Offline-First • Score AAA (99.4) • Valuación: $15,000 USD",
+    vdr: "VDR_FARO_20261021_221241.zip",
+    tier: "Tier 1 Sovereign Ready",
+    listingText: `================================================================================
+ACQUIRE.COM / FLIPPA LISTING TEASER: FARO (SAFETYTECH & EMERGENCY SOS)
+================================================================================
+Titular Exclusivo: Mauricio Uribe Maldonado
+Precio de Salida (Asset Sale): $15,000 USD (All-Cash Buyout)
+Múltiplo SaaS ARR Estimado: 4.5x – 6.0x ARR
+Vertical: Personal Safety, IoT Emergency & Micro-SaaS
+
+RESUMEN EJECUTIVO:
+Sistema de seguridad personal, alerta SOS y geolocalización de emergencias ("Tu Seguridad, Tu Luz"):
+- Botón de pánico SOS con disparo acústico y visual inmediato en 1 toque.
+- Envío instantáneo de coordenadas GPS exactas a contactos de confianza por SMS y WhatsApp.
+- Geocercas inteligentes de llegada segura (hogar, universidad, turno nocturno).
+- Linterna estroboscópica de auxilio bajo código óptico internacional.
+- Arquitectura autónoma PWA Offline-First de consumo cero en reposo.
+
+ESPECIFICACIONES DE INGENIERÍA:
+- Frontend: HTML5 Semántico, CSS3 WCAG AA, JavaScript Vanilla ultra-optimizado.
+- Pruebas Automatizadas: 25 tests unitarios con 100% de aprobación.
+- Certificaciones: OpenSSF Gold Badge (100%), OWASP ASVS Level 2 (100/100), SLSA Level 2+.
+- Deuda Técnica Haircut: 0.0% (0 dependencias vulnerables, micro-latencia garantizada).
+
+ACTIVOS TRANSFERIDOS:
+1. Repositorio Git limpio, modular y estructurado.
+2. Cesión absoluta e irrevocable de propiedad intelectual y marcas.
+3. Paquete Virtual Data Room (VDR) sellado con SHA-256 inmutable.
+4. Despliegue de producción oficial (GitHub Pages / Cloudflare).
+5. Gemelo digital en Obsidian (cerebro_faro).
+6. Asistencia de inducción y soporte del fundador por 30 días (hasta 15 horas).`
+  }
+};
+
+const NDA_TEMPLATE_TEXT = `================================================================================
+ACUERDO DE CONFIDENCIALIDAD, NO DIVULGACIÓN Y NO ELUSIÓN (NDA - M&A STANDARD)
+================================================================================
+PARTE REVELADORA: Mauricio Uribe Maldonado (Fundador & Titular Exclusivo)
+PARTE RECEPTORA: Potencial Inversor / Entidad Compradora Institucional
+
+CLÁUSULAS ESENCIALES:
+1. OBJETO: Evaluación exclusiva de una transacción de adquisición (Asset Sale) o
+   licenciamiento B2B de los activos de software del ecosistema V-GUARD.
+2. INFORMACIÓN CONFIDENCIAL: Código fuente, contraseñas de Virtual Data Room (VDR),
+   arquitectura, métricas financieras y precios de reserva no públicos.
+3. NO DIVULGACIÓN: La Parte Receptora mantendrá estricta confidencialidad y no compartirá
+   datos con terceros no autorizados ni empleará la información para replicar la tecnología.
+4. NO ELUSIÓN: Prohibición de contactar directamente a contrapartes o clientes sin intermediación.
+5. DEVOLUCIÓN O DESTRUCCIÓN: A requerimiento, se destruirá toda copia en un plazo de 3 días.
+6. JURISDICCIÓN: Leyes de la República de Chile y/o Jurisdicción Comercial Internacional acordada.
+
+Para firmar y recibir la clave del VDR cifrado con SHA-256, contactar a Mauricio Uribe:
+Email: mauriciano47@gmail.com`;
+
+function openDealModal(appKey) {
+  const deal = DEAL_LISTINGS[appKey];
+  if (!deal) return;
+
+  const modal = document.getElementById("dealModal");
+  if (!modal) return;
+
+  document.getElementById("dealModalTitle").textContent = deal.title;
+  document.getElementById("dealModalSubtitle").textContent = deal.subtitle;
+  document.getElementById("dealModalTier").textContent = deal.tier;
+  document.getElementById("dealListingText").textContent = deal.listingText;
+  document.getElementById("dealNdaText").textContent = NDA_TEMPLATE_TEXT;
+  document.getElementById("vdrPackageCode").textContent = deal.vdr;
+
+  const emailBtn = document.getElementById("btnEmailDeal");
+  if (emailBtn) {
+    emailBtn.href = `mailto:mauriciano47@gmail.com?subject=Solicitud%20de%20Acceso%20a%20VDR%20y%20NDA%20-%20${encodeURIComponent(deal.title)}`;
+  }
+
+  // Activar tab de listing por defecto
+  switchDealTab("pane-listing");
+
+  modal.classList.remove("hidden");
+}
+
+function openNdaModal(appKey) {
+  openDealModal(appKey);
+  switchDealTab("pane-nda");
+}
+
+function closeDealModal() {
+  const modal = document.getElementById("dealModal");
+  if (modal) modal.classList.add("hidden");
+}
+
+function switchDealTab(paneId) {
+  const tabBtns = document.querySelectorAll(".deal-tab-btn");
+  const panes = document.querySelectorAll(".deal-modal-pane");
+
+  tabBtns.forEach(btn => {
+    btn.classList.toggle("active", btn.getAttribute("data-deal-tab") === paneId);
+  });
+
+  panes.forEach(pane => {
+    pane.classList.toggle("active", pane.id === paneId);
+  });
+}
+
+function setupDealDeskListeners() {
+  const btnToggle = document.getElementById("btnToggleDealDesk");
+  const dealSection = document.getElementById("dealDeskSection");
+  if (btnToggle && dealSection) {
+    btnToggle.addEventListener("click", () => {
+      dealSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+
+  const btnClose = document.getElementById("btnCloseDealModal");
+  const btnDismiss = document.getElementById("btnDismissDealModal");
+  if (btnClose) btnClose.addEventListener("click", closeDealModal);
+  if (btnDismiss) btnDismiss.addEventListener("click", closeDealModal);
+
+  const dealTabBtns = document.querySelectorAll(".deal-tab-btn");
+  dealTabBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const paneId = btn.getAttribute("data-deal-tab");
+      if (paneId) switchDealTab(paneId);
+    });
+  });
+}
+
+window.openDealModal = openDealModal;
+window.openNdaModal = openNdaModal;
+window.closeDealModal = closeDealModal;
