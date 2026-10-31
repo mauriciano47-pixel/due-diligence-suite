@@ -981,8 +981,8 @@ window.viewFleetAppDetail = function(appKey) {
 
 const DEAL_LISTINGS = {
   ataraxia: {
-    title: "Ataraxia v2.9.9 — FitTech & Coach Estoico IA",
-    subtitle: "React Native (Expo 52) + Web PWA • Score AAA (96.7) • Valuación: $22,000 USD",
+    title: "Ataraxia v3.0.0 — FitTech & Coach Estoico IA (SaaS Edition)",
+    subtitle: "React Native (Expo 52) + Web PWA • Score AAA (96.7) • SaaS Engine Activo • Valuación: $22,000 – $60,000+ USD",
     vdr: "VDR_ATARAXIA_20261021_221404.zip",
     tier: "Tier 1 Sovereign Ready",
     listingText: `================================================================================
@@ -1002,7 +1002,8 @@ de TDEE/BMR y balance calórico continuo a 60 FPS.
 ESPECIFICACIONES DE INGENIERÍA:
 - Frontend / Móvil: TypeScript, React Native (Expo SDK 52), React 19, Tailwind CSS / NativeWind.
 - Plataformas: Android nativo (EAS Build), PWA Web con soporte offline total.
-- Calidad de Código: 65 tests unitarios verificados con 100% Pass Rate.
+- Calidad de Código: 71 tests unitarios verificados con 100% Pass Rate.
+- Monetización SaaS: Paywall in-app, Quota Guard (3 rutinas gratuitas) y Stripe Elements / Checkout integrados.
 - Certificaciones: OpenSSF Gold Badge (100%), OWASP ASVS Level 2 (100/100), SLSA Level 2+.
 - Deuda Técnica Haircut: 0.0% (Cero archivos monolíticos, cero complejidad ciclomática crítica).
 - Costes de Servidor: $0 USD/mes (Arquitectura desacoplada Offline-First en Edge).
@@ -1016,8 +1017,8 @@ ACTIVOS TRANSFERIDOS:
 6. Periodo de acompañamiento y soporte del fundador por 30 días (hasta 15 horas).`
   },
   hidoctor: {
-    title: "HiDoctor v3.0.0 — HealthTech Pediátrico & Triaje Clínico IA",
-    subtitle: "React 19 + Vite 8 • Score AAA (97.3) • Valuación: $18,000 USD",
+    title: "HiDoctor v3.1.0 — HealthTech Pediátrico & Triaje Clínico IA (SaaS Edition)",
+    subtitle: "React 19 + Vite 8 • Score AAA (97.3) • SaaS Engine Activo • Valuación: $18,000 – $55,000+ USD",
     vdr: "VDR_HIDOCTOR_20261021_221136.zip",
     tier: "Tier 1 Sovereign Ready",
     listingText: `================================================================================
@@ -1040,6 +1041,7 @@ para apoyar a padres y profesionales de la salud:
 ESPECIFICACIONES DE INGENIERÍA:
 - Frontend: TypeScript, React 19, Vite 8, Tailwind CSS, SVG Vectorial nativo.
 - Batería de Pruebas: 54 tests unitarios dinámicos con 100% de aprobación.
+- Monetización SaaS: ModalPlanesPremium, Quota Guard (3 consultas IA gratuitas) y Planes Pro Familiares.
 - Certificaciones: OpenSSF Gold Badge (100%), OWASP ASVS L1/L2 (98/100), HIPAA & RGPD Art. 9 (98.5%).
 - Deuda Técnica Haircut: 0.0% (Código Turnkey listo para clínicas y aseguradoras).
 - Costes de Servidor: $0 USD/mes (Static Edge CDN).
