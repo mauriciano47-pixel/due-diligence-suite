@@ -1002,7 +1002,7 @@ de TDEE/BMR y balance calórico continuo a 60 FPS.
 ESPECIFICACIONES DE INGENIERÍA:
 - Frontend / Móvil: TypeScript, React Native (Expo SDK 52), React 19, Tailwind CSS / NativeWind.
 - Plataformas: Android nativo (EAS Build), PWA Web con soporte offline total.
-- Calidad de Código: 71 tests unitarios verificados con 100% Pass Rate.
+- Calidad de Código: 74 tests unitarios verificados con 100% Pass Rate.
 - Monetización SaaS: Paywall in-app, Quota Guard (3 rutinas gratuitas) y Stripe Elements / Checkout integrados.
 - Certificaciones: OpenSSF Gold Badge (100%), OWASP ASVS Level 2 (100/100), SLSA Level 2+.
 - Deuda Técnica Haircut: 0.0% (Cero archivos monolíticos, cero complejidad ciclomática crítica).
@@ -1040,7 +1040,7 @@ para apoyar a padres y profesionales de la salud:
 
 ESPECIFICACIONES DE INGENIERÍA:
 - Frontend: TypeScript, React 19, Vite 8, Tailwind CSS, SVG Vectorial nativo.
-- Batería de Pruebas: 54 tests unitarios dinámicos con 100% de aprobación.
+- Batería de Pruebas: 57 tests unitarios dinámicos con 100% de aprobación.
 - Monetización SaaS: ModalPlanesPremium, Quota Guard (3 consultas IA gratuitas) y Planes Pro Familiares.
 - Certificaciones: OpenSSF Gold Badge (100%), OWASP ASVS L1/L2 (98/100), HIPAA & RGPD Art. 9 (98.5%).
 - Deuda Técnica Haircut: 0.0% (Código Turnkey listo para clínicas y aseguradoras).
