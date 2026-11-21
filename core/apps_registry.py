@@ -10,8 +10,8 @@ ECOSYSTEM_APPS = [
         "key": "cambioya",
         "name": "CAMBIOYA!",
         "role": "Plataforma Comunitaria de Trueque Directo & Economía Circular",
-        "primary_path": r"C:\Users\mauro\OneDrive\Documentos\CAMBIOYA!",
-        "fallback_path": r"C:\Users\mauro\cambioya",
+        "primary_path": r"C:\Users\mauro\cambioya",
+        "fallback_path": r"C:\Users\mauro\OneDrive\Documentos\CAMBIOYA!",
         "obsidian_vault": "cerebro_cambioya",
         "icon": "🔄",
         "category": "Economía Colaborativa"
